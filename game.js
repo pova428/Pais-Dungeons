@@ -850,6 +850,12 @@
   function generateShopStock() {
     const pool=EQUIPMENT_ITEMS.filter((item)=>item.rarity!=="Hyperrara");
     const result=[];
+    const affordable=pool.filter((item)=>item.price<=100);
+    if(affordable.length) {
+      const first=affordable[Math.floor(Math.random()*affordable.length)];
+      result.push(first.id);
+      pool.splice(pool.findIndex((item)=>item.id===first.id),1);
+    }
     while(result.length<SHOP_STOCK_SIZE && pool.length) result.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0].id);
     return result;
   }
