@@ -963,6 +963,7 @@
 
     const currentActor=getActiveBattleActor();
     const activeHero=currentActor && currentActor.side==="ally" ? characters.find((entry)=>entry.id===currentActor.id) : null;
+    const activeEnemy=currentActor && currentActor.side==="enemy" ? battle.enemies.find((entry)=>entry.id===currentActor.id) : null;
     const pendingSkill=activeHero && battle.pendingSkillId ? activeHero.skills.find((entry)=>entry.id===battle.pendingSkillId) : null;
     const isVictory=battle.status==="victory";
     const isDefeat=battle.status==="defeat";
@@ -974,7 +975,7 @@
       const alive=hero ? (Number(state.hp[hero.id])||0)>0 : Boolean(enemy && enemy.hp>0);
       const label=hero ? hero.name : enemy ? enemy.name : entry.name;
       const mark=hero ? hero.sign : enemy ? enemy.mark : "?";
-      return '<div class="battle-initiative-chip '+(isCurrent?"is-current ":"")+(entry.side==="enemy"?"is-enemy ":"")+(alive?"":"is-fallen")+'"><b>'+mark+'</b><small>'+label+'</small></div>';
+      return '<div class="battle-initiative-chip '+(isCurrent?"is-current ":"")+(entry.side==="enemy"?"is-enemy ":"")+(alive?"":"is-fallen")+'" '+(isCurrent?'aria-current="step"':'')+' title="'+label+'"><b>'+mark+'</b><small>'+label+'</small></div>';
     }).join("");
 
     const allyUnits=state.party.map((id,index)=>{
@@ -1027,13 +1028,14 @@
       const enoughMana=(Number(state.mp[activeHero.id])||0)>=skill.manaCost;
       const disabled=!unlocked || !enoughMana || battle.status!=="active";
       const selected=battle.pendingSkillId===skill.id;
-      return '<button class="battle-skill-button '+(unlocked?"is-unlocked":"is-locked")+(selected?" is-selected":"")+'" type="button" data-action="battle-skill" data-skill-id="'+skill.id+'" '+(disabled?"disabled":"")+'>' +
+      const helpText=!unlocked ? "Se desbloquea en nivel "+skill.unlockLevel : !enoughMana ? "Necesitas "+skill.manaCost+" PM" : "Usar "+skill.name;
+      return '<button class="battle-skill-button '+(unlocked?"is-unlocked":"is-locked")+(selected?" is-selected":"")+'" type="button" data-action="battle-skill" data-skill-id="'+skill.id+'" aria-pressed="'+selected+'" title="'+helpText+'" '+(disabled?"disabled":"")+'>' +
         '<span class="battle-skill-icon">'+skill.icon+'</span><span class="battle-skill-copy"><strong>'+skill.name+'</strong><small>'+skill.kind+' · NIVEL '+skill.unlockLevel+'</small><em>'+skill.detail+'</em></span>' +
         '<span class="battle-skill-cost">'+skill.manaCost+' PM</span></button>';
     }).join("") : '<div class="battle-waiting-message">'+(isVictory?"SALA DESPEJADA":isDefeat?"COMPAÑÍA DERROTADA":"Turno enemigo…")+'</div>';
 
     const logMarkup=battle.log.slice(0,3).map((line)=>'<li>'+line+'</li>').join("");
-    const activeLabel=activeHero ? 'TURNO DE '+activeHero.name.toUpperCase() : isVictory ? "VICTORIA" : isDefeat ? "DERROTA" : "RESOLVIENDO TURNO";
+    const activeLabel=activeHero ? 'TURNO DE '+activeHero.name.toUpperCase() : activeEnemy ? 'TURNO ENEMIGO · '+activeEnemy.name.toUpperCase() : isVictory ? "VICTORIA" : isDefeat ? "DERROTA" : "RESOLVIENDO TURNO";
     const prompt=pendingSkill ? (pendingSkill.target==="enemy" ? "ELIGE UN ENEMIGO" : "ELIGE UN COMPAÑERO") : activeHero ? "ELIGE UNA HABILIDAD" : "EL TURNO AVANZA AUTOMÁTICAMENTE";
 
     const commandPanel=isVictory
@@ -1056,9 +1058,9 @@
         '<div class="battle-ground-line"></div>'+
         '<div class="battle-stage-foot"><span>ALIADOS · '+getAliveParty().length+'/04</span><span>ENEMIGOS · '+battle.enemies.filter((enemy)=>enemy.hp>0).length+'/03</span><span>MANÁ Y VIDA INDIVIDUALES</span></div>'+
       '</section>'+
-      '<section class="battle-actions-area">'+
+      '<section class="battle-actions-area" aria-live="polite">'+
         commandPanel+
-        '<aside class="battle-log-panel"><div><span>REGISTRO DE COMBATE</span><b>RONDA '+battle.round+'</b></div><ul>'+logMarkup+'</ul></aside>'+
+        '<aside class="battle-log-panel" aria-live="polite"><div><span>REGISTRO DE COMBATE</span><b>RONDA '+battle.round+'</b></div><ul>'+logMarkup+'</ul></aside>'+
       '</section>'+
       '<div class="battle-bottom-bar"><div><span class="battle-provisional-mark">◆</span><span>ESCENARIO Y ENEMIGOS PROVISIONALES · LOS TURNOS Y HABILIDADES YA FUNCIONAN</span></div><button class="game-action secondary" type="button" data-action="leave-battle">← VOLVER A RUTAS</button></div>'+
     '</div>';
