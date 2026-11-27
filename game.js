@@ -420,9 +420,12 @@
     if (!actor || actor.side !== "ally" || actor.id !== character.id) return;
     const stats = getCharacterStats(character,state.levels[character.id] || 1);
     if ((Number(state.mp[character.id]) || 0) < skill.manaCost) return showNotice("No tienes maná suficiente.");
-    state.mp[character.id] -= skill.manaCost;
     const enemy = battle.enemies.find((entry) => entry.id === targetId && entry.hp > 0);
-    const ally = characters.find((entry) => entry.id === targetId && state.party.includes(entry.id));
+    const ally = characters.find((entry) => entry.id === targetId && state.party.includes(entry.id) && (Number(state.hp[entry.id]) || 0) > 0);
+    if (skill.target === "enemy" && !enemy) return showNotice("Selecciona un enemigo válido.");
+    if (skill.target === "ally" && !ally) return showNotice("Selecciona un compañero válido.");
+    state.mp[character.id] -= skill.manaCost;
+    const freshShieldIds = new Set();
     const damageMultiplier = battle.buffs[character.id] && battle.buffs[character.id].attack > 0 ? 1+battle.buffs[character.id].attack : 1;
     const targetDamage = (ratio,magic) => Math.round((magic ? stats.magic : stats.attack)*ratio*damageMultiplier);
     switch(skill.id) {
@@ -471,7 +474,9 @@
         if (!ally) return showNotice("Selecciona un compañero válido.");
         const allyMax=getCharacterStats(ally,state.levels[ally.id]||1).hp;
         battle.shields[ally.id]=Math.round(allyMax*.3);
-        pushBattleLog(ally.name+" recibe un escudo de "+battle.shields[ally.id]+" puntos.");
+        battle.shieldTurns[ally.id]=2;
+        freshShieldIds.add(ally.id);
+        pushBattleLog(ally.name+" recibe un escudo de "+battle.shields[ally.id]+" puntos durante sus próximos 2 turnos.");
         break;
       case "knockdown":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
@@ -483,8 +488,10 @@
           const allyChar=characters.find((entry)=>entry.id===id);
           const max=getCharacterStats(allyChar,state.levels[id]||1).hp;
           battle.shields[id]=(battle.shields[id]||0)+Math.round(max*.2);
+          battle.shieldTurns[id]=Math.max(2,battle.shieldTurns[id]||0);
+          freshShieldIds.add(id);
         });
-        pushBattleLog("Ivan levanta un bastión que protege a toda la compañía.");
+        pushBattleLog("Ivan levanta un bastión que protege a toda la compañía durante 2 turnos de cada aliado.");
         break;
       case "balonazo":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
@@ -503,10 +510,23 @@
     pushBattleLog(character.name+" utiliza "+skill.name+".");
     if (battle.buffs[character.id] && skill.id !== "modo-mujer") {
       battle.buffs[character.id].turns -= 1;
-      if(battle.buffs[character.id].turns<=0) delete battle.buffs[character.id];
+      if(battle.buffs[character.id].turns<=0) {
+        delete battle.buffs[character.id];
+        pushBattleLog(character.name + " ya no está bajo los efectos de su mejora.");
+      }
+    }
+    const shieldTurns=battle.shieldTurns[character.id]||0;
+    if(shieldTurns>0 && !freshShieldIds.has(character.id)) {
+      battle.shieldTurns[character.id]=shieldTurns-1;
+      if(battle.shieldTurns[character.id]<=0) {
+        delete battle.shieldTurns[character.id];
+        delete battle.shields[character.id];
+        pushBattleLog("El escudo de " + character.name + " se desvanece.");
+      }
     }
     battle.pendingSkillId=null;
     battle.targetMode=null;
+    battle.currentTurnStarted=null;
     if (battle.enemies.every((entry)=>entry.hp<=0)) {
       setBattleVictory();
     } else {
@@ -517,7 +537,7 @@
     renderCampaign();
   }
 
-  function chooseBattleTarget(targetId) {
+  function chooseBattleTarget(targetId,targetSide) {
     const battle=state.battle;
     if(!battle || !battle.pendingSkillId) return;
     const actor=getActiveBattleActor();
@@ -525,7 +545,9 @@
     const character=characters.find((entry)=>entry.id===actor.id);
     const skill=character.skills.find((entry)=>entry.id===battle.pendingSkillId);
     if(!skill) return;
-    const valid = skill.target==="enemy"
+    const expectedSide=skill.target==="enemy" ? "enemy" : "ally";
+    if(targetSide && targetSide!==expectedSide) return showNotice("Ese objetivo no es válido para esta habilidad.");
+    const valid=expectedSide==="enemy"
       ? battle.enemies.some((entry)=>entry.id===targetId && entry.hp>0)
       : state.party.includes(targetId) && (Number(state.hp[targetId])||0)>0;
     if(!valid) return showNotice("El objetivo seleccionado no es válido.");
@@ -541,7 +563,7 @@
     levels:{guardian:1,duelist:1,arcanist:1,tracker:1,alchemist:1},
     xp:{guardian:0,duelist:0,arcanist:0,tracker:0,alchemist:0},
     battle:null,
-    characterDataVersion:4,
+    characterDataVersion:5,
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
     battleSiteId:"institute-programming",
@@ -638,7 +660,7 @@
       const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
       const merged = Object.assign(defaults,saved,{
         inventory:Object.assign({},defaults.inventory,saved.inventory || {}),
-        hp,mp,levels,xp,characterDataVersion:4,
+        hp,mp,levels,xp,characterDataVersion:5,
         battle:saved.battle && typeof saved.battle === "object" ? saved.battle : null,
         visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
@@ -654,6 +676,20 @@
         if (merged.tab === "battle") merged.tab = "route";
       }
       if (merged.tab === "battle" && (!merged.battle || merged.battle.siteId !== merged.battleSiteId)) merged.tab = "route";
+      if (merged.battle) {
+        const savedBattle=merged.battle;
+        if (!savedBattle.shields || typeof savedBattle.shields !== "object") savedBattle.shields={};
+        if (!savedBattle.shieldTurns || typeof savedBattle.shieldTurns !== "object") savedBattle.shieldTurns={};
+        if (!savedBattle.buffs || typeof savedBattle.buffs !== "object") savedBattle.buffs={};
+        if (!savedBattle.startingVitals) {
+          savedBattle.startingVitals={};
+          merged.party.forEach((id)=>{
+            savedBattle.startingVitals[id]={hp:hp[id],mp:mp[id]};
+          });
+        }
+        if (!Array.isArray(savedBattle.order)) savedBattle.order=[];
+        if (!Array.isArray(savedBattle.log)) savedBattle.log=["Combate recuperado desde el guardado."];
+      }
       const maximumRegion = getUnlockedRegionIndex(merged.visitedSites);
       let selectedIndex = regions.findIndex((region) => region.id === merged.selectedRegion);
       if (selectedIndex < 0 || selectedIndex > maximumRegion) selectedIndex = maximumRegion;
@@ -667,7 +703,7 @@
 
   function saveState() {
     if (!state) return;
-    state.characterDataVersion = 4;
+    state.characterDataVersion = 5;
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (error) {
       state.notice = "No se ha podido guardar en este navegador. La partida seguirá activa mientras no cierres la página.";
     }
@@ -691,9 +727,18 @@
     footer.hidden = true;
     campaign.hidden = false;
     renderCampaign();
+    if (state.tab === "battle" && state.battle && state.battle.status === "active") {
+      if (!Array.isArray(state.battle.order) || !state.battle.order.length) {
+        state.battle.order=getBattleOrder();
+        state.battle.turnIndex=0;
+      }
+      processBattleUntilPlayerTurn();
+      renderCampaign();
+    }
   }
 
   function returnToTitle() {
+    clearBattleTimer();
     campaign.hidden = true;
     titleMenu.hidden = false;
     hud.hidden = false;
@@ -991,7 +1036,7 @@
     const commandPanel=isVictory
       ? '<div class="battle-result-panel is-victory"><span>✦</span><div><strong>VICTORIA</strong><small>La sala está despejada. +45 XP para la compañía.</small></div><button type="button" class="game-action" data-action="leave-battle">CONTINUAR →</button></div>'
       : isDefeat
-        ? '<div class="battle-result-panel is-defeat"><span>☠</span><div><strong>DERROTA</strong><small>La compañía necesita recuperarse o intentarlo otra vez.</small></div><button type="button" class="game-action" data-action="retry-battle">REINTENTAR</button><button type="button" class="game-action secondary" data-action="leave-battle">VOLVER A RUTAS</button></div>'
+        ? '<div class="battle-result-panel is-defeat"><span>☠</span><div><strong>DERROTA</strong><small>Puedes reintentar con la vida y el maná que tenías al entrar en la sala, o volver al bastión para descansar.</small></div><button type="button" class="game-action" data-action="retry-battle">REINTENTAR</button><button type="button" class="game-action secondary" data-action="leave-battle">VOLVER A RUTAS</button></div>'
         : '<div class="battle-command"><div class="battle-command-heading"><div><span class="section-eyebrow">'+activeLabel+'</span><h3>'+prompt+'</h3></div>' +
             (pendingSkill?'<button class="battle-cancel-target" type="button" data-action="cancel-battle-target">CANCELAR</button>':"")+
           '</div><div class="battle-skill-row">'+skillsMarkup+'</div></div>';
@@ -1051,7 +1096,7 @@
     if (kind === "credits") {
       dialogEyebrow.textContent = "REGISTRO DE LA COMPAÑÍA";
       dialogTitle.textContent = "Créditos";
-      dialogContent.innerHTML = '<div class="credits-list"><div class="credit-item"><span class="credit-role">CONCEPTO Y DESARROLLO</span><span class="credit-name">PAIS DUNGEON</span></div><div class="credit-item"><span class="credit-role">DIRECCIÓN ARTÍSTICA</span><span class="credit-name">Fantasía oscura · Pixel art original</span></div><div class="credit-item"><span class="credit-role">ESTADO</span><span class="credit-name">Build 002 — esqueleto de campaña</span></div></div>';
+      dialogContent.innerHTML = '<div class="credits-list"><div class="credit-item"><span class="credit-role">CONCEPTO Y DESARROLLO</span><span class="credit-name">PAIS DUNGEON</span></div><div class="credit-item"><span class="credit-role">DIRECCIÓN ARTÍSTICA</span><span class="credit-name">Fantasía oscura · Pixel art original</span></div><div class="credit-item"><span class="credit-role">ESTADO</span><span class="credit-name">Build 012 — revisión de combate y campaña</span></div></div>';
       dialogActions.innerHTML = '<button class="dialog-button" type="button" data-action="close-dialog">Volver al menú <span>←</span></button>';
     }
     if (kind === "boss") {
@@ -1062,7 +1107,7 @@
       const defeated = state.visitedSites.includes(boss.id);
       dialogEyebrow.textContent = region.bossRole;
       dialogTitle.textContent = region.boss;
-      dialogContent.innerHTML = '<p class="dialog-emphasis">' + region.name + '</p><p>' + region.bossDescription + '</p><p class="dialog-caveat">El combate real se añadirá en una próxima versión.</p>';
+      dialogContent.innerHTML = '<p class="dialog-emphasis">' + region.name + '</p><p>' + region.bossDescription + '</p><p class="dialog-caveat">El combate de jefe todavía está pendiente de diseño.</p>';
       dialogActions.innerHTML = defeated
         ? '<button class="dialog-button" type="button" data-action="close-dialog">Cerrar <span>←</span></button>'
         : (unlocked ? '<button class="dialog-button" type="button" data-action="defeat-boss">SIMULAR VICTORIA <span>✦</span></button>' : '<button class="dialog-button" type="button" data-action="close-dialog">Volver al mapa <span>←</span></button>');
@@ -1072,7 +1117,7 @@
       const partyNames = characters.filter((entry) => state.party.includes(entry.id)).map((entry) => entry.name + " «" + entry.title + "»").join(", ");
       dialogEyebrow.textContent = "ORDEN DE MARCHA";
       dialogTitle.textContent = "La compañía está preparada";
-      dialogContent.innerHTML = '<p class="dialog-emphasis">' + region.name + '</p><p>Partirán: ' + partyNames + '.</p><p>Esta versión contiene el mapa, las localizaciones y la preparación de expedición. El desplazamiento y el combate táctico se añadirán después.</p>';
+      dialogContent.innerHTML = '<p class="dialog-emphasis">' + region.name + '</p><p>Partirán: ' + partyNames + '.</p><p>La primera sala ya incluye un combate por turnos provisional. Los jefes y el resto de localizaciones se irán incorporando después.</p>';
       dialogActions.innerHTML = '<button class="dialog-button" type="button" data-action="close-dialog">Volver al mapa <span>←</span></button>';
     }
     const first = backdrop.querySelector("button");
@@ -1143,8 +1188,11 @@
       const maxHp=getCharacterStats(character,level).hp;
       const currentHp=Number.isFinite(state.hp[character.id]) ? state.hp[character.id] : maxHp;
       state.hp[character.id]=Math.min(maxHp,currentHp+Math.ceil(maxHp*0.25));
+      const maxMp=getCharacterStats(character,level).mp;
+      const currentMp=Number.isFinite(state.mp[character.id]) ? state.mp[character.id] : maxMp;
+      state.mp[character.id]=Math.min(maxMp,currentMp+Math.ceil(maxMp*0.25));
     });
-    showNotice("La compañía ha descansado. Todos recuperan un 25% de su vida máxima.");
+    showNotice("La compañía ha descansado. Todos recuperan un 25% de su vida y su maná máximos.");
   }
 
   function buyItem(itemId) {
@@ -1196,7 +1244,7 @@
       return;
     }
     if (action === "battle-target") {
-      chooseBattleTarget(target.dataset.targetId);
+      chooseBattleTarget(target.dataset.targetId,target.dataset.targetSide);
       return;
     }
     if (action === "cancel-battle-target") {
@@ -1284,6 +1332,12 @@
   });
 
   document.addEventListener("keydown", (event) => {
+    const targetCard=event.target.closest && event.target.closest('[data-action="battle-target"]');
+    if (targetCard && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      handleAction("battle-target",targetCard);
+      return;
+    }
     if (event.key === "Escape") closeDialog();
     if (event.key === "Tab" && !backdrop.hidden) {
       const focusable = Array.from(backdrop.querySelectorAll("button:not(:disabled)"));
