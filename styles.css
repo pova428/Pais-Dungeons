@@ -3424,3 +3424,643 @@ body.reduce-motion .battle-enemy.is-attacking .battle-enemy-figure { animation:n
   .owned-equipment-card { grid-template-columns:26px minmax(0,1fr); }
   .owned-equipment-card button,.owned-state { grid-column:2;justify-self:start; }
 }
+
+
+/* Build 020 — pixel-art merchant stall and animated capsule reveal */
+.merchant-page { max-width:1600px; }
+.merchant-heading { margin-bottom:18px; }
+.merchant-heading h2 { font-family:var(--pixel);font-size:clamp(26px,3.3vw,40px);letter-spacing:.03em;text-shadow:3px 3px #24151a; }
+.merchant-heading p { max-width:760px; }
+.merchant-main-grid {
+  grid-template-columns:minmax(0,1.42fr) minmax(345px,.82fr);
+  align-items:stretch;
+  gap:18px;
+}
+.merchant-stock-panel {
+  min-height:580px;
+  padding:0 20px 18px;
+  overflow:hidden;
+  border:2px solid #76543d;
+  background:
+    repeating-linear-gradient(0deg,rgba(9,7,8,.24) 0 3px,transparent 3px 22px),
+    linear-gradient(180deg,#3d2926 0,#23191a 130px,#120e11 100%);
+  box-shadow:inset 0 0 0 4px #201719,inset 0 0 0 6px rgba(172,125,80,.18),0 8px 25px rgba(0,0,0,.28);
+}
+.merchant-stock-panel::before,.merchant-stock-panel::after { width:11px;height:11px;border-color:#d4a66c; }
+.merchant-stall-header {
+  position:relative;
+  display:flex;
+  align-items:stretch;
+  min-height:104px;
+  margin:0 -20px 17px;
+  border-bottom:7px solid #201618;
+  background:
+    repeating-linear-gradient(90deg,#442b29 0 24px,#51342d 24px 48px,#362323 48px 72px);
+  box-shadow:inset 0 -5px rgba(5,4,5,.25),0 7px 0 rgba(0,0,0,.18);
+}
+.merchant-awning {
+  position:relative;
+  flex:0 0 116px;
+  display:flex;
+  gap:2px;
+  align-items:stretch;
+  padding:0 0 11px;
+  background:#211719;
+  border-right:4px solid #171114;
+  clip-path:polygon(0 0,100% 0,100% 78%,93% 100%,83% 78%,73% 100%,63% 78%,53% 100%,43% 78%,33% 100%,23% 78%,13% 100%,0 78%);
+}
+.merchant-awning i { flex:1;background:#a34739;border-right:2px solid #3c2522;box-shadow:inset -3px 0 #6b342f; }
+.merchant-awning i:nth-child(even) { background:#d0b283;box-shadow:inset -3px 0 #8c7156; }
+.merchant-stall-name {
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  justify-content:center;
+  gap:8px;
+  padding:12px 18px;
+  min-width:0;
+  text-shadow:2px 2px #1c1115;
+}
+.merchant-stall-name span { color:#d59a66;font:700 8px var(--mono);letter-spacing:.2em; }
+.merchant-stall-name b { color:#f0d6a8;font:700 clamp(17px,2.2vw,26px) var(--pixel);letter-spacing:.07em; }
+.merchant-stall-stock {
+  flex:0 0 86px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:3px;
+  margin:12px;
+  border:3px solid #8a684b;
+  background:#211619;
+  box-shadow:inset 0 0 0 3px #392523,3px 3px 0 rgba(0,0,0,.28);
+}
+.merchant-stall-stock strong { color:#f0cf8b;font:700 24px var(--pixel); }
+.merchant-stall-stock small { color:#bc8962;font:6px var(--mono);letter-spacing:.12em; }
+.merchant-stock-toolbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:0 0 12px;
+  padding:0 1px 9px;
+  border-bottom:2px solid rgba(180,132,88,.34);
+}
+.merchant-stock-toolbar span { color:#dec397;font:700 10px var(--pixel);letter-spacing:.13em; }
+.merchant-stock-toolbar small { color:#9b7458;font:8px var(--mono);letter-spacing:.13em; }
+.merchant-stock-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.merchant-item-card {
+  position:relative;
+  grid-template-columns:112px minmax(0,1fr);
+  grid-template-rows:minmax(90px,1fr) auto;
+  gap:10px;
+  min-height:174px;
+  padding:10px;
+  border:2px solid #5a4137;
+  background:
+    linear-gradient(90deg,rgba(105,72,47,.15),transparent 35%),
+    repeating-linear-gradient(0deg,rgba(8,6,8,.18) 0 3px,transparent 3px 13px),
+    linear-gradient(140deg,#2e2020,#151114 75%);
+  box-shadow:inset 0 0 0 2px rgba(177,133,91,.08),4px 4px 0 #0c090b;
+  transition:transform .12s steps(2,end),border-color .12s steps(2,end),filter .12s steps(2,end);
+}
+.merchant-item-card:hover { transform:translate(-2px,-2px);border-color:#d4a46d;filter:brightness(1.12); }
+.merchant-item-display {
+  position:relative;
+  grid-row:1 / 3;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  min-width:0;
+  padding:7px 4px 4px;
+  border:2px solid #71543d;
+  border-bottom:6px solid #38261f;
+  background:
+    repeating-linear-gradient(0deg,rgba(18,12,13,.36) 0 3px,transparent 3px 12px),
+    linear-gradient(180deg,#51382e,#211719);
+  box-shadow:inset 0 0 0 2px rgba(201,156,105,.12),2px 3px 0 rgba(0,0,0,.28);
+}
+.merchant-display-number { position:absolute;top:4px;left:5px;color:rgba(228,187,132,.4);font:7px var(--mono); }
+.merchant-item-art {
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:100%;
+  flex:1;
+  min-height:105px;
+  overflow:hidden;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+.merchant-item-art span { color:#e9c58b;font:700 44px var(--pixel);text-shadow:3px 3px #201219,0 0 0 #201219; }
+.merchant-item-art img {
+  inset:5px;
+  width:calc(100% - 10px);
+  height:calc(100% - 10px);
+  object-fit:contain;
+  image-rendering:pixelated;
+  filter:drop-shadow(3px 4px 0 rgba(0,0,0,.6));
+}
+.merchant-item-display > small { color:#c7a176;font:700 7px var(--pixel);letter-spacing:.13em;text-align:center; }
+.merchant-item-copy { gap:6px;padding:2px 2px 0; }
+.merchant-item-copy strong { color:#eed9b2;font-size:14px;line-height:1.3; }
+.merchant-item-copy small { color:rgba(220,199,166,.7);font-size:8px;line-height:1.55; }
+.merchant-item-copy em { color:#d0aa78;font-size:7px;line-height:1.5; }
+.rarity-label { padding:3px 6px;font-size:8px; }
+.merchant-item-buy { grid-column:2;align-self:end;padding-top:7px;border-top:1px solid rgba(177,133,87,.18); }
+.merchant-item-buy b { color:#f2d28d;font-size:13px; }
+.merchant-item-buy .buy-button { min-width:90px;padding:9px 11px;border:2px solid #9d694d;background:#4f2a25;color:#f2d8b1;font:700 9px var(--pixel);box-shadow:2px 3px 0 #140d0f; }
+.merchant-item-buy .buy-button:not(:disabled):hover { background:#743b30;transform:translate(-1px,-1px); }
+.merchant-item-buy .buy-button:disabled { opacity:.38; }
+.merchant-stock-footer { align-items:center;margin-top:17px;padding-top:14px;border-top:2px solid rgba(177,132,88,.23); }
+.merchant-stock-footer small { max-width:490px;color:rgba(211,187,151,.65);font-size:8px;line-height:1.7; }
+.merchant-stock-footer .game-action { border:2px solid #72533c;background:#2b1c1b;box-shadow:2px 3px 0 #0b080a; }
+.merchant-supplies-details { margin-top:18px;border-top:2px solid rgba(179,134,90,.24); }
+.merchant-supplies-details summary { display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 2px 5px;color:#dec69e;font:700 10px var(--pixel);letter-spacing:.1em;cursor:pointer;list-style:none; }
+.merchant-supplies-details summary::-webkit-details-marker { display:none; }
+.merchant-supplies-details summary::after { content:"+";color:#d4a36e;font:700 18px var(--pixel); }
+.merchant-supplies-details[open] summary::after { content:"−"; }
+.merchant-supplies-details summary span { color:rgba(202,173,134,.45);font:7px var(--mono); }
+.merchant-supplies-details .merchant-supplies { padding:6px 0 0; }
+
+/* A single arcade-like cabinet, built from hard-edged pixel panels and bright lamps. */
+.gacha-panel {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  padding:17px;
+  overflow:hidden;
+  border:2px solid #75506c;
+  background:
+    repeating-linear-gradient(0deg,rgba(9,7,12,.17) 0 3px,transparent 3px 18px),
+    linear-gradient(160deg,#302039,#16121c 68%,#100d13);
+  box-shadow:inset 0 0 0 4px #1e1722,inset 0 0 28px rgba(136,78,165,.12),0 8px 25px rgba(0,0,0,.3);
+}
+.gacha-panel-heading { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:11px; }
+.gacha-panel-heading h3 { margin:4px 0 0;color:#f1d8bb;font:700 23px var(--pixel);text-shadow:2px 2px #241321; }
+.gacha-panel-heading p { max-width:255px;margin:6px 0 0;color:rgba(222,198,174,.67);font:8px/1.55 var(--mono); }
+.gacha-cost-mark { flex:0 0 auto;padding:8px 9px;border:2px solid #bf8e60;background:#2c1b29;color:#f5d18d;font:700 12px var(--pixel);box-shadow:2px 3px 0 #100b12; }
+.gacha-showcase-frame {
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:340px;
+  padding:20px 13px 15px;
+  overflow:hidden;
+  border:3px solid #826078;
+  background:
+    repeating-linear-gradient(90deg,rgba(223,170,236,.035) 0 2px,transparent 2px 9px),
+    radial-gradient(ellipse at 50% 45%,rgba(154,82,173,.24),transparent 66%),
+    linear-gradient(180deg,#1a1623,#100e15);
+  box-shadow:inset 0 0 0 4px #211927,inset 0 0 35px rgba(168,85,197,.16);
+}
+.gacha-showcase-frame::before,.gacha-showcase-frame::after {
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  height:4px;
+  background:#9c6e9e;
+  box-shadow:0 0 12px #d38ae5;
+}
+.gacha-showcase-frame::before { top:7px; }
+.gacha-showcase-frame::after { bottom:7px; }
+.gacha-showcase-lights { position:absolute;inset:0;pointer-events:none; }
+.gacha-showcase-lights i {
+  position:absolute;
+  width:7px;
+  height:7px;
+  background:#eecb80;
+  box-shadow:0 0 0 2px #49314e,0 0 13px 4px rgba(244,177,92,.6);
+  animation:gacha-lamp-pulse .72s steps(2,end) infinite alternate;
+}
+.gacha-showcase-lights i:nth-child(1) { left:8%;top:10%; }
+.gacha-showcase-lights i:nth-child(2) { left:27%;top:6%;animation-delay:.1s; }
+.gacha-showcase-lights i:nth-child(3) { left:50%;top:5%;animation-delay:.2s; }
+.gacha-showcase-lights i:nth-child(4) { right:27%;top:6%;animation-delay:.3s; }
+.gacha-showcase-lights i:nth-child(5) { right:8%;top:10%;animation-delay:.4s; }
+.gacha-showcase-lights i:nth-child(6) { right:6%;top:44%;background:#8ee4d0; }
+.gacha-showcase-lights i:nth-child(7) { right:8%;bottom:10%;animation-delay:.2s; }
+.gacha-showcase-lights i:nth-child(8) { right:27%;bottom:6%;animation-delay:.3s; }
+.gacha-showcase-lights i:nth-child(9) { left:50%;bottom:5%;background:#ed8eaf; }
+.gacha-showcase-lights i:nth-child(10) { left:27%;bottom:6%;animation-delay:.1s; }
+.gacha-showcase-lights i:nth-child(11) { left:8%;bottom:10%;animation-delay:.4s; }
+.gacha-showcase-lights i:nth-child(12) { left:6%;top:44%;background:#8ee4d0; }
+.gacha-pixel-machine {
+  position:relative;
+  z-index:2;
+  width:min(100%,270px);
+  padding:13px 16px 15px;
+  border:5px solid #6a4b70;
+  border-bottom:12px solid #33223e;
+  background:
+    repeating-linear-gradient(90deg,rgba(230,179,239,.045) 0 3px,transparent 3px 11px),
+    linear-gradient(90deg,#392746,#68476e 48%,#37243f);
+  box-shadow:inset 0 0 0 3px #261b31,inset 0 0 0 6px rgba(218,169,236,.12),5px 7px 0 #0b0810,0 0 24px rgba(171,97,206,.17);
+  image-rendering:pixelated;
+}
+.gacha-machine-top {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  margin:0 0 10px;
+  padding:7px 6px;
+  border:3px solid #302039;
+  background:linear-gradient(180deg,#a8779b,#5d3d68);
+  color:#ffe2b1;
+  box-shadow:inset 0 0 0 2px rgba(255,220,188,.2),2px 3px 0 #1e1426;
+  text-align:center;
+  font:700 9px var(--pixel);
+  letter-spacing:.16em;
+  text-shadow:2px 2px #3b2647;
+}
+.gacha-machine-top b { color:#ffda9b;font-size:15px; }
+.gacha-machine-glass {
+  position:relative;
+  display:grid;
+  place-items:center;
+  height:175px;
+  overflow:hidden;
+  border:5px solid #c09ebc;
+  border-radius:0;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 2px,transparent 2px 7px),
+    radial-gradient(circle at 50% 42%,#685078,#2b203a 68%,#171321);
+  box-shadow:inset 0 0 0 4px #332541,inset 0 0 24px #120e1b,0 0 0 3px #2a1d34,0 0 18px rgba(197,126,225,.19);
+}
+.gacha-machine-glass::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.12) 0 5%,transparent 5% 65%,rgba(255,255,255,.035) 65% 70%,transparent 70%);
+}
+.gacha-machine-rotor {
+  position:absolute;
+  width:125px;
+  height:125px;
+  border:4px dashed rgba(239,189,124,.55);
+  box-shadow:0 0 0 6px rgba(133,91,157,.19),0 0 24px rgba(221,157,243,.24);
+  animation:gacha-rotor-spin 7s linear infinite;
+}
+.gacha-machine-rotor i {
+  position:absolute;
+  width:9px;
+  height:9px;
+  border:2px solid #f4d08d;
+  background:#b66c99;
+  box-shadow:2px 2px 0 #382541;
+}
+.gacha-machine-rotor i:nth-child(1) { top:-7px;left:50%; }
+.gacha-machine-rotor i:nth-child(2) { right:-7px;top:50%;background:#83d7cc; }
+.gacha-machine-rotor i:nth-child(3) { bottom:-7px;left:50%;background:#e989a8; }
+.gacha-machine-rotor i:nth-child(4) { left:-7px;top:50%;background:#e8bd70; }
+.gacha-orb {
+  z-index:1;
+  width:17px;
+  height:17px;
+  border:3px solid rgba(243,204,152,.65);
+  border-radius:0;
+  background:#d4a4e1;
+  box-shadow:3px 3px 0 #362746,0 0 8px rgba(229,170,249,.3);
+  animation:gacha-orb-float 1.6s steps(3,end) infinite alternate;
+}
+.orb-one { left:13%;top:18%; }
+.orb-two { right:13%;top:26%;background:#8ee2cf;animation-delay:.3s; }
+.orb-three { left:22%;bottom:15%;background:#efb66f;animation-delay:.55s; }
+.gacha-capsule {
+  position:absolute;
+  z-index:4;
+  top:50%;
+  left:50%;
+  width:52px;
+  height:66px;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(4px 5px 0 rgba(0,0,0,.5));
+}
+.gacha-capsule i {
+  position:absolute;
+  left:0;
+  width:52px;
+  height:34px;
+  border:4px solid #35253f;
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.18);
+}
+.gacha-capsule .capsule-top {
+  top:0;
+  background:repeating-linear-gradient(90deg,#f0d18c 0 8px,#c18d66 8px 15px);
+}
+.gacha-capsule .capsule-bottom {
+  bottom:0;
+  background:repeating-linear-gradient(90deg,#83d7c9 0 8px,#498f98 8px 15px);
+}
+.gacha-capsule b {
+  position:absolute;
+  z-index:2;
+  left:50%;
+  top:50%;
+  display:grid;
+  place-items:center;
+  width:18px;
+  height:18px;
+  transform:translate(-50%,-50%);
+  border:2px solid #362441;
+  background:#f0d18c;
+  color:#6d426b;
+  font:700 10px var(--pixel);
+}
+.gacha-machine-controls { display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:5px 9px;border:2px solid #2b1f34;background:#1a1420;color:#eac98d;font:700 8px var(--pixel);letter-spacing:.12em; }
+.gacha-machine-controls span { color:#88dbc8;font-size:13px;text-shadow:0 0 8px #7fe4d0; }
+.gacha-machine-chute { position:relative;width:74px;height:17px;margin:0 auto;border:3px solid #271b32;border-top:4px solid #c29b77;background:#110d16;box-shadow:0 4px 0 #17101c; }
+.gacha-machine-chute i { display:block;width:24px;height:5px;margin:3px auto;background:#543c5d; }
+.gacha-machine-base { margin:7px -4px -4px;padding:6px;border:2px solid #30223b;background:#211829;color:#b996af;text-align:center;font:6px var(--mono);letter-spacing:.22em; }
+.is-idle-machine .gacha-machine-rotor { animation-duration:5s; }
+.is-idle-machine .gacha-capsule { animation:gacha-capsule-idle 2s steps(3,end) infinite alternate; }
+.gacha-showcase-caption { position:absolute;z-index:4;left:8px;right:8px;bottom:15px;display:flex;flex-direction:column;gap:4px;align-items:center;pointer-events:none;text-shadow:2px 2px #130d18; }
+.gacha-showcase-caption span { color:#f0ca88;font:700 8px var(--pixel);letter-spacing:.14em; }
+.gacha-showcase-caption b { color:rgba(219,193,163,.56);font:6px var(--mono);letter-spacing:.2em; }
+.gacha-last-result { display:flex;align-items:center;gap:10px;margin:13px 0;padding:10px;border:2px solid #71506f;background:rgba(17,12,20,.8);box-shadow:3px 4px 0 #0a080b; }
+.gacha-last-result > span { display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border:2px solid #916d80;background:#271b2d;color:#f1d094;font:700 20px var(--pixel); }
+.gacha-last-result b,.gacha-last-result small,.gacha-last-result em { display:block; }
+.gacha-last-result b { color:#f1d6b0;font:700 11px var(--pixel); }
+.gacha-last-result small { color:#bc9273;font:7px var(--mono); }
+.gacha-last-result em { color:#d0b387;font:normal 7px var(--mono); }
+.gacha-pull-button {
+  position:relative;
+  width:100%;
+  min-height:48px;
+  margin:13px 0 14px;
+  border:3px solid #f0bd7b;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,220,160,.1) 0 3px,transparent 3px 12px),
+    linear-gradient(180deg,#a34b70,#542b56);
+  color:#fff0c9;
+  box-shadow:inset 0 0 0 3px rgba(255,220,176,.12),4px 5px 0 #1a1120,0 0 18px rgba(208,107,204,.2);
+  font:700 13px var(--pixel);
+  letter-spacing:.08em;
+  text-shadow:2px 2px #412340;
+}
+.gacha-pull-button:not(:disabled) { animation:gacha-button-glow 1.8s steps(3,end) infinite alternate; }
+.gacha-pull-button:not(:disabled):active { transform:translate(3px,3px);box-shadow:inset 0 0 0 3px rgba(255,220,176,.12),1px 2px 0 #1a1120; }
+.gacha-pull-button:disabled { opacity:.48;filter:saturate(.55); }
+.gacha-rates { gap:6px;margin:0 0 12px;padding:11px;border:2px solid #47334e;background:rgba(10,8,14,.48); }
+.gacha-rates > b { color:#e3c79f;font:700 9px var(--pixel); }
+.gacha-rates > div { padding:3px 0;border-bottom:1px solid rgba(183,135,175,.12);font:8px var(--mono); }
+.gacha-rates > div:last-child { border-bottom:0;color:#ff9cae; }
+.hyperrare-vault { padding:9px 11px;border:2px solid rgba(210,110,145,.42);background:rgba(37,17,34,.5); }
+.hyperrare-vault summary { color:#f0a4b8;font:700 8px var(--pixel);letter-spacing:.08em;cursor:pointer;list-style:none; }
+.hyperrare-vault summary::-webkit-details-marker { display:none; }
+.hyperrare-vault summary::after { content:"+";float:right;font-size:13px; }
+.hyperrare-vault[open] summary::after { content:"−"; }
+.hyperrare-vault > b { display:block;margin-bottom:8px;color:#ef9ba8;font:700 8px var(--pixel); }
+.hyperrare-preview { opacity:.85; }
+.hyperrare-preview b { font-size:8px; }
+.merchant-collection-strip { margin-top:17px;border:2px solid #6b4f3c;background:#181114;box-shadow:3px 4px 0 #0b080a; }
+
+/* Full-screen, staged capsule ceremony. The item is granted once at roll time;
+   the animation is presentation only and can safely resume after a reload. */
+.gacha-ceremony {
+  position:fixed;
+  z-index:10000;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow-y:auto;
+  padding:20px;
+  background:rgba(5,4,9,.92);
+  image-rendering:pixelated;
+}
+.gacha-ceremony[hidden] { display:none; }
+.gacha-ceremony-backdrop {
+  position:fixed;
+  inset:0;
+  background:
+    repeating-linear-gradient(0deg,rgba(132,91,169,.07) 0 2px,transparent 2px 8px),
+    radial-gradient(ellipse at 50% 42%,rgba(126,57,155,.34),rgba(5,4,9,.96) 68%);
+  animation:gacha-backdrop-in .45s steps(4,end) both;
+}
+.gacha-ceremony-card {
+  position:relative;
+  z-index:1;
+  width:min(96vw,690px);
+  max-height:calc(100vh - 40px);
+  overflow:auto;
+  padding:18px clamp(16px,3vw,28px) 22px;
+  border:4px solid #97739b;
+  outline:4px solid #24172e;
+  background:
+    repeating-linear-gradient(0deg,rgba(224,183,231,.035) 0 3px,transparent 3px 12px),
+    linear-gradient(145deg,#30203c,#15101b 70%);
+  box-shadow:0 0 0 8px rgba(9,6,13,.85),inset 0 0 0 4px #1c1423,0 0 54px rgba(186,100,226,.25);
+  animation:gacha-ceremony-pop .38s steps(5,end) both;
+}
+.gacha-ceremony-heading { display:flex;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:2px solid #735277;color:#e9cca1;font:700 9px var(--pixel);letter-spacing:.16em; }
+.gacha-ceremony-heading b { color:#f2cd83;letter-spacing:.2em;text-shadow:0 0 12px #edb46d; }
+.gacha-ceremony-copy { margin:13px 0 4px;text-align:center; }
+.gacha-ceremony-copy small { color:#f2c78a;font:700 13px var(--pixel);letter-spacing:.11em;text-shadow:2px 2px #231327; }
+.gacha-ceremony-copy p { margin:6px 0;color:rgba(223,201,180,.65);font:8px var(--mono); }
+.gacha-ceremony-machine-stage {
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:320px;
+  padding:15px 12px 29px;
+  overflow:hidden;
+  border:2px solid rgba(198,139,190,.45);
+  background:
+    repeating-linear-gradient(90deg,rgba(222,170,231,.035) 0 2px,transparent 2px 12px),
+    radial-gradient(ellipse at 50% 52%,rgba(170,91,196,.24),transparent 68%),
+    #100d17;
+}
+.gacha-ceremony-machine-stage::before {
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  bottom:22px;
+  height:8px;
+  border:2px solid #5b4564;
+  background:#2b1d33;
+  box-shadow:0 0 18px rgba(210,130,227,.32);
+}
+.gacha-pixel-machine.is-ceremony-machine { width:min(100%,280px);transform:translateY(-2px) scale(1.03); }
+.gacha-pixel-machine.is-ceremony-machine .gacha-machine-glass { height:190px;overflow:visible; }
+.gacha-pixel-machine.is-ceremony-machine .gacha-capsule { transform:translate(-50%,-50%); }
+.gacha-capsule-tray {
+  position:absolute;
+  z-index:1;
+  bottom:10px;
+  left:calc(50% - 50px);
+  width:100px;
+  height:22px;
+  border:3px solid #c19a72;
+  border-top:5px solid #e4c392;
+  background:#29202b;
+  box-shadow:0 5px 0 #08070a,0 0 18px rgba(215,161,102,.2);
+}
+.gacha-capsule-tray span { display:block;width:20px;height:6px;margin:5px auto;background:#7e5a7f; }
+.gacha-capsule-tray i { position:absolute;top:-5px;left:43px;width:12px;height:7px;background:#efcc8c; }
+.gacha-pixel-burst { position:absolute;inset:0;pointer-events:none;opacity:0; }
+.gacha-pixel-burst i { position:absolute;width:8px;height:8px;background:#f2d08f;box-shadow:3px 3px 0 #ac6baa; }
+.gacha-pixel-burst i:nth-child(1) { left:17%;top:25%; }
+.gacha-pixel-burst i:nth-child(2) { left:27%;top:65%;background:#8ce0d2; }
+.gacha-pixel-burst i:nth-child(3) { left:42%;top:16%; }
+.gacha-pixel-burst i:nth-child(4) { right:21%;top:23%;background:#ee9bb4; }
+.gacha-pixel-burst i:nth-child(5) { right:15%;top:61%; }
+.gacha-pixel-burst i:nth-child(6) { right:35%;top:77%;background:#8ce0d2; }
+.gacha-pixel-burst i:nth-child(7) { left:11%;top:53%;background:#ee9bb4; }
+.gacha-pixel-burst i:nth-child(8) { right:9%;top:43%; }
+.gacha-ceremony-reveal { display:none;margin-top:15px; }
+.gacha-ceremony.is-reveal .gacha-ceremony-reveal { display:block; }
+.gacha-reveal-reward {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:14px 16px 18px;
+  border:3px solid #b18a68;
+  background:
+    repeating-linear-gradient(90deg,rgba(243,207,154,.04) 0 3px,transparent 3px 12px),
+    linear-gradient(180deg,#302138,#17111d);
+  box-shadow:inset 0 0 0 3px rgba(230,188,132,.1),0 0 0 3px #22152b,0 0 28px rgba(212,133,230,.25);
+  text-align:center;
+  animation:gacha-item-reveal .7s steps(7,end) both;
+}
+.gacha-reveal-icon {
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:145px;
+  height:145px;
+  margin:2px 0 10px;
+  border:4px solid #b18b6b;
+  background:
+    repeating-linear-gradient(0deg,rgba(240,209,168,.06) 0 3px,transparent 3px 12px),
+    radial-gradient(circle,#65466c,#241a31 72%);
+  box-shadow:inset 0 0 0 4px #30213a,0 0 0 4px #20172a,0 0 30px rgba(215,151,232,.2);
+}
+.gacha-reveal-icon img {
+  position:absolute;
+  inset:10px;
+  width:calc(100% - 20px);
+  height:calc(100% - 20px);
+  object-fit:contain;
+  image-rendering:pixelated;
+  filter:drop-shadow(4px 4px 0 rgba(0,0,0,.5));
+}
+.gacha-reveal-icon span { color:#ffe0a5;font:700 65px var(--pixel);text-shadow:4px 4px #241629; }
+.gacha-reveal-rarity { margin:5px 0;color:#e8c17f;font:700 10px var(--pixel);letter-spacing:.25em;text-shadow:2px 2px #211422; }
+.gacha-reveal-reward h3 { margin:5px 0 7px;color:#fff0ce;font:700 clamp(23px,4vw,35px) var(--pixel);text-shadow:3px 3px #241426; }
+.gacha-reveal-reward p { max-width:480px;margin:0 0 10px;color:rgba(224,205,177,.68);font:9px/1.65 var(--mono); }
+.gacha-reveal-reward > strong { color:#f5d295;font:700 9px var(--pixel); }
+.gacha-reveal-reward > em { margin-top:7px;color:#efa7b7;font:normal 8px var(--pixel);letter-spacing:.12em; }
+.gacha-reveal-reward.is-refund .gacha-reveal-icon { color:#a9d5bd;font:700 64px var(--pixel); }
+.gacha-collect-button { display:block;width:100%;margin-top:14px;padding:14px;border:3px solid #e6c080;background:#6e3d6b;color:#ffe8bd;font:700 12px var(--pixel);box-shadow:4px 5px 0 #120c17; }
+.gacha-ceremony-wait { margin-top:13px;text-align:center;color:#d7b18d;font:700 8px var(--pixel);letter-spacing:.2em;animation:gacha-wait-flash .5s steps(2,end) infinite alternate; }
+
+.gacha-ceremony.is-spin .gacha-machine-lights i,
+.gacha-ceremony.is-drop .gacha-machine-lights i,
+.gacha-ceremony.is-open .gacha-machine-lights i { animation:gacha-lamp-chase .19s steps(2,end) infinite; }
+.gacha-ceremony.is-spin .gacha-machine-rotor { animation:gacha-rotor-spin .23s linear infinite; }
+.gacha-ceremony.is-spin .is-ceremony-machine { animation:gacha-machine-rumble .14s steps(2,end) infinite; }
+.gacha-ceremony.is-spin .gacha-capsule { animation:gacha-capsule-charge .27s steps(3,end) infinite alternate; }
+.gacha-ceremony.is-drop .gacha-capsule { animation:gacha-capsule-drop .82s cubic-bezier(.45,0,.7,1) both; }
+.gacha-ceremony.is-drop .gacha-capsule-tray { animation:gacha-tray-hit .4s steps(3,end) .55s both; }
+.gacha-ceremony.is-open .gacha-pixel-burst { opacity:1;animation:gacha-burst-in .45s steps(5,end) both; }
+.gacha-ceremony.is-open .gacha-capsule .capsule-top { animation:gacha-capsule-open-top .72s steps(5,end) both; }
+.gacha-ceremony.is-open .gacha-capsule .capsule-bottom { animation:gacha-capsule-open-bottom .72s steps(5,end) both; }
+.gacha-ceremony.is-open .gacha-capsule b { animation:gacha-core-flash .45s steps(3,end) .25s both; }
+.gacha-ceremony.is-reveal .gacha-ceremony-machine-stage { min-height:150px; }
+.gacha-ceremony.is-reveal .is-ceremony-machine { transform:scale(.62);transform-origin:center center; }
+.gacha-ceremony.is-reveal .gacha-ceremony-machine-stage::before { opacity:.3; }
+.gacha-ceremony.is-reveal .gacha-pixel-burst { opacity:1;animation:gacha-burst-in .8s steps(7,end) both; }
+.gacha-ceremony.is-reveal .gacha-capsule-tray { opacity:.35; }
+
+@keyframes gacha-lamp-pulse { from { filter:brightness(.65);opacity:.65; } to { filter:brightness(1.6);opacity:1; } }
+@keyframes gacha-lamp-chase { 0% { filter:brightness(.65);transform:scale(.8); } 100% { filter:brightness(2);transform:scale(1.25); } }
+@keyframes gacha-rotor-spin { from { transform:rotate(0); } to { transform:rotate(360deg); } }
+@keyframes gacha-orb-float { from { transform:translate(0,0); } to { transform:translate(4px,-7px); } }
+@keyframes gacha-capsule-idle { from { translate:0 -4px; } to { translate:0 4px; } }
+@keyframes gacha-capsule-charge { from { transform:translate(-50%,-50%) rotate(-12deg) scale(.94); } to { transform:translate(-50%,-50%) rotate(12deg) scale(1.1); } }
+@keyframes gacha-capsule-drop {
+  0% { transform:translate(-50%,-165%) rotate(-12deg) scale(.78); }
+  55% { transform:translate(-50%,44%) rotate(270deg) scale(1.04); }
+  72% { transform:translate(-50%,35%) rotate(360deg) scale(.94); }
+  100% { transform:translate(-50%,48%) rotate(360deg) scale(1); }
+}
+@keyframes gacha-capsule-open-top {
+  0% { transform:translateY(0) rotate(0); }
+  65% { transform:translate(-16px,-26px) rotate(-45deg); }
+  100% { transform:translate(-22px,-34px) rotate(-60deg); }
+}
+@keyframes gacha-capsule-open-bottom {
+  0% { transform:translateY(0); }
+  65% { transform:translate(14px,20px) rotate(35deg); }
+  100% { transform:translate(18px,28px) rotate(55deg); }
+}
+@keyframes gacha-core-flash { 0% { opacity:1;transform:translate(-50%,-50%) scale(1); } 50% { opacity:.2;transform:translate(-50%,-50%) scale(3); } 100% { opacity:0;transform:translate(-50%,-50%) scale(4); } }
+@keyframes gacha-tray-hit { 0%,100% { transform:translateY(0); } 35% { transform:translateY(5px); } 65% { transform:translateY(-2px); } }
+@keyframes gacha-burst-in { 0% { opacity:0;transform:scale(.15); } 55% { opacity:1;transform:scale(1.2); } 100% { opacity:.7;transform:scale(1); } }
+@keyframes gacha-item-reveal { 0% { opacity:0;transform:translateY(30px) scale(.45);filter:brightness(2); } 45% { opacity:1;transform:translateY(-7px) scale(1.08); } 100% { opacity:1;transform:translateY(0) scale(1);filter:brightness(1); } }
+@keyframes gacha-machine-rumble { 0% { translate:-2px 0; } 50% { translate:2px 1px; } 100% { translate:0 -1px; } }
+@keyframes gacha-button-glow { from { filter:brightness(.92);box-shadow:inset 0 0 0 3px rgba(255,220,176,.12),4px 5px 0 #1a1120,0 0 9px rgba(208,107,204,.16); } to { filter:brightness(1.17);box-shadow:inset 0 0 0 3px rgba(255,220,176,.12),4px 5px 0 #1a1120,0 0 21px rgba(225,126,231,.38); } }
+@keyframes gacha-backdrop-in { from { opacity:0; } to { opacity:1; } }
+@keyframes gacha-ceremony-pop { 0% { opacity:0;transform:translateY(15px) scale(.95); } 100% { opacity:1;transform:translateY(0) scale(1); } }
+@keyframes gacha-wait-flash { from { opacity:.55; } to { opacity:1; } }
+
+@media(max-width:1100px) {
+  .merchant-main-grid { grid-template-columns:minmax(0,1fr) minmax(300px,.82fr);gap:12px; }
+  .merchant-item-card { grid-template-columns:92px minmax(0,1fr); }
+  .merchant-stall-stock { flex-basis:72px;margin:10px; }
+}
+@media(max-width:850px) {
+  .merchant-main-grid { grid-template-columns:minmax(0,1fr); }
+  .merchant-stock-panel { min-height:0; }
+  .gacha-panel { display:flex; }
+  .gacha-showcase-frame { min-height:330px; }
+  .gacha-pixel-machine { width:min(100%,265px); }
+}
+@media(max-width:600px) {
+  .merchant-stock-panel { padding:0 11px 13px; }
+  .merchant-stall-header { min-height:80px;margin:0 -11px 13px; }
+  .merchant-awning { flex-basis:60px; }
+  .merchant-stall-name { padding:8px;gap:5px; }
+  .merchant-stall-name b { font-size:14px; }
+  .merchant-stall-stock { flex-basis:55px;margin:8px 6px; }
+  .merchant-stall-stock strong { font-size:19px; }
+  .merchant-stock-grid { grid-template-columns:minmax(0,1fr);gap:8px; }
+  .merchant-item-card { grid-template-columns:86px minmax(0,1fr);min-height:145px;padding:8px; }
+  .merchant-item-art { min-height:78px; }
+  .merchant-item-art span { font-size:34px; }
+  .merchant-stock-footer { align-items:stretch;flex-direction:column; }
+  .merchant-stock-footer .game-action { width:100%; }
+  .merchant-supplies-details summary { align-items:flex-start;flex-wrap:wrap; }
+  .gacha-showcase-frame { min-height:300px;padding:13px 6px; }
+  .gacha-pixel-machine { width:min(100%,235px);padding:10px 12px 12px; }
+  .gacha-machine-glass { height:150px; }
+  .gacha-machine-rotor { width:105px;height:105px; }
+  .gacha-ceremony { padding:9px; }
+  .gacha-ceremony-card { width:100%;max-height:calc(100vh - 18px);padding:12px 10px 14px; }
+  .gacha-ceremony-machine-stage { min-height:270px;padding:8px 5px 24px; }
+  .gacha-pixel-machine.is-ceremony-machine { width:min(100%,245px); }
+  .gacha-pixel-machine.is-ceremony-machine .gacha-machine-glass { height:160px; }
+  .gacha-reveal-icon { width:110px;height:110px; }
+  .gacha-reveal-icon span { font-size:48px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .gacha-showcase-lights i,.gacha-pixel-machine,.gacha-machine-rotor,.gacha-orb,.gacha-capsule,
+  .gacha-ceremony *, .gacha-pull-button { animation:none !important;transition:none !important; }
+}
+body.reduce-motion .gacha-showcase-lights i,body.reduce-motion .gacha-pixel-machine,
+body.reduce-motion .gacha-machine-rotor,body.reduce-motion .gacha-orb,body.reduce-motion .gacha-capsule,
+body.reduce-motion .gacha-ceremony *,body.reduce-motion .gacha-pull-button { animation:none !important;transition:none !important; }
