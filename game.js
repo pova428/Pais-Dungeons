@@ -220,7 +220,8 @@
     });
     return {
       siteId,encounterVersion:2,round:1,order:[],turnIndex:0,currentTurnStarted:null,startingVitals,
-      enemies,shields:{},shieldTurns:{},buffs:{},debuffs:{},pendingSkillId:null,targetMode:null,status:"active",
+      enemies,shields:{},shieldTurns:{},buffs:{},debuffs:{},pendingSkillId:null,targetMode:null,
+      actionAnimation:null,floatingNumbers:[],nextFloatingNumberId:1,status:"active",
       log:["La compañía entra en la sala. ¡Comienza el combate!"]
     };
   }
@@ -305,51 +306,74 @@
   }
 
   function applyEnemyDamage(enemy,amount) {
-    const damage = Math.max(1,Math.round(amount));
-    enemy.hp = Math.max(0,enemy.hp-damage);
-    pushBattleLog(enemy.name + " recibe " + damage + " de daño.");
-    if (enemy.hp <= 0) pushBattleLog(enemy.name + " ha sido derrotado.");
+    const before=Math.max(0,Number(enemy.hp)||0);
+    const damage=Math.max(1,Math.round(amount));
+    enemy.hp=Math.max(0,before-damage);
+    const actual=before-enemy.hp;
+    if(actual>0) addBattleFloatingNumber("enemy",enemy.id,actual,"damage");
+    pushBattleLog(enemy.name+" recibe "+actual+" de daño.");
+    if(enemy.hp<=0) pushBattleLog(enemy.name+" ha sido derrotado.");
+    return actual;
   }
 
   function applyHeroDamage(heroId,amount) {
-    const character = characters.find((entry) => entry.id === heroId);
-    if (!character) return 0;
-    const level = state.levels[heroId] || 1;
-    const maxHp = getCharacterStats(character,level).hp;
-    let damage = Math.max(1,Math.round(amount));
+    const character=characters.find((entry)=>entry.id===heroId);
+    if(!character) return 0;
+    const level=state.levels[heroId]||1;
+    const maxHp=getCharacterStats(character,level).hp;
+    let damage=Math.max(1,Math.round(amount));
     const curse=state.battle.debuffs[heroId];
     if(curse && curse.turns>0) {
       damage=Math.ceil(damage*(1+(curse.damageTaken||.18)));
       pushBattleLog(character.name+" sufre daño amplificado por la maldición.");
     }
-    const shield = state.battle.shields[heroId] || 0;
-    if (shield > 0) {
-      const absorbed = Math.min(shield,damage);
-      state.battle.shields[heroId] -= absorbed;
-      damage -= absorbed;
-      pushBattleLog(character.name + " bloquea " + absorbed + " con su escudo.");
-      if (state.battle.shields[heroId] <= 0) {
+    const shield=state.battle.shields[heroId]||0;
+    if(shield>0) {
+      const absorbed=Math.min(shield,damage);
+      state.battle.shields[heroId]-=absorbed;
+      damage-=absorbed;
+      if(absorbed>0) addBattleFloatingNumber("ally",heroId,absorbed,"shield");
+      pushBattleLog(character.name+" bloquea "+absorbed+" con su escudo.");
+      if(state.battle.shields[heroId]<=0) {
         delete state.battle.shields[heroId];
         delete state.battle.shieldTurns[heroId];
-        pushBattleLog("El escudo de " + character.name + " se rompe.");
+        pushBattleLog("El escudo de "+character.name+" se rompe.");
       }
     }
-    const current = Math.max(0,Number(state.hp[heroId]) || 0);
-    const actual = Math.min(current,damage);
-    state.hp[heroId] = Math.max(0,current-damage);
-    if (actual > 0) pushBattleLog(character.name + " pierde " + actual + " PV.");
-    if (state.hp[heroId] <= 0) pushBattleLog(character.name + " queda fuera de combate.");
+    const current=Math.max(0,Number(state.hp[heroId])||0);
+    const actual=Math.min(current,damage);
+    state.hp[heroId]=Math.max(0,current-damage);
+    if(actual>0) {
+      addBattleFloatingNumber("ally",heroId,actual,"damage");
+      pushBattleLog(character.name+" pierde "+actual+" PV.");
+    }
+    if(state.hp[heroId]<=0) pushBattleLog(character.name+" queda fuera de combate.");
     return actual;
   }
 
   function healHero(heroId,amount) {
-    const character = characters.find((entry) => entry.id === heroId);
-    if (!character) return 0;
-    const maxHp = getCharacterStats(character,state.levels[heroId] || 1).hp;
-    const current = Math.max(0,Number(state.hp[heroId]) || 0);
-    const healed = Math.min(maxHp-current,Math.max(0,Math.round(amount)));
-    state.hp[heroId] = current+healed;
-    if (healed > 0) pushBattleLog(character.name + " recupera " + healed + " PV.");
+    const character=characters.find((entry)=>entry.id===heroId);
+    if(!character) return 0;
+    const maxHp=getCharacterStats(character,state.levels[heroId]||1).hp;
+    const current=Math.max(0,Number(state.hp[heroId])||0);
+    const healed=Math.min(maxHp-current,Math.max(0,Math.round(amount)));
+    state.hp[heroId]=current+healed;
+    if(healed>0) {
+      addBattleFloatingNumber("ally",heroId,healed,"heal");
+      pushBattleLog(character.name+" recupera "+healed+" PV.");
+    }
+    return healed;
+  }
+
+  function healEnemy(enemyId,amount,sourceName) {
+    const enemy=state.battle.enemies.find((entry)=>entry.id===enemyId && entry.hp>0);
+    if(!enemy) return 0;
+    const healed=Math.min(enemy.maxHp-enemy.hp,Math.max(0,Math.round(amount)));
+    enemy.hp+=healed;
+    if(healed>0) {
+      addBattleFloatingNumber("enemy",enemy.id,healed,"heal");
+      pushBattleLog((sourceName || "Un enemigo")+" cura a "+enemy.name+" y recupera "+healed+" PV.");
+    }
     return healed;
   }
 
@@ -401,9 +425,8 @@
         .filter((other)=>other.id!==enemy.id && other.hp>0 && other.hp<other.maxHp*.78)
         .sort((a,b)=>(a.hp/a.maxHp)-(b.hp/b.maxHp))[0];
       if(wounded) {
-        const healed=Math.min(wounded.maxHp-wounded.hp,Math.max(5,Math.round(wounded.maxHp*.13)));
-        wounded.hp+=healed;
-        pushBattleLog(enemy.name+" repara a "+wounded.name+" y recupera "+healed+" PV.");
+        const healed=healEnemy(wounded.id,Math.max(5,Math.round(wounded.maxHp*.13)),enemy.name);
+        if (!healed) pushBattleLog(enemy.name+" intenta reparar a un aliado, pero ya está al máximo.");
         return;
       }
     }
@@ -430,7 +453,7 @@
 
   function processBattleUntilPlayerTurn() {
     const battle=state.battle;
-    if(!battle || battle.status!=="active") return;
+    if(!battle || battle.status!=="active" || battle.actionAnimation) return;
     let safety=0;
     while(battle.status==="active" && safety<30) {
       safety+=1;
@@ -478,22 +501,8 @@
       }
       state.notice="Turno de "+enemy.name+".";
       battle.currentTurnStarted=enemy.id;
+      startBattleAction("enemy",enemy.id,"attack",null,null);
       saveState();
-      renderCampaign();
-      if(battleTurnTimer!==null) return;
-      battleTurnTimer=window.setTimeout(()=>{
-        battleTurnTimer=null;
-        if(!state || campaign.hidden || state.tab!=="battle" || state.battle!==battle || battle.status!=="active") return;
-        const stillCurrent=getActiveBattleActor();
-        if(!stillCurrent || stillCurrent.side!=="enemy" || stillCurrent.id!==enemy.id) return;
-        applyBurnAtEnemyTurn(enemy);
-        if(enemy.hp>0) performEnemyTurn(enemy);
-        battle.currentTurnStarted=null;
-        battle.turnIndex+=1;
-        processBattleUntilPlayerTurn();
-        saveState();
-        renderCampaign();
-      },520);
       return;
     }
     saveState();
@@ -531,7 +540,7 @@
   function chooseBattleSkill(skillId) {
     const battle = state.battle;
     const actor = getActiveBattleActor();
-    if (!battle || !actor || actor.side !== "ally" || battle.status !== "active") return;
+    if (!battle || !actor || actor.side !== "ally" || battle.status !== "active" || battle.actionAnimation) return;
     const character = characters.find((entry) => entry.id === actor.id);
     const skill = skillId === BASIC_ATTACK.id ? BASIC_ATTACK : character.skills.find((entry) => entry.id === skillId);
     if (!skill) return;
@@ -550,60 +559,51 @@
     executeBattleSkill(character,skill,null);
   }
 
-  function executeBattleSkill(character,skill,targetId) {
-    const battle = state.battle;
-    if (!battle || battle.status !== "active") return;
-    const actor = getActiveBattleActor();
-    if (!actor || actor.side !== "ally" || actor.id !== character.id) return;
-    const stats = getCharacterStats(character,state.levels[character.id] || 1);
-    if ((Number(state.mp[character.id]) || 0) < skill.manaCost) return showNotice("No tienes maná suficiente.");
-    const enemy = battle.enemies.find((entry) => entry.id === targetId && entry.hp > 0);
-    const ally = characters.find((entry) => entry.id === targetId && state.party.includes(entry.id) && (Number(state.hp[entry.id]) || 0) > 0);
-    if (skill.target === "enemy" && !enemy) return showNotice("Selecciona un enemigo válido.");
-    if (skill.target === "ally" && !ally) return showNotice("Selecciona un compañero válido.");
-    state.mp[character.id] -= skill.manaCost;
-    const freshShieldIds = new Set();
-    const damageMultiplier = battle.buffs[character.id] && battle.buffs[character.id].attack > 0 ? 1+battle.buffs[character.id].attack : 1;
-    const targetDamage = (ratio,magic) => Math.round((magic ? stats.magic : stats.attack)*ratio*damageMultiplier);
+  function resolvePlayerSkillEffect(character,skill,targetId) {
+    const battle=state.battle;
+    const stats=getCharacterStats(character,state.levels[character.id]||1);
+    const enemy=battle.enemies.find((entry)=>entry.id===targetId && entry.hp>0);
+    const ally=characters.find((entry)=>entry.id===targetId && state.party.includes(entry.id) && (Number(state.hp[entry.id])||0)>0);
+    const freshShieldIds=new Set();
+    const damageMultiplier=battle.buffs[character.id] && battle.buffs[character.id].attack>0 ? 1+battle.buffs[character.id].attack : 1;
+    const targetDamage=(ratio,magic)=>Math.round((magic?stats.magic:stats.attack)*ratio*damageMultiplier);
+
     switch(skill.id) {
       case "basic-attack":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(.7,false));
+        if(enemy) applyEnemyDamage(enemy,targetDamage(.7,false));
         break;
       case "arcane-bolt":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(.9,true)+1);
+        if(enemy) applyEnemyDamage(enemy,targetDamage(.9,true)+1);
         break;
       case "burn-mark":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(.55,true)+1);
-        if (enemy.hp > 0) { enemy.burn=2; enemy.burnDamage=Math.max(2,Math.round(stats.magic*.2)); }
+        if(enemy) {
+          applyEnemyDamage(enemy,targetDamage(.55,true)+1);
+          if(enemy.hp>0) { enemy.burn=2; enemy.burnDamage=Math.max(2,Math.round(stats.magic*.2)); }
+        }
         break;
       case "nova":
-        battle.enemies.filter((entry) => entry.hp>0).forEach((entry) => applyEnemyDamage(entry,targetDamage(.85,true)));
+        battle.enemies.filter((entry)=>entry.hp>0).forEach((entry)=>applyEnemyDamage(entry,targetDamage(.85,true)));
         break;
       case "stab":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(1,false)+1);
+        if(enemy) applyEnemyDamage(enemy,targetDamage(1,false)+1);
         break;
       case "multi-stab":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        for(let hit=0;hit<3 && enemy.hp>0;hit++) applyEnemyDamage(enemy,targetDamage(.35,false));
+        if(enemy) for(let hit=0;hit<3 && enemy.hp>0;hit++) applyEnemyDamage(enemy,targetDamage(.35,false));
         break;
       case "brothers":
-        battle.enemies.filter((entry) => entry.hp>0).slice(0,3).forEach((entry) => {
+        battle.enemies.filter((entry)=>entry.hp>0).slice(0,3).forEach((entry)=>{
           for(let hit=0;hit<2 && entry.hp>0;hit++) applyEnemyDamage(entry,targetDamage(.5,false));
         });
         break;
       case "antivirus":
-        if (!ally) return showNotice("Selecciona un compañero válido.");
-        healHero(ally.id,stats.magic*.9+6);
+        if(ally) healHero(ally.id,stats.magic*.9+6);
         break;
       case "life-drain":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        const drained = targetDamage(.8,true)+2;
-        applyEnemyDamage(enemy,drained);
-        healHero(character.id,Math.ceil(drained*.35));
+        if(enemy) {
+          const drained=targetDamage(.8,true)+2;
+          applyEnemyDamage(enemy,drained);
+          healHero(character.id,Math.ceil(drained*.35));
+        }
         break;
       case "reboot":
         getAliveParty().sort((a,b)=>{
@@ -612,31 +612,35 @@
         }).slice(0,3).forEach((id)=>healHero(id,stats.magic*.75+8));
         break;
       case "protective-shield":
-        if (!ally) return showNotice("Selecciona un compañero válido.");
-        const allyMax=getCharacterStats(ally,state.levels[ally.id]||1).hp;
-        battle.shields[ally.id]=Math.round(allyMax*.22);
-        battle.shieldTurns[ally.id]=2;
-        freshShieldIds.add(ally.id);
-        pushBattleLog(ally.name+" recibe un escudo de "+battle.shields[ally.id]+" puntos durante sus próximos 2 turnos.");
+        if(ally) {
+          const allyMax=getCharacterStats(ally,state.levels[ally.id]||1).hp;
+          battle.shields[ally.id]=Math.round(allyMax*.22);
+          battle.shieldTurns[ally.id]=2;
+          freshShieldIds.add(ally.id);
+          addBattleFloatingNumber("ally",ally.id,battle.shields[ally.id],"shield");
+          pushBattleLog(ally.name+" recibe un escudo de "+battle.shields[ally.id]+" puntos durante sus próximos 2 turnos.");
+        }
         break;
       case "knockdown":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(.9,false));
-        if(enemy.hp>0){enemy.stun=1;pushBattleLog(enemy.name+" queda derribado.");}
+        if(enemy) {
+          applyEnemyDamage(enemy,targetDamage(.9,false));
+          if(enemy.hp>0) { enemy.stun=1; pushBattleLog(enemy.name+" queda derribado."); }
+        }
         break;
       case "team-bastion":
         getAliveParty().forEach((id)=>{
           const allyChar=characters.find((entry)=>entry.id===id);
           const max=getCharacterStats(allyChar,state.levels[id]||1).hp;
-          battle.shields[id]=(battle.shields[id]||0)+Math.round(max*.15);
+          const amount=Math.round(max*.15);
+          battle.shields[id]=(battle.shields[id]||0)+amount;
           battle.shieldTurns[id]=Math.max(2,battle.shieldTurns[id]||0);
           freshShieldIds.add(id);
+          addBattleFloatingNumber("ally",id,amount,"shield");
         });
         pushBattleLog("Ivan levanta un bastión que protege a toda la compañía durante 2 turnos de cada aliado.");
         break;
       case "balonazo":
-        if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(.8,false)+1);
+        if(enemy) applyEnemyDamage(enemy,targetDamage(.8,false)+1);
         break;
       case "modo-mujer":
         battle.buffs[character.id]={attack:.2,speed:.1,turns:2};
@@ -646,49 +650,115 @@
         battle.enemies.filter((entry)=>entry.hp>0).forEach((entry)=>applyEnemyDamage(entry,targetDamage(1.05,false)));
         break;
       default:
-        return showNotice("Esta habilidad todavía no está implementada.");
+        pushBattleLog("La habilidad "+skill.name+" todavía no tiene un efecto definido.");
+        break;
     }
     pushBattleLog(character.name+" utiliza "+skill.name+".");
-    if (battle.buffs[character.id] && skill.id !== "modo-mujer") {
-      battle.buffs[character.id].turns -= 1;
-      if(battle.buffs[character.id].turns<=0) {
-        delete battle.buffs[character.id];
-        pushBattleLog(character.name + " ya no está bajo los efectos de su mejora.");
+    return [...freshShieldIds];
+  }
+
+  function completeHeroTurn(characterId,freshShieldIds) {
+    const battle=state.battle;
+    const character=characters.find((entry)=>entry.id===characterId);
+    if(!character) return;
+    const fresh=new Set(freshShieldIds || []);
+    if(battle.buffs[characterId] && battle.actionAnimationActionId!=="modo-mujer") {
+      battle.buffs[characterId].turns-=1;
+      if(battle.buffs[characterId].turns<=0) {
+        delete battle.buffs[characterId];
+        pushBattleLog(character.name+" ya no está bajo los efectos de su mejora.");
       }
     }
-    const shieldTurns=battle.shieldTurns[character.id]||0;
-    if(shieldTurns>0 && !freshShieldIds.has(character.id)) {
-      battle.shieldTurns[character.id]=shieldTurns-1;
-      if(battle.shieldTurns[character.id]<=0) {
-        delete battle.shieldTurns[character.id];
-        delete battle.shields[character.id];
-        pushBattleLog("El escudo de " + character.name + " se desvanece.");
+    const shieldTurns=battle.shieldTurns[characterId]||0;
+    if(shieldTurns>0 && !fresh.has(characterId)) {
+      battle.shieldTurns[characterId]=shieldTurns-1;
+      if(battle.shieldTurns[characterId]<=0) {
+        delete battle.shieldTurns[characterId];
+        delete battle.shields[characterId];
+        pushBattleLog("El escudo de "+character.name+" se desvanece.");
       }
     }
-    battle.pendingSkillId=null;
-    battle.targetMode=null;
-    battle.currentTurnStarted=null;
-    const curse=battle.debuffs[character.id];
+    const curse=battle.debuffs[characterId];
     if(curse && curse.turns>0) {
       curse.turns-=1;
       if(curse.turns<=0) {
-        delete battle.debuffs[character.id];
+        delete battle.debuffs[characterId];
         pushBattleLog("La maldición sobre "+character.name+" desaparece.");
       }
     }
-    if (battle.enemies.every((entry)=>entry.hp<=0)) {
+  }
+
+  function advanceBattleAction() {
+    const battle=state && state.battle;
+    if(!battle || battle.status!=="active" || !battle.actionAnimation) return;
+    const animation=battle.actionAnimation;
+
+    if(animation.frame===1) {
+      animation.frame=2;
+      if(!animation.resolved) {
+        if(animation.side==="ally") {
+          const character=characters.find((entry)=>entry.id===animation.actorId);
+          const skill=animation.actionId===BASIC_ATTACK.id ? BASIC_ATTACK : character && character.skills.find((entry)=>entry.id===animation.actionId);
+          if(character && skill) animation.freshShieldIds=resolvePlayerSkillEffect(character,skill,animation.targetId);
+        } else {
+          const enemy=battle.enemies.find((entry)=>entry.id===animation.actorId);
+          if(enemy && enemy.hp>0) {
+            applyBurnAtEnemyTurn(enemy);
+            if(enemy.hp>0) performEnemyTurn(enemy);
+          }
+        }
+        animation.resolved=true;
+      }
+      saveState();
+      renderCampaign();
+      scheduleBattleActionStep(BATTLE_ACTION_FRAME_DELAY);
+      return;
+    }
+
+    if(animation.frame===2) {
+      animation.frame=3;
+      saveState();
+      renderCampaign();
+      scheduleBattleActionStep(BATTLE_ACTION_RECOVERY_DELAY);
+      return;
+    }
+
+    battle.actionAnimation=null;
+    battle.currentTurnStarted=null;
+    if(animation.side==="ally") {
+      completeHeroTurn(animation.actorId,animation.freshShieldIds);
+    }
+    if(battle.enemies.every((enemy)=>enemy.hp<=0)) {
       setBattleVictory();
+    } else if(getAliveParty().length===0) {
+      setBattleDefeat();
     } else {
-      battle.turnIndex += 1;
+      battle.turnIndex+=1;
       processBattleUntilPlayerTurn();
     }
     saveState();
     renderCampaign();
   }
 
+  function executeBattleSkill(character,skill,targetId) {
+    const battle=state.battle;
+    if(!battle || battle.status!=="active" || battle.actionAnimation) return;
+    const actor=getActiveBattleActor();
+    if(!actor || actor.side!=="ally" || actor.id!==character.id) return;
+    if((Number(state.mp[character.id])||0)<skill.manaCost) return showNotice("No tienes maná suficiente.");
+    const enemy=battle.enemies.find((entry)=>entry.id===targetId && entry.hp>0);
+    const ally=characters.find((entry)=>entry.id===targetId && state.party.includes(entry.id) && (Number(state.hp[entry.id])||0)>0);
+    if(skill.target==="enemy" && !enemy) return showNotice("Selecciona un enemigo válido.");
+    if(skill.target==="ally" && !ally) return showNotice("Selecciona un compañero válido.");
+    state.mp[character.id]-=skill.manaCost;
+    battle.pendingSkillId=null;
+    battle.targetMode=null;
+    startBattleAction("ally",character.id,skill.id,targetId,skill.target);
+  }
+
   function chooseBattleTarget(targetId,targetSide) {
     const battle=state.battle;
-    if(!battle || !battle.pendingSkillId) return;
+    if(!battle || !battle.pendingSkillId || battle.actionAnimation) return;
     const actor=getActiveBattleActor();
     if(!actor || actor.side!=="ally") return;
     const character=characters.find((entry)=>entry.id===actor.id);
@@ -712,7 +782,7 @@
     levels:{guardian:1,duelist:1,arcanist:1,tracker:1,alchemist:1},
     xp:{guardian:0,duelist:0,arcanist:0,tracker:0,alchemist:0},
     battle:null,
-    characterDataVersion:5,
+    characterDataVersion:6,
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
     battleSiteId:"institute-programming",
@@ -726,12 +796,116 @@
   let state = null;
   let lastFocusedElement = null;
   let battleTurnTimer = null;
+  let battleActionTimer = null;
+  const battleFloatTimers = new Set();
+  const BATTLE_ACTION_FRAME_DELAY = 380;
+  const BATTLE_ACTION_RECOVERY_DELAY = 320;
 
   function clearBattleTimer() {
     if (battleTurnTimer !== null) {
       window.clearTimeout(battleTurnTimer);
       battleTurnTimer = null;
     }
+    if (battleActionTimer !== null) {
+      window.clearTimeout(battleActionTimer);
+      battleActionTimer = null;
+    }
+  }
+
+  function addBattleFloatingNumber(targetSide,targetId,amount,type) {
+    const battle=state && state.battle;
+    if (!battle || !Number.isFinite(amount) || amount<=0) return;
+    if (!Array.isArray(battle.floatingNumbers)) battle.floatingNumbers=[];
+    const id=battle.nextFloatingNumberId || 1;
+    battle.nextFloatingNumberId=id+1;
+    const entry={id,targetSide,targetId,amount:Math.round(amount),type,createdAt:Date.now()};
+    battle.floatingNumbers.push(entry);
+    battle.floatingNumbers=battle.floatingNumbers.slice(-18);
+    const animation=battle.actionAnimation;
+    if (animation && animation.frame>=2) {
+      if (!Array.isArray(animation.targets)) animation.targets=[];
+      if (!animation.targets.some((target)=>target.side===targetSide && target.id===targetId)) {
+        animation.targets.push({side:targetSide,id:targetId});
+      }
+    }
+    let timerId=null;
+    timerId=window.setTimeout(()=>{
+      battleFloatTimers.delete(timerId);
+      if (!state || state.battle!==battle) return;
+      battle.floatingNumbers=(battle.floatingNumbers||[]).filter((number)=>number.id!==id);
+      saveState();
+      if (!campaign.hidden && state.tab==="battle") renderCampaign();
+    },1450);
+    battleFloatTimers.add(timerId);
+  }
+
+  function getBattleAnimationFx(actionId,side,actorId) {
+    if (side==="enemy") {
+      const enemy=state.battle && state.battle.enemies.find((entry)=>entry.id===actorId);
+      if (enemy && enemy.ai==="support") return "healing";
+      if (enemy && enemy.ai==="hexer") return "curse";
+      if (enemy && enemy.ai==="boss") return "heavy";
+      if (enemy && enemy.ai==="bruiser") return "heavy";
+      return "slash";
+    }
+    const effects={
+      "basic-attack":"slash","arcane-bolt":"magic","burn-mark":"fire","nova":"nova",
+      "stab":"slash","multi-stab":"multi-slash","brothers":"summon",
+      "antivirus":"healing","life-drain":"drain","reboot":"healing-aura",
+      "protective-shield":"shield","knockdown":"heavy","team-bastion":"shield-aura",
+      "balonazo":"impact","modo-mujer":"buff","field-finish":"impact-area"
+    };
+    return effects[actionId] || "magic";
+  }
+
+  function scheduleBattleActionStep(delay) {
+    if (battleActionTimer!==null) window.clearTimeout(battleActionTimer);
+    battleActionTimer=window.setTimeout(()=>{
+      battleActionTimer=null;
+      advanceBattleAction();
+    },delay);
+  }
+
+  function startBattleAction(side,actorId,actionId,targetId,targetType) {
+    const battle=state && state.battle;
+    if (!battle || battle.status!=="active" || battle.actionAnimation) return;
+    const targets=[];
+    if (side==="ally") {
+      const actor=characters.find((entry)=>entry.id===actorId);
+      const skill=actionId===BASIC_ATTACK.id ? BASIC_ATTACK : actor && actor.skills.find((entry)=>entry.id===actionId);
+      if (skill) {
+        if (skill.target==="enemy") {
+          if (targetId) targets.push({side:"enemy",id:targetId});
+        } else if (skill.target==="ally") {
+          if (targetId) targets.push({side:"ally",id:targetId});
+        } else if (skill.target==="self") {
+          targets.push({side:"ally",id:actorId});
+        } else if (skill.target==="all-enemies") {
+          battle.enemies.filter((enemy)=>enemy.hp>0).forEach((enemy)=>targets.push({side:"enemy",id:enemy.id}));
+        } else if (skill.target==="all-allies") {
+          getAliveParty().forEach((id)=>targets.push({side:"ally",id}));
+        }
+      }
+    }
+    battle.actionAnimation={
+      side,actorId,actionId,targetId:targetId || null,targetType:targetType || null,
+      frame:1,resolved:false,targets,fx:getBattleAnimationFx(actionId,side,actorId),
+      freshShieldIds:[]
+    };
+    battle.pendingSkillId=null;
+    battle.targetMode=null;
+    state.notice=(side==="ally" ? characters.find((entry)=>entry.id===actorId).name : (battle.enemies.find((entry)=>entry.id===actorId)||{}).name)+" prepara una acción.";
+    saveState();
+    renderCampaign();
+    scheduleBattleActionStep(BATTLE_ACTION_FRAME_DELAY);
+  }
+
+  function resumeBattleAction() {
+    const battle=state && state.battle;
+    if (!battle || !battle.actionAnimation || battle.status!=="active") return false;
+    if (battleActionTimer!==null) return true;
+    scheduleBattleActionStep(BATTLE_ACTION_FRAME_DELAY);
+    return true;
   }
   const SETTINGS_KEY = "the-five-settings";
   const SAVE_KEY = "pais-dungeon-campaign-v3";
@@ -809,7 +983,7 @@
       const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
       const merged = Object.assign(defaults,saved,{
         inventory:Object.assign({},defaults.inventory,saved.inventory || {}),
-        hp,mp,levels,xp,characterDataVersion:5,
+        hp,mp,levels,xp,characterDataVersion:6,
         battle:saved.battle && typeof saved.battle === "object" ? saved.battle : null,
         visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
@@ -836,6 +1010,10 @@
         if (!savedBattle.shieldTurns || typeof savedBattle.shieldTurns !== "object") savedBattle.shieldTurns={};
         if (!savedBattle.buffs || typeof savedBattle.buffs !== "object") savedBattle.buffs={};
         if (!savedBattle.debuffs || typeof savedBattle.debuffs !== "object") savedBattle.debuffs={};
+        if (!Array.isArray(savedBattle.floatingNumbers)) savedBattle.floatingNumbers=[];
+        savedBattle.floatingNumbers=savedBattle.floatingNumbers.filter((entry)=>Date.now()-(entry.createdAt||0)<1600);
+        if (!Number.isFinite(savedBattle.nextFloatingNumberId)) savedBattle.nextFloatingNumberId=1;
+        if (savedBattle.actionAnimation && typeof savedBattle.actionAnimation!=="object") savedBattle.actionAnimation=null;
         if (!savedBattle.startingVitals) {
           savedBattle.startingVitals={};
           merged.party.forEach((id)=>{
@@ -858,7 +1036,7 @@
 
   function saveState() {
     if (!state) return;
-    state.characterDataVersion = 5;
+    state.characterDataVersion = 6;
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (error) {
       state.notice = "No se ha podido guardar en este navegador. La partida seguirá activa mientras no cierres la página.";
     }
@@ -883,11 +1061,15 @@
     campaign.hidden = false;
     renderCampaign();
     if (state.tab === "battle" && state.battle && state.battle.status === "active") {
-      if (!Array.isArray(state.battle.order) || !state.battle.order.length) {
-        state.battle.order=getBattleOrder();
-        state.battle.turnIndex=0;
+      if (state.battle.actionAnimation) {
+        resumeBattleAction();
+      } else {
+        if (!Array.isArray(state.battle.order) || !state.battle.order.length) {
+          state.battle.order=getBattleOrder();
+          state.battle.turnIndex=0;
+        }
+        processBattleUntilPlayerTurn();
       }
-      processBattleUntilPlayerTurn();
       renderCampaign();
     }
   }
@@ -1152,9 +1334,15 @@
       const buff=battle.buffs[id]||null;
       const debuff=battle.debuffs[id]||null;
       const targetAttrs=isTarget ? 'data-action="battle-target" data-target-id="'+id+'" data-target-side="ally" role="button" tabindex="0" aria-label="Elegir a '+character.name+' como objetivo"' : "";
-      return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
+      const animation=battle.actionAnimation;
+      const isAttacking=Boolean(animation && animation.side==="ally" && animation.actorId===id);
+      const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="ally" && target.id===id));
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="ally" && number.targetId===id).map((number)=>'<span class="battle-floating-number is-'+number.type+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const spriteMarkup=isAttacking ? '<img class="battle-action-sprite hero-action-sprite" src="assets/battles/animations/heroes/'+id+'/'+animation.actionId+'/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
+      const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
+      return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
-          '<div class="battle-pixel-figure figure-'+id+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>' +
+          '<div class="battle-pixel-figure figure-'+id+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+character.role+'</span>' +
         '</div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+character.name+'</strong><em>«'+character.title+'»</em></div>' +
@@ -1171,9 +1359,15 @@
       const activeEnemy=Boolean(currentActor && currentActor.side==="enemy" && currentActor.id===enemy.id);
       const isTarget=battle.targetMode==="enemy" && enemy.hp>0;
       const targetAttrs=isTarget?'data-action="battle-target" data-target-id="'+enemy.id+'" data-target-side="enemy" role="button" tabindex="0" aria-label="Atacar a '+enemy.name+'"':'';
-      return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+'" '+targetAttrs+'>' +
+      const animation=battle.actionAnimation;
+      const isAttacking=Boolean(animation && animation.side==="enemy" && animation.actorId===enemy.id);
+      const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="enemy" && target.id===enemy.id));
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="enemy" && number.targetId===enemy.id).map((number)=>'<span class="battle-floating-number is-'+number.type+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const spriteMarkup=isAttacking ? '<img class="battle-action-sprite enemy-action-sprite" src="assets/battles/animations/enemies/'+enemy.id+'/attack/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
+      const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
+      return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">E0'+(index+1)+'</span>' +
-          '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>' +
+          '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+enemy.role+'</span></div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+enemy.name+'</strong></div>' +
           '<div class="battle-unit-life"><span>♥ PV</span><b>'+enemy.hp+'/'+enemy.maxHp+'</b></div><div class="battle-hp-track enemy-hp-track"><i style="width:'+ratio+'%"></i></div>' +
@@ -1187,7 +1381,7 @@
       const level=state.levels[activeHero.id]||1;
       const unlocked=level>=skill.unlockLevel;
       const enoughMana=(Number(state.mp[activeHero.id])||0)>=skill.manaCost;
-      const disabled=!unlocked || !enoughMana || battle.status!=="active";
+      const disabled=!unlocked || !enoughMana || battle.status!=="active" || Boolean(battle.actionAnimation);
       const selected=battle.pendingSkillId===skill.id;
       const helpText=!unlocked ? "Se desbloquea en nivel "+skill.unlockLevel : !enoughMana ? "Necesitas "+skill.manaCost+" PM" : "Usar "+skill.name;
       return '<button class="battle-skill-button '+(unlocked?"is-unlocked":"is-locked")+(selected?" is-selected":"")+'" type="button" data-action="battle-skill" data-skill-id="'+skill.id+'" aria-pressed="'+selected+'" title="'+helpText+'" '+(disabled?"disabled":"")+'>' +
@@ -1196,8 +1390,10 @@
     }).join("") : '<div class="battle-waiting-message">'+(isVictory?"SALA DESPEJADA":isDefeat?"COMPAÑÍA DERROTADA":"Turno enemigo…")+'</div>';
 
     const logMarkup=battle.log.slice(0,3).map((line)=>'<li>'+line+'</li>').join("");
-    const activeLabel=activeHero ? 'TURNO DE '+activeHero.name.toUpperCase() : activeEnemy ? 'TURNO ENEMIGO · '+activeEnemy.name.toUpperCase() : isVictory ? "VICTORIA" : isDefeat ? "DERROTA" : "RESOLVIENDO TURNO";
-    const prompt=pendingSkill ? (pendingSkill.target==="enemy" ? "ELIGE UN ENEMIGO" : "ELIGE UN COMPAÑERO") : activeHero ? "ELIGE UNA HABILIDAD" : "EL TURNO AVANZA AUTOMÁTICAMENTE";
+    const activeLabel=battle.actionAnimation ? (battle.actionAnimation.side==="ally" ? 'ACCIÓN DE '+activeHero?.name?.toUpperCase() : 'ATAQUE DE '+activeEnemy?.name?.toUpperCase()) : activeHero ? 'TURNO DE '+activeHero.name.toUpperCase() : activeEnemy ? 'TURNO ENEMIGO · '+activeEnemy.name.toUpperCase() : isVictory ? "VICTORIA" : isDefeat ? "DERROTA" : "RESOLVIENDO TURNO";
+    const prompt=battle.actionAnimation
+      ? (battle.actionAnimation.frame===1?"PREPARANDO ACCIÓN…":battle.actionAnimation.frame===2?"¡IMPACTO!":"RECUPERANDO POSICIÓN…")
+      : pendingSkill ? (pendingSkill.target==="enemy" ? "ELIGE UN ENEMIGO" : "ELIGE UN COMPAÑERO") : activeHero ? "ELIGE UNA HABILIDAD" : "EL TURNO AVANZA AUTOMÁTICAMENTE";
 
     const commandPanel=isVictory
       ? '<div class="battle-result-panel is-victory"><span>✦</span><div><strong>VICTORIA</strong><small>La sala está despejada. +45 XP para la compañía.</small></div><button type="button" class="game-action" data-action="leave-battle">CONTINUAR →</button></div>'
