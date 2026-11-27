@@ -900,7 +900,7 @@
     let pool=EQUIPMENT_ITEMS.filter((item)=>item.rarity===rarity);
     if(rarity==="Hyperrara") pool=pool.filter((item)=>!state.equipmentInventory.some((owned)=>owned.itemId===item.id));
     if(!pool.length) {
-      const refund=rarity==="Hyperrara"?250:45;
+      const refund=GACHA_COST;
       state.gold+=refund;
       state.lastGachaResult={itemId:null,rarity,duplicate:true,refund};
       state.notice="Ya has conseguido todas las piezas de esta rareza. Recibes "+refund+" monedas de compensación.";
@@ -1350,7 +1350,7 @@
       state.tab === "bastion" ? "BASTIÓN DEL ÚLTIMO FAROL" :
       state.tab === "company" ? "REGISTRO DE LA COMPAÑÍA" :
       state.tab === "route" ? "MAPA DE LAS TIERRAS MALDITAS" :
-      state.tab === "rest" ? "CÁMARA DEL ÚLTIMO FAROL" : "MERCADER DEL BASTIÓN";
+      state.tab === "rest" ? "CÁMARA DEL ÚLTIMO FAROL" : "MERCADO DEL BASTIÓN · MERCADER Y GACHAPÓN";
     const campaignTabs = document.querySelector(".campaign-tabs");
     if (campaignTabs) campaignTabs.hidden = state.tab === "battle";
     document.querySelectorAll(".campaign-tab").forEach((button) => button.classList.toggle("is-active",button.dataset.tab === state.tab));
@@ -1837,15 +1837,15 @@
   }
 
   function buyItem(itemId) {
-    const item = items.find((entry) => entry.id === itemId);
-    if (!item) return;
-    if (state.gold < item.price) return showNotice("No tienes oro suficiente para comprar " + item.name + ".");
-    state.gold -= item.price;
-    if (item.kind === "rations") state.rations += 1;
-    else state.inventory[item.kind] = (state.inventory[item.kind] || 0) + 1;
-    showNotice("Has comprado: " + item.name + ". El mercader guarda el resto de sus mercancías.");
+    const item=items.find((entry)=>entry.id===itemId);
+    if(!item) return;
+    if(state.gold<item.price) return showNotice("No tienes oro suficiente para comprar "+item.name+".");
+    state.gold-=item.price;
+    if(item.kind==="rations") state.rations+=1;
+    else state.inventory[item.kind]=(state.inventory[item.kind]||0)+1;
+    state.notice="Has comprado: "+item.name+".";
+    renderCampaign();saveState();
   }
-
   function handleAction(action, target) {
     if (action === "begin") return startNewGame();
     if (action === "continue") return continueGame();
@@ -1919,6 +1919,11 @@
     if (action === "defeat-boss") return defeatBoss();
     if (action === "rest") return restCompany();
     if (action === "buy") return buyItem(target.dataset.item);
+    if (action === "buy-equipment") return buyEquipment(target.dataset.item);
+    if (action === "refresh-shop") return rotateShopStock();
+    if (action === "gacha-roll") return rollGachapon();
+    if (action === "equip-item") return equipOwnedItem(target.dataset.character,target.dataset.uid);
+    if (action === "unequip-item") return unequipItem(target.dataset.character,target.dataset.uid);
     if (action === "toggle-party") {
       const id = target.dataset.id;
       if (state.party.includes(id)) {
