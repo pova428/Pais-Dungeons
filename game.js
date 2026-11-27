@@ -1138,6 +1138,15 @@
     return effects[actionId] || "magic";
   }
 
+  function getHeroAnimationFrameUrl(heroId, actionId, frame) {
+    const character=characters.find((entry)=>entry.id===heroId);
+    if(!character) return "";
+    const validAction=actionId==="idle" || actionId===BASIC_ATTACK.id || character.skills.some((skill)=>skill.id===actionId);
+    const frameNumber=Math.floor(Number(frame));
+    if(!validAction || ![1,2,3].includes(frameNumber)) return "";
+    return "assets/battles/animations/heroes/"+heroId+"/"+actionId+"/frame-0"+frameNumber+".png";
+  }
+
   function scheduleBattleActionStep(delay) {
     if (battleActionTimer!==null) window.clearTimeout(battleActionTimer);
     battleActionTimer=window.setTimeout(()=>{
@@ -1675,9 +1684,9 @@
         const offset=((floatIndex%3)-1)*18;
         return '<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+offset+'px;animation-delay:-'+animationDelay+'ms" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>';
       }).join("");
-      const spriteMarkup=isAttacking ? '<img class="battle-action-sprite hero-action-sprite" src="assets/battles/animations/heroes/'+id+'/'+animation.actionId+'/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
+      const spriteMarkup=isAttacking ? '<img class="battle-action-sprite hero-action-sprite" src="'+getHeroAnimationFrameUrl(id,animation.actionId,animation.frame)+'" alt="" draggable="false" onload="this.parentElement.classList.add(&quot;has-action-sprite&quot;)" onerror="this.remove()">' : "";
       const idleMarkup=!isAttacking && !isHit && currentHp>0
-        ? '<div class="battle-idle-frames" aria-hidden="true">'+[1,2,3].map((frame)=>'<img class="battle-idle-frame idle-frame-'+frame+'" src="assets/battles/animations/heroes/'+id+'/idle/frame-0'+frame+'.png" alt="" onload="this.parentElement.dataset.loaded=String((Number(this.parentElement.dataset.loaded)||0)+1);if(Number(this.parentElement.dataset.loaded)>=3)this.parentElement.parentElement.classList.add(&quot;has-idle-sprite&quot;)" onerror="this.remove()">').join("")+'</div>'
+        ? '<div class="battle-idle-frames" aria-hidden="true">'+[1,2,3].map((frame)=>'<img class="battle-idle-frame idle-frame-'+frame+'" src="'+getHeroAnimationFrameUrl(id,"idle",frame)+'" alt="" draggable="false" onload="this.parentElement.dataset.loaded=String((Number(this.parentElement.dataset.loaded)||0)+1);if(Number(this.parentElement.dataset.loaded)>=3)this.parentElement.parentElement.classList.add(&quot;has-idle-sprite&quot;)" onerror="this.remove()">').join("")+'</div>'
         : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
