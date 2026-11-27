@@ -1,53 +1,62 @@
 # PAIS DUNGEON
 
-## Build 017 — revisión final del ritmo y números de combate
+## Build 018 — Mercado, equipo y Gachapón
 
-- El ataque enemigo tiene tres fases más lentas: preparación 900 ms, impacto 650 ms y recuperación 650 ms.
-- Durante la preparación aparece el aviso **EL ENEMIGO PREPARA EL GOLPE**; al impactar, la interfaz muestra el aviso de impacto.
-- El movimiento del enemigo sigue una misma animación a través de los tres fotogramas, sin reiniciarse en cada actualización.
-- El número flotante mantiene su tiempo de animación original aunque el juego reconstruya la interfaz. Un golpe normal crea un solo número; un multiataque muestra un número por cada impacto real.
-- Los números se eliminan al finalizar su duración y sus temporizadores se recuperan después de continuar una partida.
-- Las partidas guardadas de versiones anteriores normalizan los tiempos de la animación y no repiten un impacto ya resuelto.
+Se ha añadido el nuevo mercado medieval, con un puesto de objetos y una máquina de cápsulas independiente.
 
-Los efectos son: daño rojo, curación verde y escudo azul.
+### Mercado físico
+- Escenario provisional de plaza medieval pixel-art: techo de madera, puestos, estanterías, hogar central, suelo de piedra y Gachapón.
+- Se muestran cuatro objetos de equipo a la vez.
+- Las existencias se renuevan al superar una localización o pagando 35 monedas.
+- Los suministros antiguos siguen disponibles en el mostrador secundario.
+- El fondo se puede sustituir por `assets/shop/merchant-market.png`.
 
-## Build 016 — Ritmo de enemigos y corrección de números flotantes
+### Rarezas y Gachapón
+Cada tirada cuesta **100 monedas**. Probabilidades acumuladas al 100%:
 
-- Los enemigos tardan más en preparar un ataque: 900 ms antes del impacto.
-- El impacto permanece visible 650 ms y la recuperación dura otros 650 ms.
-- Las animaciones del atacante mantienen su progreso al cambiar de fotograma.
-- El panel de turno anuncia cuándo el enemigo prepara el golpe y cuándo impacta.
-- Los números de daño, curación y escudo sincronizan su animación con el tiempo real transcurrido. Redibujar la interfaz ya no vuelve a reproducir el mismo número desde el principio.
-- Los números se eliminan al terminar su duración y sus temporizadores se recuperan después de recargar una partida.
+| Rareza | Probabilidad |
+|---|---:|
+| Común | 50% |
+| Poco común | 25% |
+| Rara | 15% |
+| Épica | 7% |
+| Legendaria | 2,5% |
+| Hyperrara | 0,5% |
 
-## Tiempos del combate
+La colección Hyperrara contiene cinco piezas únicas ligadas a un personaje:
+- **Navaja de Ala** — Salim
+- **Varita del Aula Prohibida** — Pol
+- **Antivirus Raíz** — Igor
+- **Escudo de los Cinco** — Ivan
+- **Balón del Último Gol** — Alex
 
-| Acción | Preparación | Impacto | Recuperación | Total |
-|---|---:|---:|---:|---:|
-| Héroe | 420 ms | 420 ms | 380 ms | 1,22 s |
-| Enemigo | 900 ms | 650 ms | 650 ms | 2,20 s |
+Las piezas Hyperraras no se pueden comprar directamente en el mercader ni equipar a otro personaje. Cuando ya se han conseguido las cinco, un resultado Hyperraro adicional devuelve el coste de la tirada.
 
-Los turnos enemigos duran aproximadamente el doble que antes, para que se pueda ver venir el ataque, observar el impacto y entender el resultado.
+### Inventario y equipamiento
+- La colección conserva cada unidad de objeto individualmente.
+- Cada unidad solo puede estar equipada por un héroe a la vez.
+- Cada personaje tiene un máximo de **cinco ranuras de equipo**.
+- El equipo se gestiona desde Compañía, en la ficha de cada héroe.
+- Se puede equipar y retirar sin perder el objeto.
+- Los atributos de ataque, magia, defensa, velocidad y agilidad afectan a las estadísticas del personaje.
+- Los objetos también pueden mejorar crítico, curación y escudos.
+- El equipo se conserva en el guardado local y se migra desde las partidas antiguas sin borrar la campaña.
 
-## Números de combate
+### Imágenes para sustituir los gráficos provisionales
 
-- Daño: rojo, solo muestra los PV realmente perdidos.
-- Curación: verde, muestra los PV efectivamente recuperados.
-- Escudo: azul, muestra la protección aplicada o absorbida.
-- Los multiataques generan un número por cada impacto real, no por las actualizaciones visuales de la pantalla.
-- El tiempo de vida del número continúa correctamente tras redibujar o recargar la pantalla.
+**Fondo de la tienda**
+Sube `merchant-market.png` a `assets/shop/`. Formato PNG horizontal 16:9, recomendado 1920 × 1080. El dibujo debe tener una plaza medieval, puesto de mercader y zona para el gachapón. El juego oscurece la imagen para mantener la estética del proyecto.
 
-## Animaciones
+**Iconos de objetos**
+Sube un PNG transparente por objeto a `assets/items/`, usando exactamente el identificador del objeto:
+`assets/items/navaja-de-ala.png`, `assets/items/antivirus-raiz.png`, etc.
+Recomendado 256 × 256 px. Si no existe la imagen, se usa el símbolo pixel-art provisional del objeto.
 
-Cada acción usa tres fotogramas PNG: preparación, impacto y recuperación. Los efectos de brillo, sacudida, estela y anillo de impacto los añade el juego.
+Consulta las guías:
+- `assets/shop/README.md`
+- `assets/items/README.md`
 
-Los nombres y estructura de las carpetas están explicados en:
-- `assets/battles/animations/README.md`
-- `assets/battles/animations/heroes/README.md`
-- `assets/battles/animations/enemies/README.md`
+En GitHub: abre la carpeta → **Add file → Upload files** → arrastra la imagen → **Commit changes** en `main`.
 
-Sigue las guías de cada habilidad o enemigo para subir `frame-01.png`, `frame-02.png` y `frame-03.png`.
-
-## Publicación
-
-GitHub Pages publica desde la rama `main`, carpeta `/(root)`.
+## Rutas y combate
+Se mantienen las tres rutas y los encuentros provisionales. El equipo modifica las estadísticas en combate, incluidos golpes críticos, curación y escudos.
