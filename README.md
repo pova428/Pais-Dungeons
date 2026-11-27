@@ -1,6 +1,6 @@
 # PAIS DUNGEON
 
-## Build 018 — Mercado, equipo y Gachapón
+## Build 019 — Mercado, equipo y Gachapón
 
 Se ha añadido el nuevo mercado medieval, con un puesto de objetos y una máquina de cápsulas independiente.
 
