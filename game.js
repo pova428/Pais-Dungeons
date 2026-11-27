@@ -138,6 +138,11 @@
     });
   }
 
+  const BASIC_ATTACK = {
+    id:"basic-attack",manaCost:0,target:"enemy",name:"Ataque básico",
+    detail:"Golpe físico sin consumir maná: 70% de ATQ.",unlockLevel:1,icon:"⚔",kind:"BÁSICA"
+  };
+
   const ENEMY_TYPES = {
     "process-wisp":{name:"Eco de proceso",role:"ESPÍRITU DIGITAL",maxHp:46,attack:7,speed:16,mark:"404",ai:"hunter",asset:"process-wisp"},
     "virus-larva":{name:"Larva de virus",role:"PLAGA",maxHp:40,attack:6,speed:12,mark:"!",ai:"hexer",asset:"virus-larva"},
@@ -528,7 +533,7 @@
     const actor = getActiveBattleActor();
     if (!battle || !actor || actor.side !== "ally" || battle.status !== "active") return;
     const character = characters.find((entry) => entry.id === actor.id);
-    const skill = character.skills.find((entry) => entry.id === skillId);
+    const skill = skillId === BASIC_ATTACK.id ? BASIC_ATTACK : character.skills.find((entry) => entry.id === skillId);
     if (!skill) return;
     const level = state.levels[character.id] || 1;
     if (level < skill.unlockLevel) return showNotice("Esta habilidad se desbloquea en el nivel " + skill.unlockLevel + ".");
@@ -1174,10 +1179,7 @@
         '</div></article>';
     }).join("");
 
-    const availableSkills=activeHero ? [{
-      id:"basic-attack",manaCost:0,target:"enemy",name:"Ataque básico",
-      detail:"Golpe físico sin consumir maná: 70% de ATQ.",unlockLevel:1,icon:"⚔",kind:"BÁSICA"
-    }].concat(activeHero.skills) : [];
+    const availableSkills=activeHero ? [BASIC_ATTACK].concat(activeHero.skills) : [];
     const skillsMarkup=activeHero ? availableSkills.map((skill)=>{
       const level=state.levels[activeHero.id]||1;
       const unlocked=level>=skill.unlockLevel;
