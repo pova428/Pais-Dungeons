@@ -561,6 +561,10 @@
     const damageMultiplier = battle.buffs[character.id] && battle.buffs[character.id].attack > 0 ? 1+battle.buffs[character.id].attack : 1;
     const targetDamage = (ratio,magic) => Math.round((magic ? stats.magic : stats.attack)*ratio*damageMultiplier);
     switch(skill.id) {
+      case "basic-attack":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        applyEnemyDamage(enemy,targetDamage(.7,false));
+        break;
       case "arcane-bolt":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
         applyEnemyDamage(enemy,targetDamage(.9,true)+1);
@@ -1170,7 +1174,11 @@
         '</div></article>';
     }).join("");
 
-    const skillsMarkup=activeHero ? activeHero.skills.map((skill)=>{
+    const availableSkills=activeHero ? [{
+      id:"basic-attack",manaCost:0,target:"enemy",name:"Ataque básico",
+      detail:"Golpe físico sin consumir maná: 70% de ATQ.",unlockLevel:1,icon:"⚔",kind:"BÁSICA"
+    }].concat(activeHero.skills) : [];
+    const skillsMarkup=activeHero ? availableSkills.map((skill)=>{
       const level=state.levels[activeHero.id]||1;
       const unlocked=level>=skill.unlockLevel;
       const enoughMana=(Number(state.mp[activeHero.id])||0)>=skill.manaCost;
