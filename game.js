@@ -594,7 +594,7 @@
         if(!state.party.includes(id)) return;
         const character=characters.find((entry)=>entry.id===id);
         if(!character) return;
-        const stats=getCharacterStats(character,state.levels[id]||1);
+        const stats=getEffectiveCharacterStats(character,state.levels[id]||1);
         state.hp[id]=Math.max(0,Math.min(stats.hp,Number(vitals.hp)||0));
         state.mp[id]=Math.max(0,Math.min(stats.mp,Number(vitals.mp)||0));
       });
@@ -1566,7 +1566,7 @@
     const allyUnits=state.party.map((id,index)=>{
       const character=characters.find((entry)=>entry.id===id);
       if(!character) return "";
-      const stats=getCharacterStats(character,state.levels[id]||1);
+      const stats=getEffectiveCharacterStats(character,state.levels[id]||1);
       const maxHp=stats.hp,maxMp=stats.mp;
       const currentHp=Math.max(0,Math.min(maxHp,Number(state.hp[id])||0));
       const currentMp=Math.max(0,Math.min(maxMp,Number(state.mp[id])||0));
@@ -1714,7 +1714,7 @@
       return '<div class="hyperrare-preview '+(owned?"is-owned":"")+'"><span>'+item.icon+'</span><div><b>'+item.name+'</b><small>'+owner.name+' · '+(owned?"CONSEGUIDO":"0,5% TOTAL")+'</small></div></div>';
     }).join("");
     return '<div class="campaign-page merchant-page"><div class="page-heading merchant-heading"><div><span class="section-eyebrow">PLAZA DEL ÚLTIMO FAROL</span><h2>El Mercado</h2><p>El mercader exhibe lo que encuentra en sus viajes. Al fondo, una máquina antigua ofrece premios impredecibles.</p></div><span class="route-legend">◈ '+state.gold+' MONEDAS</span></div>'+
-      '<section class="merchant-scene" aria-label="Mercado medieval de pixel art"><div class="market-trees tree-left"></div><div class="market-trees tree-right"></div><div class="market-roof"><span>✦ CASA DEL MERCADER ✦</span></div><div class="market-arch"><div class="market-fireplace"><span>🔥</span><small>EL ÚLTIMO FAROL</small></div></div><div class="market-counter market-left-counter"><span>ARMAS Y RELIQUIAS</span><i>⚔　✧　⬡</i></div><div class="market-counter market-right-counter"><span>OBJETOS Y AMULETOS</span><i>◉　♢　✚</i></div><div class="market-shelf shelf-left"><i>⚔</i><i>◉</i><i>♧</i><i>✧</i></div><div class="market-shelf shelf-right"><i>♢</i><i>✚</i><i>♛</i><i>⬡</i></div><div class="market-stone-floor"></div><div class="market-sign"><b>ABIERTO</b><small>EL MERCADO NO DUERME</small></div><div class="market-merchant"><span>◉</span><b>EL MERCADER</b></div><div class="market-chest"><span>✦</span></div><div class="market-gacha-prop"><span>?</span><b>GACHAPÓN</b></div></section>'+
+      '<section class="merchant-scene" aria-label="Mercado medieval de pixel art"><img class="merchant-scene-background" src="assets/shop/merchant-market.png" alt="" onerror="this.remove()"><div class="market-trees tree-left"></div><div class="market-trees tree-right"></div><div class="market-roof"><span>✦ CASA DEL MERCADER ✦</span></div><div class="market-arch"><div class="market-fireplace"><span>🔥</span><small>EL ÚLTIMO FAROL</small></div></div><div class="market-counter market-left-counter"><span>ARMAS Y RELIQUIAS</span><i>⚔　✧　⬡</i></div><div class="market-counter market-right-counter"><span>OBJETOS Y AMULETOS</span><i>◉　♢　✚</i></div><div class="market-shelf shelf-left"><i>⚔</i><i>◉</i><i>♧</i><i>✧</i></div><div class="market-shelf shelf-right"><i>♢</i><i>✚</i><i>♛</i><i>⬡</i></div><div class="market-stone-floor"></div><div class="market-sign"><b>ABIERTO</b><small>EL MERCADO NO DUERME</small></div><div class="market-merchant"><span>◉</span><b>EL MERCADER</b></div><div class="market-chest"><span>✦</span></div><div class="market-gacha-prop"><span>?</span><b>GACHAPÓN</b></div></section>'+
       '<div class="merchant-main-grid"><section class="merchant-stock-panel camp-panel"><div class="panel-heading"><div><span class="section-eyebrow">MERCANCÍA LIMITADA</span><h3>Expositores del mercader</h3></div><span>ROTACIÓN '+String(state.shopRotation||0).padStart(2,"0")+'</span></div><div class="merchant-stock-grid">'+(stock||'<div class="merchant-empty">Los estantes están vacíos.</div>')+'</div><div class="merchant-stock-footer"><small>El stock se renueva al superar una sala. También puedes pagar '+SHOP_REFRESH_COST+' monedas para renovar los expositores.</small><button class="game-action secondary" type="button" data-action="refresh-shop" '+(state.gold<SHOP_REFRESH_COST?"disabled":"")+ '>↻ RENOVAR · '+SHOP_REFRESH_COST+' ◈</button></div><div class="merchant-supply-heading"><span>SUMINISTROS PARA LA RUTA</span><small>OBJETOS DE CONSUMO</small></div><div class="merchant-supplies">'+supplyOffers+'</div></section>'+
       '<aside class="gacha-panel camp-panel"><div class="gacha-panel-heading"><span class="section-eyebrow">AZAR Y DESTINO</span><h3>El Gachapón</h3><p>Introduce oro. La cápsula revelará un objeto de rareza impredecible.</p></div><div class="gacha-machine"><div class="gacha-machine-top">PAIS · CAPSULE SYSTEM</div><div class="gacha-machine-glass"><div class="gacha-orb orb-one"></div><div class="gacha-orb orb-two"></div><div class="gacha-orb orb-three"></div><span>?</span></div><div class="gacha-machine-slot">◈　◈　◈</div></div>'+resultMarkup+'<button class="game-action gacha-pull-button" type="button" data-action="gacha-roll" '+(state.gold<GACHA_COST?"disabled":"")+ '>TIRAR · '+GACHA_COST+' ◈</button><div class="gacha-rates"><b>PROBABILIDADES</b>'+GACHA_RARITY_RATES.map((entry)=>'<div><span>'+entry.rarity+'</span><strong>'+String(entry.chance).replace(".",",")+'%</strong></div>').join("")+'</div><div class="hyperrare-vault"><b>COLECCIÓN HYPERRARA · 5 PIEZAS</b>'+hyperItems+'</div></aside></div>'+
       '<section class="merchant-collection-strip"><div><b>COLECCIÓN DE LA COMPAÑÍA</b><small>'+state.equipmentInventory.length+' OBJETOS · MÁXIMO 5 EQUIPADOS POR PERSONAJE</small></div><button class="game-action secondary" type="button" data-tab="company">GESTIONAR OBJETOS →</button></section><p class="campaign-notice">'+state.notice+'</p></div>';
@@ -1826,7 +1826,7 @@
     state.rations -= 1;
     characters.forEach((character) => {
       const level=state.levels[character.id] || 1;
-      const maxHp=getCharacterStats(character,level).hp;
+      const maxHp=getEffectiveCharacterStats(character,level).hp;
       const currentHp=Number.isFinite(state.hp[character.id]) ? state.hp[character.id] : maxHp;
       state.hp[character.id]=Math.min(maxHp,currentHp+Math.ceil(maxHp*0.25));
       const maxMp=getEffectiveCharacterStats(character,level).mp;
