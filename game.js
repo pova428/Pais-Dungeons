@@ -21,13 +21,21 @@
   const continueButton = document.getElementById("continue-button");
 
   const characters = [
-    { id:"guardian", name:"Pol", title:"El Flaco", role:"GUARDIÁN", sign:"P", icon:"♜", detail:"Defensor de primera línea.", trait:"Firme como la piedra" },
+    {
+      id:"guardian", name:"Pol", title:"El Flaco", role:"GUARDIÁN", sign:"P", icon:"♜",
+      detail:"Defensor de primera línea.", trait:"Firme como la piedra",
+      portrait:"assets/pol-portrait.png", sprites:"assets/pol-sprites.png",
+      skills:[
+        {name:"Golpe de escudo",detail:"Ataque de primera línea",status:"POR DEFINIR",ready:false,icon:"♜"},
+        {name:"Provocar",detail:"Atrae la atención enemiga",status:"POR DEFINIR",ready:false,icon:"⚑"},
+        {name:"Muro firme",detail:"Protección para la compañía",status:"POR DEFINIR",ready:false,icon:"⬟"},
+        {name:"Último bastión",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
+      ]
+    },
     {
       id:"duelist", name:"Salim", title:"El Moro", role:"DUELISTA", sign:"S", icon:"⚔",
       detail:"Combatiente ágil y preciso.", trait:"Nunca ataca dos veces igual",
-      portrait:"assets/salim-portrait.webp",
-      sprites:"assets/salim-sprites.webp",
-      spriteFrame:{width:48,height:49,columns:4,rows:{idle:0,walk:1,attack:2,damage:3}},
+      portrait:"assets/salim-portrait.webp", sprites:"assets/salim-sprites.webp",
       skills:[
         {name:"Ataque básico",detail:"Secuencia de cortes con dagas",status:"ANIMACIÓN PREPARADA",ready:true,icon:"⚔"},
         {name:"Habilidad I",detail:"Efecto por diseñar",status:"POR DEFINIR",ready:false,icon:"✦"},
@@ -35,9 +43,39 @@
         {name:"Especial",detail:"Técnica definitiva por diseñar",status:"POR DEFINIR",ready:false,icon:"☠"}
       ]
     },
-    { id:"arcanist", name:"Igor", title:"El Alto", role:"ARCANISTA", sign:"I", icon:"✧", detail:"Estudia artes prohibidas.", trait:"Escucha voces en las ruinas" },
-    { id:"tracker", name:"Ivan", title:"El Gordo", role:"RASTREADOR", sign:"V", icon:"➶", detail:"Explorador y tirador.", trait:"Siempre encuentra un camino" },
-    { id:"alchemist", name:"Alex", title:"El Mujeriego", role:"ALQUIMISTA", sign:"A", icon:"⚗", detail:"Prepara remedios y mezclas.", trait:"La muerte puede esperar" }
+    {
+      id:"arcanist", name:"Igor", title:"El Alto", role:"ARCANISTA", sign:"I", icon:"✧",
+      detail:"Estudia artes prohibidas.", trait:"Escucha voces en las ruinas",
+      portrait:"assets/igor-portrait.png", sprites:"assets/igor-sprites.png",
+      skills:[
+        {name:"Proyectil arcano",detail:"Ataque mágico a distancia",status:"POR DEFINIR",ready:false,icon:"✧"},
+        {name:"Maldición",detail:"Debilita a un enemigo",status:"POR DEFINIR",ready:false,icon:"☽"},
+        {name:"Sello oscuro",detail:"Control del campo",status:"POR DEFINIR",ready:false,icon:"◇"},
+        {name:"Ruptura",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
+      ]
+    },
+    {
+      id:"tracker", name:"Ivan", title:"El Gordo", role:"RASTREADOR", sign:"V", icon:"➶",
+      detail:"Explorador y tirador.", trait:"Siempre encuentra un camino",
+      portrait:"assets/ivan-portrait.png", sprites:"assets/ivan-sprites.png",
+      skills:[
+        {name:"Disparo preciso",detail:"Ataque desde la distancia",status:"POR DEFINIR",ready:false,icon:"➶"},
+        {name:"Trampa",detail:"Prepara una emboscada",status:"POR DEFINIR",ready:false,icon:"⌁"},
+        {name:"Marca",detail:"Señala a un objetivo",status:"POR DEFINIR",ready:false,icon:"◎"},
+        {name:"Lluvia de flechas",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
+      ]
+    },
+    {
+      id:"alchemist", name:"Alex", title:"El Mujeriego", role:"ALQUIMISTA", sign:"A", icon:"⚗",
+      detail:"Prepara remedios y mezclas.", trait:"La muerte puede esperar",
+      portrait:"assets/alex-portrait.png", sprites:"assets/alex-sprites.png",
+      skills:[
+        {name:"Remedio rápido",detail:"Recuperación de vitalidad",status:"POR DEFINIR",ready:false,icon:"✚"},
+        {name:"Frasco corrosivo",detail:"Daño por alquimia",status:"POR DEFINIR",ready:false,icon:"⚗"},
+        {name:"Mezcla explosiva",detail:"Ataque de área",status:"POR DEFINIR",ready:false,icon:"✹"},
+        {name:"Elixir final",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
+      ]
+    }
   ];
 
   const regions = [
@@ -93,6 +131,7 @@
     hp:{guardian:100,duelist:100,arcanist:100,tracker:100,alchemist:100},
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
+    selectedCharacter:"duelist",
     selectedRegion:"institute",
     selectedSite:"institute-programming",
     visitedSites:[],
@@ -156,6 +195,7 @@
       });
       merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
       if (merged.party.length === 0) merged.party = defaultState().party;
+      if (!characters.some((character) => character.id === merged.selectedCharacter)) merged.selectedCharacter = "duelist";
       const maximumRegion = getUnlockedRegionIndex(merged.visitedSites);
       let selectedIndex = regions.findIndex((region) => region.id === merged.selectedRegion);
       if (selectedIndex < 0 || selectedIndex > maximumRegion) selectedIndex = maximumRegion;
@@ -278,46 +318,66 @@
   }
 
   function renderCompany() {
-    const rows = characters.map((character) => {
-      const active = state.party.includes(character.id);
-      const hp = state.hp[character.id] || 100;
-      const disabled = !active && state.party.length >= 4;
+    const selected = characters.find((character) => character.id === state.selectedCharacter) || characters[1];
+    const selectedIndex = characters.findIndex((character) => character.id === selected.id);
+    const hp = state.hp[selected.id] || 100;
+    const active = state.party.includes(selected.id);
+    const disabled = !active && state.party.length >= 4;
 
-      if (character.id === "duelist") {
-        const skillTiles = character.skills.map((skill) =>
-          '<div class="salim-skill ' + (skill.ready ? "is-ready" : "is-locked") + '">' +
-            '<span class="salim-skill-icon">' + skill.icon + '</span>' +
-            '<div><strong>' + skill.name + '</strong><small>' + skill.detail + '</small><em>' + skill.status + '</em></div>' +
-          '</div>'
-        ).join("");
-        return '<article class="salim-feature-card camp-panel ' + (active ? "is-active" : "is-reserve") + '">' +
-          '<div class="salim-art-column">' +
-            '<img class="salim-portrait-art" src="' + character.portrait + '" alt="Retrato pixel art de Salim, El Moro" loading="lazy">' +
-            '<div class="salim-sprite-preview"><span>SPRITE · IDLE</span><div class="salim-mini-sprite" style="background-image:url(' + character.sprites + ')"></div></div>' +
-          '</div>' +
-          '<div class="salim-profile">' +
-            '<div class="salim-profile-head">' +
-              '<div><span class="section-eyebrow">PERSONAJE 02 · ' + character.role + '</span><h3>' + character.name + '</h3><div class="salim-alias">«' + character.title + '»</div></div>' +
-              '<button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + character.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN GRUPO" : "EN RESERVA") + '</button>' +
-            '</div>' +
-            '<div class="salim-vitality"><div><strong>VIDA</strong><b>' + hp + '%</b></div><div class="character-health"><span style="width:' + hp + '%"></span></div></div>' +
-            '<div class="salim-skill-heading"><span>HABILIDADES</span><small>PREVISIÓN DE PERSONAJE</small></div>' +
-            '<div class="salim-skill-grid">' + skillTiles + '</div>' +
-            '<div class="salim-asset-note">Animaciones preparadas: reposo ×4 · caminar ×4 · ataque ×4 · daño ×2</div>' +
-          '</div>' +
-        '</article>';
-      }
-
-      return '<article class="character-row ' + (active ? "is-active" : "") + '">' +
-        '<div class="character-portrait">' + character.sign + '</div>' +
-        '<div class="character-meta"><strong>' + character.name + ' <em>«' + character.title + '»</em></strong><small>' + character.role + '</small><div class="character-health"><span style="width:' + hp + '%"></span></div></div>' +
-        '<div class="character-side"><small>' + hp + '% VIDA</small><button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + character.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN GRUPO" : "EN RESERVA") + '</button></div>' +
-      '</article>';
+    const characterMenu = characters.map((character) => {
+      const isSelected = character.id === selected.id;
+      const isActive = state.party.includes(character.id);
+      const portrait = character.portrait
+        ? '<img src="' + character.portrait + '" alt="" loading="lazy" onerror="this.remove()">'
+        : "";
+      return '<button class="character-nav-entry ' + (isSelected ? "is-selected" : "") + '" type="button" data-character-select="' + character.id + '" aria-pressed="' + isSelected + '">' +
+        '<span class="character-nav-avatar"><b>' + character.sign + '</b>' + portrait + '</span>' +
+        '<span class="character-nav-copy"><strong>' + character.name + '</strong><small>«' + character.title + '»</small></span>' +
+        '<span class="character-nav-state ' + (isActive ? "is-active" : "") + '">' + (isActive ? "●" : "○") + '</span>' +
+      '</button>';
     }).join("");
+
+    const portraitImage = selected.portrait
+      ? '<img class="character-portrait-art" src="' + selected.portrait + '" alt="Retrato pixel art de ' + selected.name + ' ' + selected.title + '" loading="eager" onerror="this.remove()">'
+      : "";
+    const spriteMarkup = selected.sprites
+      ? '<img class="sprite-load-probe" src="' + selected.sprites + '" alt="" onload="this.parentElement.classList.add(&quot;has-sprite&quot;);this.remove()" onerror="this.parentElement.classList.add(&quot;no-sprite&quot;);this.remove()"><div class="character-sprite-animation" style="background-image:url(' + selected.sprites + ')"></div>'
+      : "";
+    const spriteNote = selected.id === "duelist"
+      ? "REPOSO ×4 · CAMINAR ×4 · ATAQUE ×4 · DAÑO ×2"
+      : "ANIMACIONES POR AÑADIR";
+    const skills = (selected.skills || []).map((skill) =>
+      '<div class="character-skill ' + (skill.ready ? "is-ready" : "is-locked") + '">' +
+        '<span class="character-skill-icon">' + skill.icon + '</span>' +
+        '<div><strong>' + skill.name + '</strong><small>' + skill.detail + '</small><em>' + skill.status + '</em></div>' +
+      '</div>'
+    ).join("");
+
     const slots = [0,1,2,3].map((n) => '<span class="party-slot ' + (n < state.party.length ? "filled" : "") + '"></span>').join("");
-    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">PERSONAJES</span><h2>La compañía</h2></div></div>' +
-      '<div class="company-layout"><section class="character-roster">' + rows + '</section>' +
-      '<aside class="camp-panel party-summary"><span class="section-eyebrow">GRUPO ACTIVO</span><div class="party-number">' + state.party.length + '<small> / 4</small></div><div class="party-slots">' + slots + '</div><button class="game-action" type="button" data-tab="route">IR A RUTAS →</button></aside></div></div>';
+
+    return '<div class="campaign-page character-manager-page">' +
+      '<div class="page-heading"><div><span class="section-eyebrow">GESTIÓN DE LA COMPAÑÍA</span><h2>Personajes</h2></div><span class="character-count">05 HÉROES</span></div>' +
+      '<div class="character-manager">' +
+        '<aside class="character-sidebar camp-panel"><div class="character-sidebar-heading"><span>COMPAÑÍA</span><b>05</b></div><div class="character-nav-list">' + characterMenu + '</div>' +
+          '<div class="character-party-mini"><span>GRUPO ACTIVO</span><strong>' + state.party.length + ' / 4</strong><div class="party-slots">' + slots + '</div></div></aside>' +
+        '<section class="character-sheet camp-panel ' + (active ? "is-active" : "is-reserve") + '">' +
+          '<div class="character-art-column">' +
+            '<div class="character-portrait-frame"><div class="character-portrait-placeholder"><b>' + selected.sign + '</b><small>RETRATO PENDIENTE</small></div>' + portraitImage + '</div>' +
+            '<div class="character-sprite-window"><span>ANIMACIÓN DE CAMPO</span>' + spriteMarkup + '<div class="character-sprite-empty">SPRITE PENDIENTE</div></div>' +
+          '</div>' +
+          '<div class="character-profile">' +
+            '<div class="character-profile-head"><div><span class="section-eyebrow">PERSONAJE ' + String(selectedIndex + 1).padStart(2,"0") + ' · ' + selected.role + '</span><h3>' + selected.name + '</h3><div class="character-alias">«' + selected.title + '»</div><div class="character-quick-stats"><span>NIVEL 1</span><span>' + selected.role + '</span></div></div>' +
+              '<button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + selected.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN GRUPO" : "AÑADIR AL GRUPO") + '</button>' +
+            '</div>' +
+            '<div class="character-vitality"><div><strong>VIDA</strong><b>' + hp + '%</b></div><div class="character-health"><span style="width:' + hp + '%"></span></div></div>' +
+            '<div class="character-skill-heading"><span>HABILIDADES</span><small>4 HUECOS · DISEÑO EN PROGRESO</small></div>' +
+            '<div class="character-skill-grid">' + skills + '</div>' +
+            '<div class="character-asset-note">' + spriteNote + '</div>' +
+          '</div>' +
+        '</section>' +
+      '</div>' +
+      '<div class="character-manager-footer"><span>Selecciona un héroe en el menú lateral.</span><button class="game-action secondary" type="button" data-tab="route">IR A RUTAS →</button></div>' +
+    '</div>';
   }
 
   function renderRoute() {
@@ -557,6 +617,17 @@
       handleAction(actionButton.dataset.action, actionButton);
       return;
     }
+    const characterButton = event.target.closest("[data-character-select]");
+    if (characterButton && state) {
+      const characterId = characterButton.dataset.characterSelect;
+      if (characters.some((character) => character.id === characterId)) {
+        state.selectedCharacter = characterId;
+        renderCampaign();
+        saveState();
+      }
+      return;
+    }
+
     const tabButton = event.target.closest("[data-tab]");
     if (tabButton) {
       switchTab(tabButton.dataset.tab);
