@@ -2472,3 +2472,80 @@ body.reduce-motion .battle-enemy-figure { animation:none !important; }
 body.reduce-motion .battle-unit.is-targetable,
 body.reduce-motion .battle-pixel-figure,
 body.reduce-motion .battle-enemy-figure { animation:none !important; }
+
+
+/* Build 013 — asset slots and room-specific encounter atmosphere */
+.battle-room-wall { background-color:#171217; }
+.battle-scene-image {
+  position:absolute;
+  z-index:0;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  opacity:.46;
+  filter:saturate(.78) contrast(1.12) brightness(.72);
+  image-rendering:auto;
+}
+.battle-room-wall::after {
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(12,8,11,.08),rgba(12,8,11,.12) 40%,rgba(8,6,9,.66)),
+    linear-gradient(90deg,rgba(20,10,12,.22),transparent 42%,rgba(20,10,12,.35));
+}
+.battle-room-wall > :not(.battle-scene-image) { z-index:2; }
+.battle-room-institute-database { background:linear-gradient(180deg,#26303a,#171b23 55%,#111015); }
+.battle-room-institute-yard { background:linear-gradient(180deg,#3a2928,#211a20 55%,#100d12); }
+.battle-room-institute-networks { background:linear-gradient(180deg,#322126,#24131b 55%,#0c080d); }
+.battle-room-baix-bowling { background:linear-gradient(180deg,#34252d,#1e1721 55%,#0c0a10); }
+.battle-room-baix-n340 { background:linear-gradient(180deg,#3d2826,#241b1b 55%,#110d10); }
+.battle-room-baix-cinema { background:linear-gradient(180deg,#342534,#1d1726 55%,#0c0910); }
+.battle-room-baix-sushi { background:linear-gradient(180deg,#3b2525,#241618 55%,#0d090c); }
+.battle-room-steam-content-warning { background:linear-gradient(180deg,#332a2a,#1c171c 55%,#0b090d); }
+.battle-room-steam-labyrinthine { background:linear-gradient(180deg,#2d322a,#1c211d 55%,#0b0d0b); }
+.battle-room-steam-backrooms { background:linear-gradient(180deg,#4c3c27,#2b241b 55%,#100d0a); }
+.battle-room-steam-clubs { background:linear-gradient(180deg,#32213b,#1e1427 55%,#09070f); }
+
+.battle-enemy-figure { isolation:isolate; }
+.battle-enemy-art-image {
+  position:absolute;
+  z-index:3;
+  left:-15%;
+  top:-24%;
+  width:130%;
+  height:132%;
+  object-fit:contain;
+  object-position:center bottom;
+  image-rendering:pixelated;
+  filter:drop-shadow(0 5px 3px rgba(0,0,0,.7));
+  pointer-events:none;
+}
+.battle-enemy-figure b { z-index:4; }
+.battle-enemy-figure:has(.battle-enemy-art-image) i:not(.enemy-shadow) { opacity:.14; }
+.battle-unit.is-targetable .battle-enemy-art-image { filter:drop-shadow(0 0 7px rgba(239,148,93,.7)); }
+.battle-curse-value {
+  display:block;
+  margin-top:4px;
+  padding:3px 4px;
+  border:1px solid rgba(177,105,157,.42);
+  background:rgba(64,28,60,.55);
+  color:#dca5d5;
+  text-align:center;
+  font:7px/1.45 var(--pixel);
+}
+.battle-enemy.is-active-turn::before { content:"▼ TURNO ENEMIGO"; }
+.battle-enemy.is-active-turn .battle-unit-info { border-color:#b66a60; }
+
+@media(max-width:900px) {
+  .battle-scene-image { opacity:.38; }
+  .battle-enemy-art-image { top:-19%;height:125%; }
+}
+@media(max-width:600px) {
+  .battle-scene-image { opacity:.3; }
+  .battle-enemy-art-image { left:-12%;width:124%;top:-12%;height:116%; }
+}
