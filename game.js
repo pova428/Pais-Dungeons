@@ -989,17 +989,19 @@
       const isActive=Boolean(currentActor && currentActor.side==="ally" && currentActor.id===id && !isVictory && !isDefeat);
       const isTarget=battle.targetMode==="ally" && currentHp>0;
       const shield=battle.shields[id]||0;
-      const portrait=character.portrait ? '<img src="'+character.portrait+'" alt="" loading="lazy" onerror="this.remove()">' : "";
-      const targetAttrs=isTarget ? 'data-action="battle-target" data-target-id="'+id+'" data-target-side="ally" role="button" tabindex="0"' : "";
+      const shieldTurns=battle.shieldTurns[id]||0;
+      const buff=battle.buffs[id]||null;
+      const targetAttrs=isTarget ? 'data-action="battle-target" data-target-id="'+id+'" data-target-side="ally" role="button" tabindex="0" aria-label="Elegir a '+character.name+' como objetivo"' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
           '<div class="battle-pixel-figure figure-'+id+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>' +
-          '<span class="battle-unit-role">'+character.role+'</span>'+portrait +
+          '<span class="battle-unit-role">'+character.role+'</span>' +
         '</div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+character.name+'</strong><em>«'+character.title+'»</em></div>' +
           '<div class="battle-unit-life"><span>♥ PV</span><b>'+currentHp+'/'+maxHp+'</b></div><div class="battle-hp-track"><i style="width:'+hpRatio+'%"></i></div>' +
           '<div class="battle-unit-mana"><span>✦ PM</span><b>'+currentMp+'/'+maxMp+'</b></div><div class="battle-mp-track"><i style="width:'+mpRatio+'%"></i></div>' +
-          (shield>0?'<small class="battle-shield-value">ESCUDO '+shield+'</small>':"")+
+          (shield>0?'<small class="battle-shield-value">ESCUDO '+shield+' · '+shieldTurns+'T</small>':"")+
+          (buff && buff.turns>0?'<small class="battle-buff-value">MEJORA '+buff.turns+'T · ATQ +'+Math.round(buff.attack*100)+'% · VEL +'+Math.round(buff.speed*100)+'%</small>':"")+
         '</div></article>';
     }).join("");
 
@@ -1007,7 +1009,7 @@
       const ratio=Math.round(enemy.hp/enemy.maxHp*100);
       const activeEnemy=Boolean(currentActor && currentActor.side==="enemy" && currentActor.id===enemy.id);
       const isTarget=battle.targetMode==="enemy" && enemy.hp>0;
-      const targetAttrs=isTarget?'data-action="battle-target" data-target-id="'+enemy.id+'" data-target-side="enemy" role="button" tabindex="0"':'';
+      const targetAttrs=isTarget?'data-action="battle-target" data-target-id="'+enemy.id+'" data-target-side="enemy" role="button" tabindex="0" aria-label="Atacar a '+enemy.name+'"':'';
       return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">E0'+(index+1)+'</span>' +
           '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>' +
@@ -1015,6 +1017,7 @@
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+enemy.name+'</strong></div>' +
           '<div class="battle-unit-life"><span>♥ PV</span><b>'+enemy.hp+'/'+enemy.maxHp+'</b></div><div class="battle-hp-track enemy-hp-track"><i style="width:'+ratio+'%"></i></div>' +
           (enemy.burn>0?'<small class="battle-status-tag">QUEMADURA '+enemy.burn+'</small>':"")+
+          (enemy.stun>0?'<small class="battle-stun-tag">DERRIBADO · PIERDE TURNO</small>':"")+
         '</div></article>';
     }).join("");
 
