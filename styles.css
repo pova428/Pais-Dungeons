@@ -977,3 +977,46 @@ body.reduce-motion .character-sprite-animation { animation:none !important; back
   .character-nav-health > i { width:34px; }
   .character-nav-health em { font-size:7px; }
 }
+
+
+/* Build 007 — passive is the fourth ability card; clearer numerals */
+.character-passive-card {
+  min-height:66px;
+  align-self:stretch;
+  border-style:dashed;
+  border-color:rgba(178,135,94,.48);
+  background:linear-gradient(100deg,rgba(45,31,29,.58),rgba(9,7,9,.38));
+}
+.character-passive-card .character-skill-icon {
+  color:#d2a66c;
+  border-color:rgba(178,135,94,.48);
+  background:rgba(36,24,25,.82);
+}
+.character-passive-card strong { color:#d7c09a; }
+.character-passive-card small { color:rgba(204,184,153,.62); }
+.character-passive-card em { color:#c18a59; }
+
+/* Use conventional high-legibility numerals instead of the decorative pixel 5 */
+.character-count,
+.character-sidebar-heading b,
+.party-number,
+.party-number small,
+.hero-stat strong,
+.character-vitality-labels b,
+.character-xp > div:first-child b,
+.level-step-top b,
+.level-step-top small,
+.character-nav-health em {
+  font-family:Arial, Helvetica, sans-serif !important;
+  font-weight:800;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.character-count { font-size:12px; letter-spacing:.12em; }
+.character-sidebar-heading b {
+  font-size:13px;
+  line-height:1;
+  letter-spacing:0;
+}
+.party-number { font-size:35px; }
+.hero-stat strong { font-size:18px; }
+.character-vitality-labels b { font-size:19px; }
