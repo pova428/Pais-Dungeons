@@ -407,6 +407,10 @@
     scored.sort((a,b)=>b.score-a.score || candidates.indexOf(a.id)-candidates.indexOf(b.id));
     const targetId=scored[0].id;
     enemy.focusTargetId=targetId;
+    const animation=state.battle.actionAnimation;
+    if(animation && animation.side==="enemy" && animation.actorId===enemy.id) {
+      animation.targets=[{side:"ally",id:targetId}];
+    }
     return targetId;
   }
 
@@ -657,12 +661,12 @@
     return [...freshShieldIds];
   }
 
-  function completeHeroTurn(characterId,freshShieldIds) {
+  function completeHeroTurn(characterId,freshShieldIds,actionId) {
     const battle=state.battle;
     const character=characters.find((entry)=>entry.id===characterId);
     if(!character) return;
     const fresh=new Set(freshShieldIds || []);
-    if(battle.buffs[characterId] && battle.actionAnimationActionId!=="modo-mujer") {
+    if(battle.buffs[characterId] && actionId!=="modo-mujer") {
       battle.buffs[characterId].turns-=1;
       if(battle.buffs[characterId].turns<=0) {
         delete battle.buffs[characterId];
@@ -726,7 +730,7 @@
     battle.actionAnimation=null;
     battle.currentTurnStarted=null;
     if(animation.side==="ally") {
-      completeHeroTurn(animation.actorId,animation.freshShieldIds);
+      completeHeroTurn(animation.actorId,animation.freshShieldIds,animation.actionId);
     }
     if(battle.enemies.every((enemy)=>enemy.hp<=0)) {
       setBattleVictory();
@@ -1301,7 +1305,9 @@
     const currentActor=getActiveBattleActor();
     const activeHero=currentActor && currentActor.side==="ally" ? characters.find((entry)=>entry.id===currentActor.id) : null;
     const activeEnemy=currentActor && currentActor.side==="enemy" ? battle.enemies.find((entry)=>entry.id===currentActor.id) : null;
-    const pendingSkill=activeHero && battle.pendingSkillId ? activeHero.skills.find((entry)=>entry.id===battle.pendingSkillId) : null;
+    const pendingSkill=activeHero && battle.pendingSkillId
+      ? (battle.pendingSkillId===BASIC_ATTACK.id ? BASIC_ATTACK : activeHero.skills.find((entry)=>entry.id===battle.pendingSkillId))
+      : null;
     const isVictory=battle.status==="victory";
     const isDefeat=battle.status==="defeat";
     const sceneProps=region.id==="institute"
@@ -1337,7 +1343,7 @@
       const animation=battle.actionAnimation;
       const isAttacking=Boolean(animation && animation.side==="ally" && animation.actorId===id);
       const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="ally" && target.id===id));
-      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="ally" && number.targetId===id).map((number)=>'<span class="battle-floating-number is-'+number.type+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="ally" && number.targetId===id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-index:'+floatIndex+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite hero-action-sprite" src="assets/battles/animations/heroes/'+id+'/'+animation.actionId+'/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
@@ -1362,7 +1368,7 @@
       const animation=battle.actionAnimation;
       const isAttacking=Boolean(animation && animation.side==="enemy" && animation.actorId===enemy.id);
       const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="enemy" && target.id===enemy.id));
-      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="enemy" && number.targetId===enemy.id).map((number)=>'<span class="battle-floating-number is-'+number.type+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="enemy" && number.targetId===enemy.id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-index:'+floatIndex+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite enemy-action-sprite" src="assets/battles/animations/enemies/'+enemy.id+'/attack/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+'" '+targetAttrs+'>' +
@@ -1407,7 +1413,7 @@
       '<div class="battle-topbar"><div><span class="section-eyebrow">'+region.name.toUpperCase()+' · '+site.name.toUpperCase()+'</span><h2>Campo de batalla</h2></div>' +
         '<div class="battle-round-mark"><small>RONDA</small><strong>'+String(battle.round).padStart(2,"0")+'</strong></div>' +
         '<div class="battle-turn-order"><span>ORDEN DE TURNO</span><div>'+orderMarkup+'</div></div></div>'+
-      '<section class="battle-stage" aria-label="Campo de batalla por turnos">'+
+      '<section class="battle-stage '+(battle.actionAnimation && battle.actionAnimation.frame===2?'is-impacting fx-'+battle.actionAnimation.fx:'')+'" aria-label="Campo de batalla por turnos">'+
         '<div class="battle-room-wall battle-room-'+site.id+'"><img class="battle-scene-image" src="assets/battles/backgrounds/'+site.id+'.jpg" alt="" onerror="this.remove()">'+sceneProps+'<div class="battle-room-fog"></div></div>'+
         '<div class="battle-stage-topline"><span>COMPAÑÍA <b>‹</b> ENEMIGOS</span><span>UNA SOLA SALA · ENCUENTRO '+(battle.status==="active"?"ACTIVO":battle.status==="victory"?"COMPLETADO":"FALLIDO")+'</span></div>'+
         '<div class="battle-lineup battle-allies-line">'+allyUnits+'</div>'+
