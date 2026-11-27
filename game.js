@@ -414,8 +414,9 @@
             '<div class="hero-stat-grid">' + statMarkup + '</div>' +
             '<div class="hero-traits"><div><span>FORTALEZA</span><p>' + selected.strengths + '</p></div><div><span>DEBILIDAD</span><p>' + selected.weaknesses + '</p></div></div>' +
             '<div class="character-skill-heading"><span>HABILIDADES</span><small>DESBLOQUEO EN NIVELES 1 · 4 · 10</small></div>' +
-            '<div class="character-skill-grid">' + skills + '</div>' +
-            '<div class="character-passive-slot"><span class="character-passive-icon">✧</span><div><strong>PASIVA · ESPACIO RESERVADO</strong><small>Se diseñará más adelante. Hito previsto: nivel 3.</small></div><em>PENDIENTE</em></div>' +
+            '<div class="character-skill-grid">' + skills +
+              '<div class="character-skill character-passive-card is-locked"><span class="character-skill-icon">✧</span><div><strong>Pasiva · Por diseñar</strong><small>Espacio reservado para la habilidad pasiva del héroe.</small><em>SE DESBLOQUEARÁ EN NIVEL 3</em></div></div>' +
+            '</div>' +
             '<details class="character-progression"><summary>PROGRESIÓN COMPLETA · NIVELES 1–10</summary><div class="progression-grid">' + levelSteps + '</div></details>' +
             '<div class="character-asset-note">' + spriteNote + '</div>' +
           '</div></section></div>' +
