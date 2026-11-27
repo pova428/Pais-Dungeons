@@ -336,3 +336,90 @@ body.reduce-motion .embers { display: none; }
   border-color: rgba(207,93,72,.82);
   background: linear-gradient(90deg, rgba(126,39,37,.4), rgba(13,7,10,.45));
 }
+
+
+/* PAIS DUNGEON — interfaz pixelada, menos texto y jerarquía de lectura */
+:root { --pixel:'Pixelify Sans',monospace; }
+.game-title { font-family:var(--pixel); font-size:clamp(68px,7.8vw,118px); letter-spacing:-.025em; }
+.game-subtitle, .title-overline, .title-caption, .menu-footnote { font-family:var(--pixel); }
+.campaign-topbar { min-height:88px; border-bottom:2px solid #57352e; box-shadow:0 5px 0 rgba(0,0,0,.35); }
+.campaign-heading strong { font:600 19px var(--pixel); letter-spacing:.06em; }
+.campaign-kicker { font:600 10px var(--pixel); letter-spacing:.16em; color:#cc7860; }
+.campaign-tabs { border-bottom:2px solid #48302b; gap:clamp(18px,3vw,42px); }
+.campaign-tab { font:600 16px var(--pixel); padding:17px 5px 14px; }
+.campaign-tab span { font-size:11px; }
+.campaign-resources { gap:10px; padding:0 16px; }
+.resource { min-width:106px; min-height:48px; justify-content:center; gap:8px; padding:8px 12px; border:2px solid rgba(160,132,93,.35); background:#171013; font:700 20px var(--pixel); }
+.resource b { font-size:23px; }
+.resource small { font:700 10px var(--pixel); letter-spacing:.08em; }
+.gold-resource { color:#f2ce62; border-color:#917139; background:linear-gradient(180deg,#382b16,#171013); text-shadow:0 2px #4e3518; }
+.gold-resource b { color:#ffdf75; }
+.health-resource { color:#7be09b; border-color:#397d53; background:linear-gradient(180deg,#173b2b,#111b17); text-shadow:0 2px #173b25; }
+.health-resource b { color:#90f1a5; }
+.health-resource[data-low="true"] { color:#ff8277; border-color:#a23c37; background:#3c1718; }
+.health-resource[data-low="true"] b { color:#ff625f; }
+.ration-resource { color:#a9d8eb; border-color:#426d82; background:linear-gradient(180deg,#1c3442,#111519); }
+.resource span { font-size:22px; }
+.campaign-main { padding-top:25px; }
+.page-heading { margin-bottom:15px; }
+.page-heading h2 { font:600 clamp(30px,3.4vw,43px) var(--pixel); }
+.campaign-screen .page-heading p, .campaign-screen .region-description, .campaign-screen .bastion-intro p { display:none; }
+.section-eyebrow { font:600 11px var(--pixel); letter-spacing:.14em; color:#c36c55; }
+.panel-heading h3 { font:600 17px var(--pixel); }
+.campaign-notice { font:11px var(--pixel); color:#d2af7d; }
+.character-meta strong { font:600 18px var(--pixel); display:flex; align-items:baseline; flex-wrap:wrap; gap:7px; }
+.character-meta strong em, .peek-member strong em { font-style:normal; color:#e2a96a; font:600 14px var(--pixel); }
+.character-meta small { font:600 11px var(--pixel); }
+.peek-member strong { font:600 14px var(--pixel); }
+.peek-member strong em { display:inline; }
+.peek-member small { font:10px var(--pixel); }
+.peek-status { font:10px var(--pixel); }
+.character-row { padding:14px 16px; border-width:2px; }
+.character-portrait { width:52px; height:57px; font:700 22px var(--pixel); border:2px solid #8b6446; }
+.character-side small { color:#80e39d; font:600 11px var(--pixel); }
+.character-health { width:100%; height:8px; margin-top:8px; border:1px solid #386446; background:#122219; }
+.character-health span { display:block; height:100%; background:linear-gradient(90deg,#2d9b55,#8dec94); box-shadow:0 0 8px rgba(91,220,127,.35); }
+.character-side { min-width:118px; }
+.party-toggle { font:600 10px var(--pixel); min-width:102px; }
+.route-layout { gap:12px; }
+.region-column { border:2px solid #574037; background:linear-gradient(180deg,#251a1c,#110d10); }
+.region-column h3 { font:600 20px var(--pixel); line-height:1.1; }
+.region-topline { font:600 10px var(--pixel); }
+.site-node { min-height:54px; gap:12px; border:2px solid #43302b; padding:10px; }
+.site-node strong { font:600 16px var(--pixel); }
+.site-node small { font:600 10px var(--pixel); letter-spacing:.05em; }
+.node-number { font:600 16px var(--pixel); }
+.site-node.is-locked { opacity:.38; filter:grayscale(.85); cursor:not-allowed; background:#100d0f; border-style:dashed; }
+.site-node.is-locked .node-number { color:#b6a9a0; }
+.region-column.is-locked { opacity:.52; filter:grayscale(.7); border-style:dashed; }
+.region-seal { margin:10px 0; padding:12px; border:2px dashed #76514a; color:#d18b7c; font:600 14px var(--pixel); text-align:center; }
+.site-detail { border:2px solid #67463b; padding:16px 18px; }
+.site-detail h3 { font:600 23px var(--pixel); }
+.site-detail p { display:none; }
+.game-action, .game-action.secondary, .dialog-button, .buy-button { border-width:2px; border-radius:0; font:600 13px var(--pixel); padding:11px 15px; }
+.sanctuary-tile { border:2px solid #594033; min-height:90px; }
+.sanctuary-tile strong { font:600 16px var(--pixel); }
+.sanctuary-tile small { font:10px var(--pixel); }
+.camp-panel { border-width:2px; border-radius:0; }
+.campaign-footer { font:9px var(--pixel); }
+.progress-complete { color:#8ee4a0; font:700 14px var(--pixel); }
+.dialog-caveat { color:#d08a68; font:600 11px var(--pixel); }
+.region-preview-item.is-locked { opacity:.45; filter:grayscale(1); }
+@media(max-width:900px) {
+  .campaign-resources { padding:0 4px; gap:5px; }
+  .resource { min-width:75px; min-height:40px; padding:5px 7px; font-size:15px; }
+  .resource small { display:none; }
+}
+@media(max-width:700px) {
+  .campaign-heading strong { font-size:13px; }
+  .campaign-kicker { font-size:8px; }
+  .campaign-resources { margin-left:auto; }
+  .resource { min-width:54px; min-height:34px; font-size:12px; gap:4px; }
+  .resource b { font-size:15px; }
+  .resource span { font-size:14px; }
+  .campaign-tabs { gap:12px; }
+  .campaign-tab { font-size:13px; }
+  .character-meta strong { font-size:15px; }
+  .character-meta strong em { font-size:12px; }
+  .region-column h3 { min-height:0; }
+}
