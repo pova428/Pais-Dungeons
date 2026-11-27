@@ -90,7 +90,7 @@
   let state = null;
   let lastFocusedElement = null;
   const SETTINGS_KEY = "the-five-settings";
-  const SAVE_KEY = "the-five-campaign-v1";
+  const SAVE_KEY = "the-five-campaign-v2";
   const settings = {highContrast:false,reduceMotion:false};
 
   try {
