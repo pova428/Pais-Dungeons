@@ -2,59 +2,85 @@
 
 RPG táctico por turnos de fantasía oscura protagonizado por cinco amigos.
 
-## Build 014 — Balance, IA y las tres rutas
+## Build 015 — Combate animado y números de daño
 
-Las 12 localizaciones ya tienen un encuentro provisional. Los tres encuentros finales son jefes y se combaten como encuentros reales.
+### Ritmo de combate
+Cada acción se reproduce en tres fases visibles:
+1. **Preparación:** el atacante carga el movimiento.
+2. **Impacto:** se aplica el daño, curación, escudo o efecto.
+3. **Recuperación:** el personaje vuelve a su posición antes del siguiente turno.
 
-### Rutas y encuentros
+Cada fotograma dura aproximadamente 0,38 segundos y hay una breve fase de recuperación. Durante la secuencia, los botones de habilidad quedan bloqueados para evitar acciones dobles. Los turnos enemigos también utilizan el mismo sistema de tres fases.
 
-| Zona | Localización | Enemigos provisionales |
-|---|---|---|
-| Instituto Camí de Mar | Programacion | Eco de proceso, Larva de virus, Fragmento de código |
-| Instituto Camí de Mar | Base de Datos | Mímico de archivo, Sanguijuela SQL, Centinela nulo |
-| Instituto Camí de Mar | Patio | Sabueso de ceniza, Aparición del patio, Pupitre roto |
-| Instituto Camí de Mar | Redes · Jefe | Espectro del router, Acechador de cable, Dron cortafuegos |
-| Baix Penedes | Bolera | Necrófago de bolera, Fantasma de pista, Aplastabolos |
-| Baix Penedes | N-340 | Desollador de asfalto, Rastrero de señal, Sabueso de chatarra |
-| Baix Penedes | Cine | Aparición de pantalla, Mímico de fotograma, Acomodador espectral |
-| Baix Penedes | Sushi · Jefe | El chef de la última mesa, Demonio de wasabi, Sombra de soja |
-| Steam | Content warning | Acechador de cámara, Demonio de clip, Fantasma grabado |
-| Steam | Labyrinthine | Tejedor del laberinto, Minotauro de espinas, Rastrero de pared |
-| Steam | Escape Backrooms | Corredor sin rostro, Mímico amarillo, Vigía del techo |
-| Steam | Clubes · Jefe | Maestro de Clubes, Bruto del bajo, Bruja estroboscópica |
+### Números flotantes
+- Daño a héroes y enemigos: número rojo con el PV realmente perdido.
+- Curación de héroes y enemigos: número verde con los PV recuperados.
+- Escudos: número azul con los puntos de protección.
+- En ataques múltiples aparecen varios números, separados para que no se tapen.
 
-La progresión es secuencial. Completa una localización para desbloquear la siguiente; al derrotar al jefe se abre la siguiente zona.
+### Efectos visuales
+El juego añade efectos por encima de los fotogramas:
+- movimiento hacia el objetivo y retroceso del atacante;
+- sacudida y destello al recibir un golpe;
+- anillo de impacto y brillo;
+- efectos de magia, fuego, curación, drenaje, escudo, maldición y golpes fuertes;
+- barra de vida actualizada en el momento del impacto.
 
-### Botón de entrada
-El botón **ENTRAR/CONTINUAR** de una zona inicia directamente el primer mapa disponible de esa zona. El botón de cada localización inicia el mapa seleccionado. Los jefes usan el mismo sistema de combate.
+No necesitas dibujar estos efectos en las imágenes: los crea el juego. Los PNG solo representan el movimiento del personaje o enemigo.
 
-### Balance provisional
-- Se han reducido PV, ataque, magia, maná y crecimiento de los héroes.
-- Se han moderado daño, curación y escudos de las habilidades.
-- Todos disponen de **Ataque básico**, que no consume maná. Esto permite que Igor e Ivan ataquen cuando no necesitan curar o proteger.
-- Los enemigos aumentan progresivamente su resistencia y daño.
-- Los jefes entran en fase de furia cuando bajan del 40% de su vida.
-- Recompensa: 45 XP por sala normal y 120 XP por jefe.
+### Dónde subir las animaciones
 
-### IA enemiga
-- **Cazadores:** priorizan al sanador y al mago, especialmente si están debilitados.
-- **Brutos:** buscan héroes con poca vida y golpean más fuerte.
-- **Espectros:** aplican una maldición que aumenta el daño recibido durante dos turnos.
-- **Soporte:** cura a un enemigo herido cuando resulta útil.
-- **Jefes:** seleccionan objetivos y entran en fase de furia.
+Cada animación tiene tres archivos PNG con transparencia y nombres exactos.
 
-La IA y el balance siguen siendo provisionales. Se irán ajustando tras probar partidas completas.
+**Héroes:**
+`assets/battles/animations/heroes/<personaje>/<habilidad>/frame-01.png`
 
-## Imágenes para sustituir los gráficos provisionales
+Personajes:
+- `guardian` — Pol
+- `duelist` — Salim
+- `arcanist` — Igor
+- `tracker` — Ivan
+- `alchemist` — Alex
 
-- `assets/battles/backgrounds/`: fondos de mapas. Sube un JPG 16:9, preferiblemente 1920 × 1080, con el nombre exacto del mapa, por ejemplo `institute-programming.jpg`.
-- `assets/battles/enemies/`: enemigos. Sube un PNG con fondo transparente por tipo de enemigo, usando los nombres listados en `assets/battles/enemies/README.md`.
+Cada personaje tiene `basic-attack` y tres carpetas de habilidades.
 
-Encontrarás los nombres exactos y las instrucciones dentro de cada carpeta. En GitHub: abre la carpeta → **Add file → Upload files** → arrastra la imagen → **Commit changes** en `main`. Puedes subirlas poco a poco; las imágenes que falten mantienen los gráficos provisionales.
+**Enemigos:**
+`assets/battles/animations/enemies/<enemy-id>/attack/frame-01.png`
 
-## Personajes y progresión
+Los 36 enemigos ya tienen su carpeta `attack`. Dentro de cada una sube `frame-01.png`, `frame-02.png` y `frame-03.png`.
 
-Cinco héroes, cuatro plazas activas, estadísticas individuales, crecimiento del nivel 1 al 10 y una ranura reservada para pasiva.
+### Cómo dibujar los tres fotogramas
+
+| Archivo | Qué debe mostrar |
+|---|---|
+| `frame-01.png` | Preparación: cargar el brazo, agacharse, levantar el arma o concentrar energía |
+| `frame-02.png` | Impacto: ejecutar el golpe, lanzar el hechizo o emitir la curación |
+| `frame-03.png` | Recuperación: terminar el gesto y volver a una pose estable |
+
+Recomendaciones:
+- PNG RGBA, fondo transparente.
+- 512 × 512 px o 512 × 640 px.
+- Mantén el mismo tamaño, escala, punto de apoyo y línea de suelo en los tres fotogramas.
+- Héroes mirando hacia la derecha; enemigos mirando hacia la izquierda.
+- Deja un margen alrededor para que los efectos de brillo y golpe no queden cortados.
+- No pongas texto, números ni barras de vida dentro del dibujo.
+
+### Subir una animación a GitHub
+
+1. Abre la carpeta exacta de la habilidad o enemigo.
+2. Pulsa **Add file → Upload files**.
+3. Arrastra los tres PNG.
+4. Verifica que se llamen `frame-01.png`, `frame-02.png` y `frame-03.png`.
+5. Pulsa **Commit changes** en la rama `main`.
+
+Puedes subir solo una animación para probarla. Si faltan imágenes, se mantienen las figuras y efectos provisionales. Al subir los tres fotogramas con el nombre correcto, el juego los reproduce automáticamente en orden.
+
+## Rutas y encuentros
+
+Las 12 localizaciones mantienen sus encuentros provisionales:
+- Instituto Camí de Mar: Programacion, Base de Datos, Patio y Redes.
+- Baix Penedes: Bolera, N-340, Cine y Sushi.
+- Steam: Content warning, Labyrinthine, Escape Backrooms y Clubes.
 
 ## Publicación
 
