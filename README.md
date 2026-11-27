@@ -1,5 +1,14 @@
 # PAIS DUNGEON
 
+## Build 026 — Escala coherente de sprites en combate
+
+- Las imágenes de reposo y ataque de los héroes comparten ahora el mismo marco visual.
+- Se elimina el escalado independiente de hasta el 190% que hacía que Salim creciera bruscamente al atacar.
+- El tamaño base del personaje aumenta y se ajusta por anchura de pantalla.
+- Los PNG de ataque se colocan dentro del marco del personaje y mantienen proporción, línea de suelo y posición.
+- La figura provisional solo se oculta cuando el PNG de ataque se ha cargado correctamente.
+
+
 ## Build 025 — Corrección de las animaciones de Salim
 
 - Las 15 imágenes PNG de Salim se han colocado en la estructura estándar `heroes/duelist/`, en vez de una carpeta anidada dentro de `guardian/`.
