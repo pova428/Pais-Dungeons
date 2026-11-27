@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10090c">
+  <meta name="description" content="THE FIVE — La Maldición. Un RPG táctico de fantasía oscura.">
+  <title>THE FIVE — La Maldición</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Pixelify+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main class="game-screen" id="game-screen">
+    <div class="world" aria-hidden="true">
+      <img class="world-art" src="assets/ashen-keep.svg" alt="">
+      <div class="world-vignette"></div>
+      <div class="world-grain"></div>
+      <div class="embers"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <header class="game-hud">
+      <div class="hud-mark" aria-hidden="true"><span class="mark-ring"></span><span class="mark-cross"></span><span class="mark-core"></span></div>
+      <div class="hud-copy">
+        <span class="hud-kicker">ARCHIVO DE LA COMPAÑÍA</span>
+        <span class="hud-number">REGISTRO <b>001</b> <i></i> ACTO CERO</span>
+      </div>
+      <div class="hud-right"><span class="status-dot"></span><span>LA NOCHE SIGUE</span></div>
+    </header>
+
+    <section class="title-menu" aria-label="Menú principal">
+      <div class="title-overline"><span></span> UNA HISTORIA DE CINCO <span></span></div>
+      <h1 class="game-title">THE FIVE</h1>
+      <div class="game-subtitle"><span class="subtitle-rule"></span> LA MALDICIÓN <span class="subtitle-rule"></span></div>
+      <p class="title-caption">Cinco juramentos. Una tierra condenada.</p>
+      <div class="menu-divider"><span>✦</span></div>
+      <nav class="main-menu" aria-label="Opciones del juego">
+        <button class="menu-entry menu-entry-primary" type="button" data-action="begin"><span class="entry-index">01</span><span class="entry-label">Nueva partida</span><span class="entry-arrow" aria-hidden="true">↗</span></button>
+        <button class="menu-entry is-disabled" type="button" disabled aria-disabled="true"><span class="entry-index">02</span><span class="entry-label">Continuar</span><span class="entry-lock" aria-hidden="true">—</span></button>
+        <button class="menu-entry" type="button" data-action="options"><span class="entry-index">03</span><span class="entry-label">Opciones</span><span class="entry-arrow" aria-hidden="true">↗</span></button>
+        <button class="menu-entry" type="button" data-action="credits"><span class="entry-index">04</span><span class="entry-label">Créditos</span><span class="entry-arrow" aria-hidden="true">↗</span></button>
+      </nav>
+      <div class="menu-footnote"><span class="footnote-rule"></span><span>EL CAMINO NO PERDONA</span></div>
+    </section>
+
+    <aside class="world-inscription" aria-label="Lema de la compañía">
+      <span class="inscription-mark">V</span>
+      <div><p class="inscription-kicker">MÁS ALLÁ DEL BASTIÓN</p><p class="inscription-text">Nadie vuelve<br>si camina solo.</p></div>
+    </aside>
+
+    <footer class="game-footer">
+      <span class="footer-build">BUILD 001 <i></i> LA PRIMERA LUZ</span>
+      <span class="footer-center">UN RPG TÁCTICO DE FANTASÍA OSCURA</span>
+      <span class="footer-controls"><kbd>ESC</kbd> CERRAR VENTANA</span>
+    </footer>
+  </main>
+
+  <div class="dialog-backdrop" id="dialog-backdrop" hidden>
+    <section class="game-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+      <div class="dialog-topline"><span></span><b id="dialog-eyebrow">EL PRIMER JURAMENTO</b><span></span></div>
+      <h2 id="dialog-title">La noche tiene memoria</h2>
+      <div class="dialog-rule"><i></i></div>
+      <div id="dialog-content" class="dialog-content"></div>
+      <div class="dialog-actions" id="dialog-actions"></div>
+      <span class="dialog-corner dialog-corner-tl"></span><span class="dialog-corner dialog-corner-tr"></span>
+      <span class="dialog-corner dialog-corner-bl"></span><span class="dialog-corner dialog-corner-br"></span>
+    </section>
+  </div>
+  <noscript>THE FIVE necesita JavaScript activado para mostrar el menú.</noscript>
+</body>
+</html>
