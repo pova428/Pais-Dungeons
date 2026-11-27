@@ -963,3 +963,17 @@ body.reduce-motion .character-sprite-animation { animation:none !important; back
   .character-skill-grid { grid-template-columns:1fr; }
   .progression-grid { grid-template-columns:1fr; }
 }
+
+.character-nav-entry { min-height:68px; }
+.character-nav-copy { gap:2px; }
+.character-nav-copy strong { line-height:1.1; }
+.character-nav-health { display:flex; align-items:center; gap:6px; margin-top:3px; }
+.character-nav-health > i { display:block; width:48px; height:4px; overflow:hidden; border:1px solid #355e3e; background:#101b13; }
+.character-nav-health > i > b { display:block; height:100%; background:#83d98f; }
+.character-nav-health em { color:rgba(151,214,157,.72); font:normal 8px var(--pixel); font-variant-numeric:tabular-nums; }
+@media(max-width:760px) {
+  .character-nav-entry { min-height:90px; }
+  .character-nav-health { justify-content:center; gap:4px; }
+  .character-nav-health > i { width:34px; }
+  .character-nav-health em { font-size:7px; }
+}
