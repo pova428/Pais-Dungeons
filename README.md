@@ -1,18 +1,21 @@
 # PAIS DUNGEON
 
-## Build 019 — Mercado, equipo y Gachapón
+## Build 020 — Mercado pixel-art y animación del Gachapón
 
 Se ha añadido el nuevo mercado medieval, con un puesto de objetos y una máquina de cápsulas independiente.
 
 ### Mercado físico
-- Escenario provisional de plaza medieval pixel-art: techo de madera, puestos, estanterías, hogar central, suelo de piedra y Gachapón.
+- Puesto del mercader ampliado, con expositores más grandes, mercancía ordenada y suministros de viaje plegables.
+- Se ha eliminado el escenario superior decorativo que no tenía acciones.
 - Se muestran cuatro objetos de equipo a la vez.
 - Las existencias se renuevan al superar una localización o pagando 35 monedas.
 - Los suministros antiguos siguen disponibles en el mostrador secundario.
-- El fondo se puede sustituir por `assets/shop/merchant-market.png`.
+- La tienda y la máquina se construyen con elementos pixel-art provisionales; no hace falta subir un fondo de mercado adicional.
 
 ### Rarezas y Gachapón
-Cada tirada cuesta **100 monedas**. Probabilidades acumuladas al 100%:
+Cada tirada cuesta **100 monedas**. La animación tiene cuatro fases: la máquina se carga y gira, cae la cápsula, se abre y muestra el premio a gran tamaño. El objeto se añade a la colección una sola vez al iniciar la tirada y la presentación se puede recuperar tras recargar la partida.
+
+Probabilidades acumuladas al 100%:
 
 | Rareza | Probabilidad |
 |---|---:|
@@ -44,8 +47,8 @@ Las piezas Hyperraras no se pueden comprar directamente en el mercader ni equipa
 
 ### Imágenes para sustituir los gráficos provisionales
 
-**Fondo de la tienda**
-Sube `merchant-market.png` a `assets/shop/`. Formato PNG horizontal 16:9, recomendado 1920 × 1080. El dibujo debe tener una plaza medieval, puesto de mercader y zona para el gachapón. El juego oscurece la imagen para mantener la estética del proyecto.
+**Fondo del mercado**
+En esta versión no se necesita una imagen de fondo del mercado: el puesto y el Gachapón están dibujados con elementos de interfaz pixel-art. La carpeta `assets/shop/` queda reservada para futuras piezas gráficas del escenario.
 
 **Iconos de objetos**
 Sube un PNG transparente por objeto a `assets/items/`, usando exactamente el identificador del objeto:
