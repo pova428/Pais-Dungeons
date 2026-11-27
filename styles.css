@@ -4104,3 +4104,60 @@ body.reduce-motion .gacha-ceremony *,body.reduce-motion .gacha-pull-button { ani
   .gacha-pixel-lamp { animation:none !important; }
 }
 body.reduce-motion .gacha-pixel-lamp { animation:none !important; }
+
+
+/* Build 021 — per-hero idle breathing animation from three PNG frames */
+.battle-character-visual {
+  position:relative;
+  width:92px;
+  height:124px;
+  flex:0 0 92px;
+  transform-origin:center bottom;
+  image-rendering:pixelated;
+}
+.battle-character-visual .battle-pixel-figure {
+  position:absolute;
+  inset:0;
+  margin:0;
+}
+.battle-character-visual.has-idle-sprite .battle-pixel-figure {
+  opacity:0;
+  animation:none;
+}
+.battle-idle-frames {
+  position:absolute;
+  z-index:3;
+  inset:0;
+  overflow:visible;
+  pointer-events:none;
+  image-rendering:pixelated;
+}
+.battle-idle-frame {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center bottom;
+  image-rendering:pixelated;
+  opacity:0;
+  pointer-events:none;
+  animation:battle-idle-breath-frame 3s steps(1,end) infinite;
+}
+.battle-idle-frame.idle-frame-1 { animation-delay:0s; }
+.battle-idle-frame.idle-frame-2 { animation-delay:-1s; }
+.battle-idle-frame.idle-frame-3 { animation-delay:-2s; }
+@keyframes battle-idle-breath-frame {
+  0%,32.99% { opacity:1; }
+  33%,100% { opacity:0; }
+}
+@media(max-width:600px) {
+  .battle-character-visual { transform:scale(.72); }
+  .battle-character-visual .battle-pixel-figure { transform:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .battle-idle-frame { animation:none !important; }
+  .battle-idle-frame.idle-frame-1 { opacity:1; }
+}
+body.reduce-motion .battle-idle-frame { animation:none !important; }
+body.reduce-motion .battle-idle-frame.idle-frame-1 { opacity:1; }
