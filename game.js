@@ -115,6 +115,7 @@
     {rarity:"Épica",chance:7},{rarity:"Legendaria",chance:2.5},{rarity:"Hyperrara",chance:.5}
   ];
   const GACHA_COST=100,SHOP_REFRESH_COST=35,SHOP_STOCK_SIZE=4,MAX_EQUIPPED_ITEMS=5;
+  const GACHA_ANIMATION_DURATIONS={spin:1350,drop:850,open:720};
 
   const items = [
     {id:"ration",name:"Ración de marcha",desc:"Comida seca para recuperar fuerzas en el bastión.",price:15,icon:"✚",kind:"rations"},
@@ -897,27 +898,101 @@
     state.notice=(item?item.name:"Objeto")+" guardado en la colección.";
     renderCampaign();saveState();
   }
+  function clearGachaAnimationTimer() {
+    if(gachaAnimationTimer!==null) {
+      window.clearTimeout(gachaAnimationTimer);
+      gachaAnimationTimer=null;
+    }
+  }
+
+  function scheduleGachaAnimationStep(delay) {
+    clearGachaAnimationTimer();
+    if(!state || !state.gachaAnimation || state.gachaAnimation.stage==="reveal") return;
+    gachaAnimationTimer=window.setTimeout(advanceGachaAnimation,Math.max(0,delay));
+  }
+
+  function advanceGachaAnimation() {
+    if(!state || !state.gachaAnimation) {
+      clearGachaAnimationTimer();
+      return;
+    }
+    const flow={spin:"drop",drop:"open",open:"reveal"};
+    const next=flow[state.gachaAnimation.stage];
+    if(!next) {
+      clearGachaAnimationTimer();
+      return;
+    }
+    state.gachaAnimation.stage=next;
+    state.gachaAnimation.stageStartedAt=Date.now();
+    saveState();
+    renderCampaign();
+    scheduleGachaAnimationStep(GACHA_ANIMATION_DURATIONS[next]||0);
+  }
+
+  function resumeGachaAnimation() {
+    if(!state || !state.gachaAnimation || state.gachaAnimation.stage==="reveal") {
+      clearGachaAnimationTimer();
+      return;
+    }
+    const stage=state.gachaAnimation.stage;
+    const duration=GACHA_ANIMATION_DURATIONS[stage];
+    if(!duration) {
+      state.gachaAnimation.stage="reveal";
+      state.gachaAnimation.stageStartedAt=Date.now();
+      saveState();
+      renderCampaign();
+      return;
+    }
+    const started=Number(state.gachaAnimation.stageStartedAt)||Date.now();
+    scheduleGachaAnimationStep(Math.max(0,duration-(Date.now()-started)));
+  }
+
+  function closeGachaReveal() {
+    if(!state || !state.gachaAnimation || state.gachaAnimation.stage!=="reveal") return;
+    clearGachaAnimationTimer();
+    state.gachaAnimation=null;
+    renderCampaign();
+    saveState();
+  }
+
   function rollGachapon() {
+    if(state.gachaAnimation) return;
     if(state.gold<GACHA_COST) return showNotice("Necesitas "+GACHA_COST+" monedas para usar el gachapón.");
     state.gold-=GACHA_COST;
     const roll=Math.random()*100;
     let cursor=0,rarity="Común";
-    for(const entry of GACHA_RARITY_RATES){cursor+=entry.chance;if(roll<cursor){rarity=entry.rarity;break;}}
+    for(const entry of GACHA_RARITY_RATES) {
+      cursor+=entry.chance;
+      if(roll<cursor) { rarity=entry.rarity; break; }
+    }
     let pool=EQUIPMENT_ITEMS.filter((item)=>item.rarity===rarity);
     if(rarity==="Hyperrara") pool=pool.filter((item)=>!state.equipmentInventory.some((owned)=>owned.itemId===item.id));
+    let result={itemId:null,rarity,duplicate:false,refund:0};
     if(!pool.length) {
-      const refund=GACHA_COST;
-      state.gold+=refund;
-      state.lastGachaResult={itemId:null,rarity,duplicate:true,refund};
-      state.notice="Ya has conseguido todas las piezas de esta rareza. Recibes "+refund+" monedas de compensación.";
+      result.duplicate=true;
+      result.refund=GACHA_COST;
+      state.gold+=GACHA_COST;
+      state.notice="La colección de esta rareza está completa. La cápsula ha devuelto el coste de la tirada.";
     } else {
       const item=pool[Math.floor(Math.random()*pool.length)];
       addEquipmentToCollection(item.id);
-      state.lastGachaResult={itemId:item.id,rarity:item.rarity,duplicate:false};
-      state.notice="¡Has conseguido "+item.name+" · "+item.rarity+"!";
+      result.itemId=item.id;
+      state.notice="La cápsula ha revelado "+item.name+".";
     }
-    renderCampaign();saveState();
+    state.lastGachaResult=result;
+    state.gachaAnimation={
+      stage:"spin",
+      stageStartedAt:Date.now(),
+      itemId:result.itemId,
+      rarity:result.rarity,
+      duplicate:result.duplicate,
+      refund:result.refund
+    };
+    saveState();
+    renderCampaign();
+    resumeGachaAnimation();
   }
+
   function buyEquipment(itemId) {
     const item=EQUIPMENT_ITEMS.find((entry)=>entry.id===itemId);
     if(!item||item.rarity==="Hyperrara") return;
@@ -937,13 +1012,13 @@
     inventory:{bandage:0,tonic:0,oil:0},
     equipmentInventory:[],
     equippedItems:{guardian:[],duelist:[],arcanist:[],tracker:[],alchemist:[]},
-    nextEquipmentUid:1,shopStock:[],shopRotation:0,lastGachaResult:null,
+    nextEquipmentUid:1,shopStock:[],shopRotation:0,lastGachaResult:null,gachaAnimation:null,
     hp:{guardian:58,duelist:48,arcanist:78,tracker:116,alchemist:86},
     mp:{guardian:60,duelist:36,arcanist:80,tracker:48,alchemist:52},
     levels:{guardian:1,duelist:1,arcanist:1,tracker:1,alchemist:1},
     xp:{guardian:0,duelist:0,arcanist:0,tracker:0,alchemist:0},
     battle:null,
-    characterDataVersion:7,
+    characterDataVersion:8,
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
     battleSiteId:"institute-programming",
@@ -958,6 +1033,7 @@
   let lastFocusedElement = null;
   let battleTurnTimer = null;
   let battleActionTimer = null;
+  let gachaAnimationTimer = null;
   const battleFloatTimers = new WeakMap();
   const BATTLE_ACTION_FRAME_DELAY = 420;
   const BATTLE_ACTION_RECOVERY_DELAY = 380;
@@ -1192,7 +1268,8 @@
         nextEquipmentUid:Math.max(1,Number(saved.nextEquipmentUid)||1),
         shopStock:Array.isArray(saved.shopStock) ? saved.shopStock.filter((id)=>EQUIPMENT_ITEMS.some((item)=>item.id===id && item.rarity!=="Hyperrara")) : [],
         shopRotation:Math.max(0,Number(saved.shopRotation)||0),lastGachaResult:saved.lastGachaResult || null,
-        hp,mp,levels,xp,characterDataVersion:7,
+        gachaAnimation:saved.gachaAnimation && typeof saved.gachaAnimation==="object" ? saved.gachaAnimation : null,
+        hp,mp,levels,xp,characterDataVersion:8,
         battle:saved.battle && typeof saved.battle === "object" ? saved.battle : null,
         visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
@@ -1265,7 +1342,7 @@
 
   function saveState() {
     if (!state) return;
-    state.characterDataVersion = 7;
+    state.characterDataVersion = 8;
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (error) {
       state.notice = "No se ha podido guardar en este navegador. La partida seguirá activa mientras no cierres la página.";
     }
@@ -1291,6 +1368,7 @@
     resumeBattleFloatingNumbers();
     saveState();
     renderCampaign();
+    resumeGachaAnimation();
     if (state.tab === "battle" && state.battle && state.battle.status === "active") {
       if (state.battle.actionAnimation) {
         resumeBattleAction();
@@ -1929,6 +2007,7 @@
     if (action === "buy-equipment") return buyEquipment(target.dataset.item);
     if (action === "refresh-shop") return rotateShopStock();
     if (action === "gacha-roll") return rollGachapon();
+    if (action === "close-gacha-reveal") return closeGachaReveal();
     if (action === "equip-item") return equipOwnedItem(target.dataset.character,target.dataset.uid);
     if (action === "unequip-item") return unequipItem(target.dataset.character,target.dataset.uid);
     if (action === "toggle-party") {
