@@ -1,5 +1,16 @@
 # PAIS DUNGEON
 
+## Build 017 — revisión final del ritmo y números de combate
+
+- El ataque enemigo tiene tres fases más lentas: preparación 900 ms, impacto 650 ms y recuperación 650 ms.
+- Durante la preparación aparece el aviso **EL ENEMIGO PREPARA EL GOLPE**; al impactar, la interfaz muestra el aviso de impacto.
+- El movimiento del enemigo sigue una misma animación a través de los tres fotogramas, sin reiniciarse en cada actualización.
+- El número flotante mantiene su tiempo de animación original aunque el juego reconstruya la interfaz. Un golpe normal crea un solo número; un multiataque muestra un número por cada impacto real.
+- Los números se eliminan al finalizar su duración y sus temporizadores se recuperan después de continuar una partida.
+- Las partidas guardadas de versiones anteriores normalizan los tiempos de la animación y no repiten un impacto ya resuelto.
+
+Los efectos son: daño rojo, curación verde y escudo azul.
+
 ## Build 016 — Ritmo de enemigos y corrección de números flotantes
 
 - Los enemigos tardan más en preparar un ataque: 900 ms antes del impacto.
