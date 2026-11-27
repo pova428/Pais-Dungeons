@@ -1,74 +1,48 @@
-# THE FIVE — La Maldición
+# PAIS DUNGEON
 
-RPG táctico de fantasía oscura, con cinco protagonistas inspirados en un grupo de amigos. Proyecto web original en HTML, CSS y JavaScript.
+RPG táctico de fantasía oscura protagonizado por cinco amigos.
 
-## Build 003 — Personajes y mapa personalizado
+## Build 004 — Identidad, pixel art y progresión
 
 ### Los cinco protagonistas
-
 - **Pol «El Flaco»** — Guardián.
 - **Salim «El Moro»** — Duelista.
 - **Igor «El Alto»** — Arcanista.
 - **Ivan «El Gordo»** — Rastreador.
 - **Alex «El Mujeriego»** — Alquimista.
 
-Los nombres y apodos ya están definidos. Las clases, las habilidades, los rasgos y las estadísticas todavía son provisionales y se personalizarán en una fase posterior.
+Los nombres y apodos aparecen juntos en las fichas y en la compañía. Las clases y estadísticas siguen siendo provisionales.
 
-### Las tres zonas
+### Tres zonas en orden obligatorio
+1. **Instituto Camí de Mar:** Programacion → Base de Datos → Patio → **Redes (jefe)**.
+2. **Baix Penedes:** Bolera → N-340 → Cine → **Sushi (jefe)**.
+3. **Steam:** Content warning → Labyrinthine → Escape Backrooms → **Clubes (jefe)**.
 
-Cada zona contiene cuatro paradas: tres localizaciones y una sala final con el jefe.
+La primera zona comienza abierta. Cada parada se desbloquea al superar la anterior. La sala del jefe solo se abre al superar las tres paradas previas. Al superar el jefe de una zona se desbloquea la siguiente. Las paradas y zonas cerradas muestran candados y no se pueden seleccionar.
 
-1. **Instituto Camí de Mar**
-   - Programacion
-   - Base de Datos
-   - Patio
-   - **Redes — sala del jefe**
+La victoria del jefe se simula temporalmente desde el menú, ya que el combate real todavía está pendiente.
 
-2. **Baix Penedes**
-   - Bolera
-   - N-340
-   - Cine
-   - **Sushi — sala del jefe**
+### Interfaz
+- Título visible: **Pais Dungeon**.
+- Tipografía pixelada y paneles de bordes duros.
+- Menos texto ambiental y controles más grandes.
+- Indicadores destacados de vida, oro y raciones con colores diferenciados.
 
-3. **Steam**
-   - Content warning
-   - Labyrinthine
-   - Escape Backrooms
-   - **Clubes — sala del jefe**
+### Sistemas incluidos
+- Bastión, compañía, rutas, descanso y tienda.
+- Cinco héroes con cuatro plazas para expedición.
+- Guardado local en el navegador.
+- Descanso y tienda con inventario básico.
+- Progresión secuencial por las doce localizaciones y tres jefes.
 
-### Sistemas incluidos en el esqueleto
+## Pendiente
+Combate táctico, exploración jugable, habilidades, enemigos, objetos con efectos reales, recompensas y retratos pixel art definitivos.
 
-- Bastión como refugio principal.
-- Compañía con cinco héroes y selección de cuatro para expedición.
-- Mapa de tres zonas con doce paradas en total.
-- Selección e inspección de las salas finales.
-- Descanso en el bastión, con coste de una ración y recuperación de vitalidad.
-- Mercader con raciones, vendas, tónicos y aceite.
-- Guardado local de campaña, grupo, inventario y preferencias.
-- Migración de partidas anteriores al nuevo mapa.
+## Publicar
+GitHub Pages usa la rama main y la carpeta root.
 
-## Pendiente de desarrollo
-
-El desplazamiento por las localizaciones, los encuentros, el combate táctico, los enemigos reales, los patrones de los jefes, las habilidades, el equipo y las recompensas se desarrollarán en siguientes versiones.
-
-## Ejecutar en local
-
-Abre `index.html` en un navegador moderno. No necesita instalación ni dependencias de JavaScript.
-
-## Publicar con GitHub Pages
-
-En **Settings → Pages**:
-- Source: **Deploy from a branch**
-- Branch: **main**
-- Folder: **/ (root)**
-
-## Estructura
-
-- `index.html`: pantalla de título y contenedor de campaña.
-- `styles.css`: estilo de fantasía oscura, menús, mapas y paneles del juego.
-- `game.js`: personajes, zonas, navegación, descanso, tienda y guardado.
-- `assets/ashen-keep.svg`: escenario original del bastión en ruinas.
-
-## Dirección artística
-
-La interfaz se diseña como una pantalla de videojuego: paleta limitada, sombras, ornamentación sobria y controles integrados en el mundo. Es una interpretación original de fantasía oscura y no utiliza ilustraciones ni recursos de Darkest Dungeon.
+## Archivos
+- index.html: menú y estructura de campaña.
+- styles.css: interfaz de fantasía oscura pixelada.
+- game.js: personajes, mapa, progresión, tienda, descanso y guardado.
+- assets/ashen-keep.svg: escenario original del bastión.
