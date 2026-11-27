@@ -145,17 +145,14 @@
   ];
 
   function createBattleState(siteId) {
+    const startingVitals = {};
+    state.party.forEach((id) => {
+      startingVitals[id] = {hp:Number(state.hp[id]) || 0,mp:Number(state.mp[id]) || 0};
+    });
     return {
-      siteId,
-      round:1,
-      order:[],
-      turnIndex:0,
+      siteId,round:1,order:[],turnIndex:0,currentTurnStarted:null,startingVitals,
       enemies:BATTLE_ENEMIES.map((enemy) => Object.assign({},enemy,{hp:enemy.maxHp,burn:0,stun:0})),
-      shields:{},
-      buffs:{},
-      pendingSkillId:null,
-      targetMode:null,
-      status:"active",
+      shields:{},shieldTurns:{},buffs:{},pendingSkillId:null,targetMode:null,status:"active",
       log:["La compañía entra en la sala. ¡Comienza el combate!"]
     };
   }
@@ -170,7 +167,9 @@
   function getBattleOrder() {
     const allies = getAliveParty().map((id) => {
       const character = characters.find((entry) => entry.id === id);
-      return {side:"ally",id,name:character.name,speed:getCharacterStats(character,state.levels[id] || 1).speed};
+      const baseSpeed=getCharacterStats(character,state.levels[id] || 1).speed;
+      const speedBuff=state.battle.buffs[id] ? state.battle.buffs[id].speed || 0 : 0;
+      return {side:"ally",id,name:character.name,speed:baseSpeed*(1+speedBuff)};
     });
     const enemies = state.battle.enemies.filter((enemy) => enemy.hp > 0).map((enemy) => ({
       side:"enemy",id:enemy.id,name:enemy.name,speed:enemy.speed
@@ -192,6 +191,7 @@
   function setBattleVictory() {
     const battle = state.battle;
     if (battle.status !== "active") return;
+    clearBattleTimer();
     battle.status = "victory";
     battle.pendingSkillId = null;
     battle.targetMode = null;
@@ -214,6 +214,7 @@
   function setBattleDefeat() {
     const battle = state.battle;
     if (battle.status !== "active") return;
+    clearBattleTimer();
     battle.status = "defeat";
     battle.pendingSkillId = null;
     battle.targetMode = null;
@@ -240,6 +241,11 @@
       state.battle.shields[heroId] -= absorbed;
       damage -= absorbed;
       pushBattleLog(character.name + " bloquea " + absorbed + " con su escudo.");
+      if (state.battle.shields[heroId] <= 0) {
+        delete state.battle.shields[heroId];
+        delete state.battle.shieldTurns[heroId];
+        pushBattleLog("El escudo de " + character.name + " se rompe.");
+      }
     }
     const current = Math.max(0,Number(state.hp[heroId]) || 0);
     const actual = Math.min(current,damage);
@@ -533,6 +539,14 @@
 
   let state = null;
   let lastFocusedElement = null;
+  let battleTurnTimer = null;
+
+  function clearBattleTimer() {
+    if (battleTurnTimer !== null) {
+      window.clearTimeout(battleTurnTimer);
+      battleTurnTimer = null;
+    }
+  }
   const SETTINGS_KEY = "the-five-settings";
   const SAVE_KEY = "pais-dungeon-campaign-v3";
   const settings = {highContrast:false,reduceMotion:false};
