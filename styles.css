@@ -321,3 +321,6 @@ body.reduce-motion .embers { display: none; }
   .supply-item { grid-template-columns: 35px minmax(0,1fr); }
   .buy-button { grid-column: 2; justify-self: start; }
 }
+
+.region-boss { display:block; width:100%; text-align:left; font-family:inherit; color:inherit; cursor:pointer; }
+.region-boss:hover { border-color:rgba(201,102,77,.78); background:linear-gradient(100deg,rgba(119,37,35,.4),rgba(20,11,14,.5)); }
