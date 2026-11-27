@@ -4064,3 +4064,43 @@ body.reduce-motion .battle-enemy.is-attacking .battle-enemy-figure { animation:n
 body.reduce-motion .gacha-showcase-lights i,body.reduce-motion .gacha-pixel-machine,
 body.reduce-motion .gacha-machine-rotor,body.reduce-motion .gacha-orb,body.reduce-motion .gacha-capsule,
 body.reduce-motion .gacha-ceremony *,body.reduce-motion .gacha-pull-button { animation:none !important;transition:none !important; }
+
+
+/* Gachapon machine lamp wiring — square bulbs on all four cabinet edges */
+.gacha-machine-lights {
+  position:absolute;
+  z-index:7;
+  inset:-10px;
+  pointer-events:none;
+}
+.gacha-pixel-lamp {
+  position:absolute;
+  width:7px;
+  height:7px;
+  border:2px solid #392743;
+  background:#f4d28b;
+  box-shadow:2px 2px 0 #17101e,0 0 0 2px rgba(225,179,244,.12),0 0 11px rgba(255,197,117,.5);
+  animation:gacha-lamp-pulse .8s steps(2,end) infinite alternate;
+}
+.gacha-pixel-lamp:nth-child(1) { left:6%;top:0; }
+.gacha-pixel-lamp:nth-child(2) { left:18%;top:0;animation-delay:.1s; }
+.gacha-pixel-lamp:nth-child(3) { left:30%;top:0;animation-delay:.2s; }
+.gacha-pixel-lamp:nth-child(4) { left:42%;top:0;animation-delay:.3s; }
+.gacha-pixel-lamp:nth-child(5) { left:54%;top:0;animation-delay:.4s; }
+.gacha-pixel-lamp:nth-child(6) { left:66%;top:0;animation-delay:.5s; }
+.gacha-pixel-lamp:nth-child(7) { left:78%;top:0;animation-delay:.6s; }
+.gacha-pixel-lamp:nth-child(8) { right:6%;top:0;animation-delay:.7s; }
+.gacha-pixel-lamp:nth-child(9) { right:6%;bottom:0;background:#8de4d0; }
+.gacha-pixel-lamp:nth-child(10) { right:18%;bottom:0;background:#8de4d0;animation-delay:.1s; }
+.gacha-pixel-lamp:nth-child(11) { right:30%;bottom:0;background:#e99db9;animation-delay:.2s; }
+.gacha-pixel-lamp:nth-child(12) { right:42%;bottom:0;background:#e99db9;animation-delay:.3s; }
+.gacha-pixel-lamp:nth-child(13) { left:42%;bottom:0;background:#e99db9;animation-delay:.4s; }
+.gacha-pixel-lamp:nth-child(14) { left:30%;bottom:0;background:#8de4d0;animation-delay:.5s; }
+.gacha-pixel-lamp:nth-child(15) { left:18%;bottom:0;background:#8de4d0;animation-delay:.6s; }
+.gacha-pixel-lamp:nth-child(16) { left:6%;bottom:0;animation-delay:.7s; }
+.gacha-machine-glass .gacha-orb { image-rendering:pixelated; }
+.gacha-pixel-machine .gacha-machine-glass { box-shadow:inset 0 0 0 4px #332541,inset 0 0 24px #120e1b,0 0 0 3px #2a1d34,5px 5px 0 #100b13,0 0 18px rgba(197,126,225,.19); }
+@media(prefers-reduced-motion:reduce) {
+  .gacha-pixel-lamp { animation:none !important; }
+}
+body.reduce-motion .gacha-pixel-lamp { animation:none !important; }
