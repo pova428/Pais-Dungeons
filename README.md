@@ -2,55 +2,49 @@
 
 RPG táctico de fantasía oscura protagonizado por cinco amigos.
 
-## Build 004 — Identidad, pixel art y progresión
+## Build 005 — Gestión de personajes
 
-### Los cinco protagonistas
+La sección **Compañía** ahora presenta un selector vertical a la izquierda y una ficha detallada reutilizable para los cinco héroes.
+
 - **Pol «El Flaco»** — Guardián.
 - **Salim «El Moro»** — Duelista.
 - **Igor «El Alto»** — Arcanista.
 - **Ivan «El Gordo»** — Rastreador.
 - **Alex «El Mujeriego»** — Alquimista.
 
-Los nombres y apodos aparecen juntos en las fichas y en la compañía. Las clases y estadísticas siguen siendo provisionales.
+Cada ficha incluye retrato, vista previa de sprite, clase, nivel, vida, estado de grupo y cuatro huecos de habilidades futuras. Las habilidades son propuestas provisionales, no ataques implementados.
 
-### Tres zonas en orden obligatorio
+Salim ya tiene retrato y hoja de sprites en `assets/salim-portrait.webp` y `assets/salim-sprites.webp`. Los otros cuatro muestran una tarjeta provisional hasta que se suban sus imágenes.
+
+Consulta `assets/CHARACTER-ASSETS.md` para ver los nombres exactos de archivos y cómo subir los retratos y las hojas de sprites desde GitHub.
+
+## Rutas y progresión
+
 1. **Instituto Camí de Mar:** Programacion → Base de Datos → Patio → **Redes (jefe)**.
 2. **Baix Penedes:** Bolera → N-340 → Cine → **Sushi (jefe)**.
 3. **Steam:** Content warning → Labyrinthine → Escape Backrooms → **Clubes (jefe)**.
 
-La primera zona comienza abierta. Cada parada se desbloquea al superar la anterior. La sala del jefe solo se abre al superar las tres paradas previas. Al superar el jefe de una zona se desbloquea la siguiente. Las paradas y zonas cerradas muestran candados y no se pueden seleccionar.
+Cada localización se desbloquea al superar la anterior. El jefe abre la siguiente zona. La victoria de jefes es una simulación temporal hasta desarrollar los combates.
 
-La victoria del jefe se simula temporalmente desde el menú, ya que el combate real todavía está pendiente.
+## Sistemas incluidos
 
-### Interfaz
-- Título visible: **Pais Dungeon**.
-- Tipografía pixelada y paneles de bordes duros.
-- Menos texto ambiental y controles más grandes.
-- Indicadores destacados de vida, oro y raciones con colores diferenciados.
-
-### Sistemas incluidos
-- Bastión, compañía, rutas, descanso y tienda.
-- Cinco héroes con cuatro plazas para expedición.
-- Guardado local en el navegador.
-- Descanso y tienda con inventario básico.
-- Progresión secuencial por las doce localizaciones y tres jefes.
+- Bastión, compañía, rutas, descanso y mercader.
+- Grupo de expedición de cuatro héroes.
+- Guardado local del progreso en el navegador.
+- Interfaz pixelada de fantasía oscura.
+- Panel de personajes con mini menú lateral y fichas grandes.
 
 ## Pendiente
-Combate táctico, exploración jugable, habilidades, enemigos, objetos con efectos reales, recompensas y retratos pixel art definitivos.
+
+Combate táctico real, encuentros, enemigos, animaciones de todos los héroes, habilidades definitivas, equipamiento, recompensas y retratos finales del resto del grupo.
 
 ## Publicar
-GitHub Pages usa la rama main y la carpeta root.
 
-## Archivos
-- index.html: menú y estructura de campaña.
-- styles.css: interfaz de fantasía oscura pixelada.
-- game.js: personajes, mapa, progresión, tienda, descanso y guardado.
-- assets/ashen-keep.svg: escenario original del bastión.
+GitHub Pages usa la rama `main` y la carpeta `/(root)`.
 
+## Archivos principales
 
-## Salim «El Moro» — retrato y sprite
-
-- `assets/salim-portrait.webp`: retrato pixel art para el selector de personajes.
-- `assets/salim-sprites.webp`: atlas 4×4 (48×49 px por fotograma) con filas de reposo (4), caminar (4), ataque (4) y daño (2).
-- La ficha de Salim muestra su retrato, alias, clase Duelista, vida, sprite animado y cuatro espacios de habilidad.
-- El ataque básico queda señalado como animación preparada; las otras habilidades se mantienen como «Por definir» hasta diseñarlas.
+- `index.html`: menú y estructura de campaña.
+- `styles.css`: interfaz, mapas y fichas de personajes.
+- `game.js`: personajes, progresión, tienda, descanso y guardado.
+- `assets/`: escenario, retratos y hojas de sprites.
