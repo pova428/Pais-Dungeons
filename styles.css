@@ -4463,7 +4463,7 @@ body.reduce-motion .battle-idle-frame.idle-frame-1 { opacity:1; }
 @media(max-width:650px) {
   .rest-page-heading { margin-bottom:10px; }
   .rest-page-heading p { font-size:9px; }
-  .rest-campfire-scene { height:650px;background-position:48% center;background-size:auto 100%; }
+  .rest-campfire-scene { height:650px;background-image:url("assets/rest-campsite-mobile.svg");background-position:center;background-size:cover; }
   .rest-camp-controls { top:5%;left:7%;right:7%;width:auto;text-align:center; }
   .rest-controls-eyebrow { font-size:8px; }
   .rest-camp-controls h3 { margin:7px 0 5px;font-size:18px; }
