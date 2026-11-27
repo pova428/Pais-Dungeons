@@ -4500,3 +4500,13 @@ body.reduce-motion .battle-idle-frame.idle-frame-1 { opacity:1; }
 body.reduce-motion .rest-flames i,body.reduce-motion .rest-smoke i,
 body.reduce-motion .rest-fire-sparks i,body.reduce-motion .rest-fire-aura { animation:none !important; }
 body.reduce-motion .rest-smoke i { opacity:.12; }
+
+/* Build 025 — use the loaded combat sprite instead of duplicating the fallback figure */
+.battle-unit-art.has-action-sprite .battle-character-visual {
+  opacity:0;
+  visibility:hidden;
+}
+.battle-action-sprite {
+  image-rendering:pixelated;
+  image-rendering:crisp-edges;
+}
