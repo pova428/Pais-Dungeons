@@ -146,6 +146,7 @@
     characterDataVersion:3,
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
+    battleSiteId:"institute-programming",
     selectedCharacter:"duelist",
     selectedRegion:"institute",
     selectedSite:"institute-programming",
@@ -228,6 +229,14 @@
       merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
       if (merged.party.length === 0) merged.party = defaults.party;
       if (!characters.some((character) => character.id === merged.selectedCharacter)) merged.selectedCharacter = "duelist";
+      const allSites = regions.flatMap((region) => region.sites);
+      const battleSite = allSites.find((site) => site.id === merged.battleSiteId);
+      const battleRegion = regions.find((region) => region.sites.some((site) => site.id === merged.battleSiteId));
+      const battleSiteIndex = battleRegion ? battleRegion.sites.findIndex((site) => site.id === merged.battleSiteId) : -1;
+      if (!battleSite || battleSite.boss || !isSiteUnlocked(battleRegion,battleSiteIndex,merged.visitedSites)) {
+        merged.battleSiteId = "institute-programming";
+        if (merged.tab === "battle") merged.tab = "route";
+      }
       const maximumRegion = getUnlockedRegionIndex(merged.visitedSites);
       let selectedIndex = regions.findIndex((region) => region.id === merged.selectedRegion);
       if (selectedIndex < 0 || selectedIndex > maximumRegion) selectedIndex = maximumRegion;
@@ -311,14 +320,21 @@
     const healthResource = document.getElementById("health-resource");
     if (lifeCount) lifeCount.textContent = averageLife + "%";
     if (healthResource) healthResource.dataset.low = String(averageLife <= 35);
-    campaignTitle.textContent = state.tab === "bastion" ? "BASTIÓN DEL ÚLTIMO FAROL" :
+    const activeBattleSite = state.tab === "battle"
+      ? regions.flatMap((region) => region.sites).find((site) => site.id === state.battleSiteId)
+      : null;
+    campaignTitle.textContent = state.tab === "battle" ? (activeBattleSite ? activeBattleSite.name.toUpperCase() + " · CAMPO DE BATALLA" : "CAMPO DE BATALLA") :
+      state.tab === "bastion" ? "BASTIÓN DEL ÚLTIMO FAROL" :
       state.tab === "company" ? "REGISTRO DE LA COMPAÑÍA" :
       state.tab === "route" ? "MAPA DE LAS TIERRAS MALDITAS" :
       state.tab === "rest" ? "CÁMARA DEL ÚLTIMO FAROL" : "MERCADER DEL BASTIÓN";
+    const campaignTabs = document.querySelector(".campaign-tabs");
+    if (campaignTabs) campaignTabs.hidden = state.tab === "battle";
     document.querySelectorAll(".campaign-tab").forEach((button) => button.classList.toggle("is-active",button.dataset.tab === state.tab));
     if (state.tab === "bastion") campaignMain.innerHTML = renderBastion();
     if (state.tab === "company") campaignMain.innerHTML = renderCompany();
     if (state.tab === "route") campaignMain.innerHTML = renderRoute();
+    if (state.tab === "battle") campaignMain.innerHTML = renderBattle();
     if (state.tab === "rest") campaignMain.innerHTML = renderRest();
     if (state.tab === "shop") campaignMain.innerHTML = renderShop();
   }
@@ -463,11 +479,92 @@
     const detailType = selectedSite.boss ? (siteCompleted ? "JEFE DERROTADO" : "JEFE FINAL") : (siteCompleted ? "LOCALIZACIÓN SUPERADA" : "LOCALIZACIÓN");
     const detailAction = selectedSite.boss
       ? (siteCompleted ? '<span class="progress-complete">✓ JEFE SUPERADO</span>' : '<button class="game-action" type="button" data-action="boss-preview">VER JEFE →</button>')
-      : (siteCompleted ? '<span class="progress-complete">✓ NIVEL SUPERADO</span>' : '<button class="game-action" type="button" data-action="complete-site" data-site="' + selectedSite.id + '">SUPERAR NIVEL →</button>');
+      : (siteCompleted
+          ? '<span class="progress-complete">✓ NIVEL SUPERADO</span>'
+          : '<button class="game-action" type="button" data-action="enter-battle" data-site="' + selectedSite.id + '">ENTRAR EN SALA →</button>');
     return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">PROGRESO ' + (unlockedRegionIndex + 1) + ' / 3 ZONAS</span><h2>Mapa de rutas</h2></div><span class="route-legend">🔒 CERRADO · ✓ SUPERADO</span></div>' +
       '<div class="route-layout">' + cards + '</div>' +
       '<section class="site-detail"><div><span class="section-eyebrow">' + selectedRegion.name.toUpperCase() + ' · ' + detailType + '</span><h3>' + selectedSite.name + '</h3></div>' + routeCompanion + '<div class="site-detail-actions">' + detailAction + '<button class="game-action secondary" type="button" data-action="prepare-expedition">PREPARAR GRUPO</button></div></section>' +
       '<p class="campaign-notice">' + state.notice + '</p></div>';
+  }
+
+  function renderBattle() {
+    const siteId = state.battleSiteId || "institute-programming";
+    const region = regions.find((entry) => entry.sites.some((site) => site.id === siteId));
+    const site = region ? region.sites.find((entry) => entry.id === siteId) : null;
+    const siteIndex = region ? region.sites.findIndex((entry) => entry.id === siteId) : -1;
+    if (!site || site.boss || !isSiteUnlocked(region,siteIndex,state.visitedSites)) {
+      state.tab = "route";
+      return renderRoute();
+    }
+
+    const allyUnits = state.party.map((id,index) => {
+      const character = characters.find((entry) => entry.id === id);
+      if (!character) return "";
+      const level = state.levels[id] || 1;
+      const maximum = getCharacterStats(character,level).hp;
+      const current = Number.isFinite(state.hp[id]) ? Math.max(0,Math.min(maximum,state.hp[id])) : maximum;
+      const ratio = Math.round(current / maximum * 100);
+      return '<article class="battle-unit battle-ally battle-hero-' + character.id + '">' +
+        '<div class="battle-unit-art">' +
+          '<span class="battle-unit-index">0' + (index + 1) + '</span>' +
+          '<div class="battle-pixel-figure figure-' + character.id + '" aria-hidden="true">' +
+            '<i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">' + character.sign + '</b>' +
+          '</div>' +
+          '<span class="battle-unit-role">' + character.role + '</span>' +
+        '</div>' +
+        '<div class="battle-unit-info">' +
+          '<div class="battle-unit-name"><strong>' + character.name + '</strong><em>«' + character.title + '»</em></div>' +
+          '<div class="battle-unit-life"><span>VIDA</span><b>' + current + ' / ' + maximum + ' PV</b></div>' +
+          '<div class="battle-hp-track"><i style="width:' + ratio + '%"></i></div>' +
+        '</div>' +
+      '</article>';
+    }).join("");
+
+    const enemies = [
+      {id:"error",name:"Proceso corrupto",role:"ERROR DE SISTEMA",hp:74,maxHp:74,mark:"404"},
+      {id:"virus",name:"Virus de aula",role:"AMENAZA",hp:62,maxHp:62,mark:"!"},
+      {id:"glitch",name:"Fragmento de código",role:"ANOMALÍA",hp:88,maxHp:88,mark:"//"}
+    ];
+    const enemyUnits = enemies.map((enemy,index) => {
+      const ratio = Math.round(enemy.hp / enemy.maxHp * 100);
+      return '<article class="battle-unit battle-enemy battle-enemy-' + enemy.id + '">' +
+        '<div class="battle-unit-art">' +
+          '<span class="battle-unit-index">E0' + (index + 1) + '</span>' +
+          '<div class="battle-enemy-figure enemy-' + enemy.id + '" aria-hidden="true"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>' + enemy.mark + '</b></div>' +
+          '<span class="battle-unit-role">' + enemy.role + '</span>' +
+        '</div>' +
+        '<div class="battle-unit-info">' +
+          '<div class="battle-unit-name"><strong>' + enemy.name + '</strong></div>' +
+          '<div class="battle-unit-life"><span>VIDA</span><b>' + enemy.hp + ' / ' + enemy.maxHp + ' PV</b></div>' +
+          '<div class="battle-hp-track enemy-hp-track"><i style="width:' + ratio + '%"></i></div>' +
+        '</div>' +
+      '</article>';
+    }).join("");
+
+    return '<div class="campaign-page battle-page">' +
+      '<div class="battle-page-heading"><div><span class="section-eyebrow">' + region.name.toUpperCase() + ' · SALA ÚNICA</span><h2>' + site.name + '</h2></div>' +
+        '<div class="battle-heading-status"><span class="battle-live-dot"></span>CAMPO DE BATALLA <small>VISTA PREVIA</small></div></div>' +
+      '<section class="battle-stage" aria-label="Campo de batalla provisional">' +
+        '<div class="battle-room-wall">' +
+          '<div class="battle-window"><i></i><i></i><i></i><i></i></div>' +
+          '<div class="battle-blackboard"><span>PROGRAMACIÓN</span><b>if (fear) { run(); }</b><small>// SISTEMA EN ESTADO CRÍTICO</small></div>' +
+          '<div class="battle-wall-clock"><i></i></div>' +
+          '<div class="battle-server-rack"><i></i><i></i><i></i><i></i><b>SYS</b></div>' +
+          '<div class="battle-desk desk-one"><i></i><b></b></div><div class="battle-desk desk-two"><i></i><b></b></div>' +
+          '<div class="battle-room-fog"></div>' +
+        '</div>' +
+        '<div class="battle-stage-topline"><span><b>01</b> · AULA DE INFORMÁTICA</span><span>ESCENARIO PROVISIONAL</span></div>' +
+        '<div class="battle-combat-layout">' +
+          '<section class="battle-side battle-allies-side"><div class="battle-side-heading"><span>COMPAÑÍA</span><b>' + String(state.party.length).padStart(2,"0") + ' / 04</b></div><div class="battle-formation battle-ally-formation">' + allyUnits + '</div></section>' +
+          '<div class="battle-mid-mark"><span>VS</span><i></i></div>' +
+          '<section class="battle-side battle-enemies-side"><div class="battle-side-heading"><span>AMENAZAS</span><b>03</b></div><div class="battle-formation battle-enemy-formation">' + enemyUnits + '</div></section>' +
+        '</div>' +
+        '<div class="battle-ground-line"></div>' +
+        '<div class="battle-stage-foot"><span>FORMACIÓN DE LA COMPAÑÍA</span><span>ENCUENTRO VISUAL · SIN TURNOS</span><span>1 SALA</span></div>' +
+      '</section>' +
+      '<div class="battle-bottom-bar"><div><span class="battle-provisional-mark">◆</span><span>PERSONAJES Y ENEMIGOS PROVISIONALES</span></div><button class="game-action secondary" type="button" data-action="leave-battle">← VOLVER A RUTAS</button></div>' +
+    '</div>';
   }
 
   function renderRest() {
@@ -621,6 +718,29 @@
     if (action === "prepare-expedition") {
       if (state.party.length !== 4) return showNotice("Necesitas seleccionar exactamente cuatro héroes en la sección Compañía antes de partir.");
       return openDialog("expedition");
+    }
+    if (action === "enter-battle") {
+      const siteId = target.dataset.site;
+      const region = regions.find((entry) => entry.sites.some((site) => site.id === siteId));
+      const siteIndex = region ? region.sites.findIndex((site) => site.id === siteId) : -1;
+      if (!region || siteIndex < 0 || region.sites[siteIndex].boss || !isSiteUnlocked(region,siteIndex,state.visitedSites)) {
+        return showNotice("Esta sala todavía está bloqueada.");
+      }
+      if (state.party.length !== 4) return showNotice("Selecciona exactamente cuatro personajes en Compañía para entrar en la sala.");
+      state.battleSiteId = siteId;
+      state.selectedRegion = region.id;
+      state.selectedSite = siteId;
+      state.tab = "battle";
+      saveState();
+      renderCampaign();
+      return;
+    }
+    if (action === "leave-battle") {
+      state.tab = "route";
+      if (state.battleSiteId) state.selectedSite = state.battleSiteId;
+      saveState();
+      renderCampaign();
+      return;
     }
     if (action === "complete-site" || action === "visit-site") return completeSite(target.dataset.site);
     if (action === "defeat-boss") return defeatBoss();
