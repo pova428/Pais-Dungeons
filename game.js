@@ -1773,10 +1773,56 @@
   }
 
   function renderRest() {
-    const hurt = characters.filter((character) => (Number(state.hp[character.id]) || 0) < getEffectiveCharacterStats(character,state.levels[character.id] || 1).hp).length;
-    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">EL FUEGO TODAVÍA ARDE</span><h2>Descanso en el bastión</h2><p>Lejos de las rutas malditas, la compañía puede cerrar heridas y recuperar fuerzas antes de volver a salir.</p></div></div>' +
-      '<div class="rest-layout"><section class="camp-panel rest-chamber"><div class="rest-symbol">✚</div><span class="section-eyebrow">CÁMARA DEL ÚLTIMO FAROL</span><h3>Unas horas lejos de la oscuridad</h3><p>La compañía se reúne alrededor del fuego. El calor devuelve el aliento y las vendas se renuevan. El descanso consume una ración de marcha.</p><div class="rest-cost">COSTE: 1 RACIÓN · DISPONIBLES: ' + state.rations + '</div><button class="game-action" type="button" data-action="rest" ' + (state.rations < 1 ? "disabled" : "") + '>DESCANSAR Y RECUPERAR →</button></section>' +
-      '<aside class="camp-panel rest-effect"><h3>Estado de la compañía</h3><div class="inventory-row"><span>Héroes heridos</span><strong>' + hurt + ' / 5</strong></div><div class="inventory-row"><span>Vida recuperada</span><strong>+25% PV máximo</strong></div><div class="inventory-row"><span>Maná recuperado</span><strong>+25% PM máximo</strong></div><div class="inventory-row"><span>Grupo activo</span><strong>' + state.party.length + ' / 4</strong></div><p>El descanso también atiende al miembro que permanece en reserva. Nadie queda atrás dentro de los muros.</p></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
+    const rests=Math.max(0,Number(state.rations)||0);
+    const hurt=characters.filter((character)=>{
+      const maxHp=getEffectiveCharacterStats(character,state.levels[character.id]||1).hp;
+      return (Number(state.hp[character.id])||0)<maxHp;
+    }).length;
+    const members=characters.map((character)=>{
+      const stats=getEffectiveCharacterStats(character,state.levels[character.id]||1);
+      const maxHp=stats.hp,maxMp=stats.mp;
+      const hp=Math.max(0,Math.min(maxHp,Number(state.hp[character.id])||0));
+      const mp=Math.max(0,Math.min(maxMp,Number(state.mp[character.id])||0));
+      const hpRatio=Math.round(hp/maxHp*100);
+      const mpRatio=Math.round(mp/maxMp*100);
+      const active=state.party.includes(character.id);
+      return '<article class="rest-member-card '+(hpRatio<100?"is-wounded":"is-ready")+'"><div class="rest-member-top"><span class="rest-member-sigil">'+character.sign+'</span><div class="rest-member-name"><b>'+character.name+'</b><small>«'+character.title+'»</small></div><span class="rest-member-state '+(active?"is-active":"")+'">'+(active?"EN RUTA":"RESERVA")+'</span></div><div class="rest-member-stat"><span>♥ VIDA</span><b>'+hp+' / '+maxHp+'</b></div><div class="rest-member-track hp"><i style="width:'+hpRatio+'%"></i></div><div class="rest-member-stat"><span>✦ MANÁ</span><b>'+mp+' / '+maxMp+'</b></div><div class="rest-member-track mp"><i style="width:'+mpRatio+'%"></i></div></article>';
+    }).join("");
+    const availability=rests>0
+      ? '<strong>'+rests+'</strong><span>'+ (rests===1?"DESCANSO DISPONIBLE":"DESCANSOS DISPONIBLES")+'</span><small>'+rests+' '+(rests===1?"ración · 1 uso":"raciones · "+rests+" usos")+'</small>'
+      : '<strong class="is-empty">0</strong><span>SIN DESCANSOS</span><small>Necesitas comprar raciones en el mercado.</small>';
+    const action=rests>0
+      ? '<button class="rest-main-button" type="button" data-action="rest"><span class="rest-button-icon">✚</span><span><b>DESCANSAR AHORA</b><small>CONSUMIR 1 RACIÓN · RECUPERAR AL EQUIPO</small></span><span class="rest-button-arrow">→</span></button>'
+      : '<button class="rest-main-button is-disabled" type="button" disabled><span class="rest-button-icon">✕</span><span><b>NO QUEDAN RACIONES</b><small>EL FUEGO NECESITA COMBUSTIBLE</small></span></button><button class="rest-market-link" type="button" data-tab="shop">IR AL MERCADO Y COMPRAR RACIONES →</button>';
+    return '<div class="campaign-page rest-page">'+
+      '<div class="page-heading rest-page-heading"><div><span class="section-eyebrow">REFUGIO · ZONA SEGURA</span><h2>La hoguera del bastión</h2><p>Dejad las armas a un lado. El fuego mantendrá a raya la oscuridad mientras la compañía recupera fuerzas.</p></div></div>'+
+      '<section class="rest-campfire-scene" aria-label="Campamento nocturno con una hoguera encendida">'+
+        '<div class="rest-sky-moon"></div><div class="rest-sky-stars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
+        '<div class="rest-distant-pines pine-left"><i></i><i></i><i></i></div><div class="rest-distant-pines pine-right"><i></i><i></i><i></i></div>'+
+        '<div class="rest-camp-banner"><span>✦ EL ÚLTIMO FAROL ✦</span><small>UN LUGAR PARA VOLVER A RESPIRAR</small></div>'+
+        '<div class="rest-fire-stage" aria-hidden="true">'+
+          '<div class="rest-fire-aura"></div>'+
+          '<div class="rest-smoke"><i></i><i></i><i></i><i></i><i></i></div>'+
+          '<div class="rest-fire-sparks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
+          '<div class="rest-firepit"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
+          '<div class="rest-fire-logs"><i class="log-a"></i><i class="log-b"></i><i class="log-c"></i></div>'+
+          '<div class="rest-flames"><i class="flame-outer"></i><i class="flame-mid"></i><i class="flame-core"></i><i class="flame-side"></i></div>'+
+          '<div class="rest-fire-glow"></div>'+
+        '</div>'+
+        '<div class="rest-scene-ground"></div>'+
+        '<div class="rest-scene-caption"><span>LA HOGUERA SIGUE ENCENDIDA</span><small>EL CALOR DEVUELVE EL ALIENTO</small></div>'+
+        '<aside class="rest-uses-display"><span class="rest-uses-icon">✚</span><div>'+availability+'</div></aside>'+
+      '</section>'+
+      '<div class="rest-command-layout">'+
+        '<section class="rest-command-panel"><span class="section-eyebrow">EL RITUAL DEL DESCANSO</span><h3>Reuníos alrededor del fuego.</h3><p>Una ración permite descansar a toda la compañía. Cada héroe recupera un 25% de su vida y de su maná máximos, incluido quien permanece en reserva.</p>'+
+          '<div class="rest-recovery-badges"><span><b>+25%</b><small>VIDA MÁXIMA</small></span><span><b>+25%</b><small>MANÁ MÁXIMO</small></span><span><b>5 / 5</b><small>HÉROES ATENDIDOS</small></span></div>'+
+          action+
+          '<small class="rest-command-footnote">'+(rests>0?"Cada descanso consume exactamente una ración. Puedes volver cuando quieras mientras tengas suministros.":"El descanso no se consume hasta que consigas una ración.")+'</small>'+
+        '</section>'+
+        '<aside class="rest-party-panel"><div class="rest-party-heading"><div><span class="section-eyebrow">JUNTO A LA HOGUERA</span><h3>Estado de la compañía</h3></div><span class="rest-hurt-count">'+hurt+' / 5 <small>HERIDOS</small></span></div><div class="rest-party-grid">'+members+'</div><p>Los cinco reciben los beneficios del descanso, estén en la expedición o de reserva.</p></aside>'+
+      '</div>'+
+      '<p class="campaign-notice">'+state.notice+'</p>'+
+    '</div>';
   }
 
   function renderGachaMachine(modifier) {
