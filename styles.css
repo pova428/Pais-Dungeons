@@ -896,3 +896,70 @@ body.reduce-motion .route-salim-sprite { animation:none !important; background-p
   .character-manager-footer { align-items:flex-start; flex-direction:column; }
 }
 body.reduce-motion .character-sprite-animation { animation:none !important; background-position:0 0 !important; }
+
+
+/* Build 006 — individual HP, RPG attributes, XP and level roadmap */
+.character-profile { width:100%; min-width:0; }
+.character-vitality { width:100%; max-width:none; }
+.character-vitality-labels { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px; }
+.character-vitality-labels strong { color:#91d99c; font:700 13px var(--pixel); letter-spacing:.12em; }
+.character-vitality-labels b { color:#abedab; font:700 19px var(--pixel); font-variant-numeric:tabular-nums; }
+.character-vitality .character-health { width:100%; height:16px; border:2px solid #3b6c48; background:#101b13; overflow:hidden; }
+.character-vitality .character-health span { display:block; height:100%; max-width:100%; background:linear-gradient(90deg,#278c47,#a0e69a); transition:width .25s ease; }
+.character-xp { width:100%; margin-top:-2px; }
+.character-xp > div:first-child { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:5px; }
+.character-xp > div:first-child span { color:#c49b6e; font:700 10px var(--pixel); letter-spacing:.12em; }
+.character-xp > div:first-child b { color:#e0c48e; font:600 11px var(--pixel); font-variant-numeric:tabular-nums; }
+.character-xp-bar { width:100%; height:7px; border:1px solid #78603a; background:#211a13; overflow:hidden; }
+.character-xp-bar span { display:block; height:100%; background:linear-gradient(90deg,#a06a33,#f1cb70); }
+.character-xp small { display:block; margin-top:4px; color:rgba(204,174,134,.55); font:8px var(--pixel); text-align:right; }
+.hero-stat-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; width:100%; }
+.hero-stat { min-width:0; display:flex; justify-content:space-between; align-items:center; gap:7px; padding:9px 10px; border:1px solid rgba(175,132,94,.27); background:linear-gradient(100deg,rgba(43,29,27,.85),rgba(13,10,13,.65)); }
+.hero-stat span { color:rgba(205,182,147,.65); font:600 9px var(--pixel); letter-spacing:.05em; white-space:nowrap; }
+.hero-stat strong { color:#ead3a8; font:700 18px var(--pixel); font-variant-numeric:tabular-nums; }
+.hero-stat:first-child { border-color:rgba(77,151,91,.45); }
+.hero-stat:first-child strong { color:#9be6a4; }
+.hero-traits { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.hero-traits > div { padding:9px 11px; border:1px solid rgba(176,132,93,.25); background:rgba(9,7,9,.28); }
+.hero-traits > div:first-child { border-left:3px solid #689d70; }
+.hero-traits > div:last-child { border-left:3px solid #ae5b4d; }
+.hero-traits span { color:#c99e70; font:700 9px var(--pixel); letter-spacing:.12em; }
+.hero-traits p { margin:5px 0 0; color:rgba(220,200,167,.76); font:9px/1.55 var(--pixel); }
+.character-skill-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.character-skill { min-width:0; }
+.character-skill.is-locked { opacity:.48; }
+.character-passive-slot { display:grid; grid-template-columns:34px minmax(0,1fr) auto; align-items:center; gap:9px; padding:10px 12px; border:1px dashed rgba(180,140,103,.42); background:rgba(22,15,17,.55); }
+.character-passive-icon { display:grid; place-items:center; width:30px; height:30px; border:1px solid rgba(178,135,94,.35); color:#d0a56e; font-size:17px; }
+.character-passive-slot strong { display:block; color:#d8c39f; font:700 10px var(--pixel); }
+.character-passive-slot small { display:block; margin-top:3px; color:rgba(196,171,137,.58); font:8px var(--pixel); }
+.character-passive-slot em { color:#b87857; font:normal 8px var(--pixel); }
+.character-progression { border:1px solid rgba(178,135,94,.31); background:rgba(7,6,8,.28); }
+.character-progression summary { padding:11px 13px; color:#d6bd91; font:700 11px var(--pixel); letter-spacing:.08em; cursor:pointer; }
+.character-progression summary:hover { background:rgba(116,72,44,.17); }
+.progression-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; padding:0 9px 10px; }
+.level-step { display:grid; gap:4px; padding:8px; border:1px solid rgba(165,125,91,.2); background:rgba(24,17,19,.65); }
+.level-step.is-current { border-color:#b96a4d; background:rgba(105,47,37,.23); box-shadow:inset 2px 0 #c25e49; }
+.level-step.is-passed { border-color:rgba(100,150,104,.26); }
+.level-step-top { display:flex; justify-content:space-between; gap:6px; }
+.level-step-top b { color:#ddc6a0; font:700 9px var(--pixel); }
+.level-step-top small { color:rgba(195,160,117,.53); font:8px var(--pixel); }
+.level-step-unlock { color:#c98762; font:600 9px var(--pixel); }
+.level-step > span { color:rgba(204,185,154,.62); font:8px var(--mono); }
+.character-asset-note { margin-top:3px; }
+@media(max-width:1000px) {
+  .hero-stat-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .hero-stat { padding:7px; }
+  .hero-stat span { font-size:8px; }
+  .hero-stat strong { font-size:16px; }
+}
+@media(max-width:760px) {
+  .character-profile { width:100%; }
+  .character-vitality { max-width:none; width:100%; }
+}
+@media(max-width:520px) {
+  .character-vitality-labels b { font-size:16px; }
+  .hero-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .hero-traits { grid-template-columns:1fr; }
+  .character-skill-grid { grid-template-columns:1fr; }
+  .progression-grid { grid-template-columns:1fr; }
+}
