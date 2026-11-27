@@ -938,7 +938,7 @@
     }
     battle.actionAnimation={
       side,actorId,actionId,targetId:targetId || null,targetType:targetType || null,
-      frame:1,phaseStartedAt:Date.now(),resolved:false,targets,fx:getBattleAnimationFx(actionId,side,actorId),
+      frame:1,startedAt:Date.now(),phaseStartedAt:Date.now(),resolved:false,targets,fx:getBattleAnimationFx(actionId,side,actorId),
       freshShieldIds:[]
     };
     battle.pendingSkillId=null;
@@ -1401,7 +1401,7 @@
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
-          '<div class="battle-pixel-figure figure-'+id+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
+          '<div class="battle-pixel-figure figure-'+id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(1120,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+character.role+'</span>' +
         '</div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+character.name+'</strong><em>«'+character.title+'»</em></div>' +
@@ -1433,7 +1433,7 @@
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">E0'+(index+1)+'</span>' +
-          '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
+          '<div class="battle-enemy-figure enemy-'+enemy.id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(2200,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+enemy.role+'</span></div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+enemy.name+'</strong></div>' +
           '<div class="battle-unit-life"><span>♥ PV</span><b>'+enemy.hp+'/'+enemy.maxHp+'</b></div><div class="battle-hp-track enemy-hp-track"><i style="width:'+ratio+'%"></i></div>' +
@@ -1458,7 +1458,9 @@
     const logMarkup=battle.log.slice(0,3).map((line)=>'<li>'+line+'</li>').join("");
     const activeLabel=battle.actionAnimation ? (battle.actionAnimation.side==="ally" ? 'ACCIÓN DE '+activeHero?.name?.toUpperCase() : 'ATAQUE DE '+activeEnemy?.name?.toUpperCase()) : activeHero ? 'TURNO DE '+activeHero.name.toUpperCase() : activeEnemy ? 'TURNO ENEMIGO · '+activeEnemy.name.toUpperCase() : isVictory ? "VICTORIA" : isDefeat ? "DERROTA" : "RESOLVIENDO TURNO";
     const prompt=battle.actionAnimation
-      ? (battle.actionAnimation.frame===1?"PREPARANDO ACCIÓN…":battle.actionAnimation.frame===2?"¡IMPACTO!":"RECUPERANDO POSICIÓN…")
+      ? battle.actionAnimation.side==="enemy"
+        ? (battle.actionAnimation.frame===1?"⚠ EL ENEMIGO PREPARA EL GOLPE…":battle.actionAnimation.frame===2?"¡IMPACTO EN LA COMPAÑÍA!":"EL ENEMIGO RECUPERA POSICIÓN…")
+        : (battle.actionAnimation.frame===1?"PREPARANDO ACCIÓN…":battle.actionAnimation.frame===2?"¡IMPACTO!":"RECUPERANDO POSICIÓN…")
       : pendingSkill ? (pendingSkill.target==="enemy" ? "ELIGE UN ENEMIGO" : "ELIGE UN COMPAÑERO") : activeHero ? "ELIGE UNA HABILIDAD" : "EL TURNO AVANZA AUTOMÁTICAMENTE";
 
     const commandPanel=isVictory
