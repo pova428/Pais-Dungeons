@@ -1020,3 +1020,32 @@ body.reduce-motion .character-sprite-animation { animation:none !important; back
 .party-number { font-size:35px; }
 .hero-stat strong { font-size:18px; }
 .character-vitality-labels b { font-size:19px; }
+
+
+/* Build 008 — retain pixel typography, make the numeral 5 unmistakable */
+.character-count,
+.character-sidebar-heading b,
+.party-number,
+.party-number small,
+.hero-stat strong,
+.character-vitality-labels b,
+.character-xp > div:first-child b,
+.level-step-top b,
+.level-step-top small,
+.character-nav-health em {
+  font-family:'Silkscreen','Pixelify Sans',monospace !important;
+  font-variant-numeric:normal;
+  font-weight:700;
+  text-shadow:1px 0 rgba(13,8,9,.8),-1px 0 rgba(13,8,9,.55);
+  -webkit-font-smoothing:none;
+}
+.character-count { font-size:11px; letter-spacing:.08em; }
+.character-sidebar-heading b { font-size:12px; line-height:1.35; }
+.party-number { font-size:34px; line-height:1.2; letter-spacing:.02em; }
+.party-number small { font-size:15px; }
+.hero-stat strong { font-size:16px; }
+.character-vitality-labels b { font-size:17px; }
+.character-xp > div:first-child b { font-size:10px; }
+.level-step-top b { font-size:9px; }
+.level-step-top small { font-size:8px; }
+.character-nav-health em { font-size:8px; }
