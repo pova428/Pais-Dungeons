@@ -484,7 +484,7 @@
         if(enemy.hp>0){enemy.stun=1;pushBattleLog(enemy.name+" queda derribado.");}
         break;
       case "team-bastion":
-        state.party.forEach((id)=>{
+        getAliveParty().forEach((id)=>{
           const allyChar=characters.find((entry)=>entry.id===id);
           const max=getCharacterStats(allyChar,state.levels[id]||1).hp;
           battle.shields[id]=(battle.shields[id]||0)+Math.round(max*.2);
