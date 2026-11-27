@@ -21,11 +21,11 @@
   const continueButton = document.getElementById("continue-button");
 
   const characters = [
-    { id:"guardian", name:"Pol", title:"El Flaco", role:"GUARDIÁN", sign:"P", icon:"♜", detail:"Defensor de primera línea. Protege a la compañía cuando la oscuridad se acerca.", trait:"Firme como la piedra" },
-    { id:"duelist", name:"Salim", title:"El Moro", role:"DUELISTA", sign:"S", icon:"⚔", detail:"Combatiente ágil que busca los puntos débiles y remata a los enemigos.", trait:"Nunca ataca dos veces igual" },
-    { id:"arcanist", name:"Igor", title:"El Alto", role:"ARCANISTA", sign:"I", icon:"✧", detail:"Estudia artes prohibidas. Sus conjuros alteran el campo de batalla.", trait:"Escucha voces en las ruinas" },
-    { id:"tracker", name:"Ivan", title:"El Gordo", role:"RASTREADOR", sign:"V", icon:"➶", detail:"Explorador y tirador. Encuentra rutas ocultas y amenaza desde lejos.", trait:"Siempre encuentra un camino" },
-    { id:"alchemist", name:"Alex", title:"El Mujeriego", role:"ALQUIMISTA", sign:"A", icon:"⚗", detail:"Prepara remedios y mezclas peligrosas. Mantiene con vida a los demás.", trait:"La muerte puede esperar" }
+    { id:"guardian", name:"Pol", title:"El Flaco", role:"GUARDIÁN", sign:"P", icon:"♜", detail:"Defensor de primera línea.", trait:"Firme como la piedra" },
+    { id:"duelist", name:"Salim", title:"El Moro", role:"DUELISTA", sign:"S", icon:"⚔", detail:"Combatiente ágil y preciso.", trait:"Nunca ataca dos veces igual" },
+    { id:"arcanist", name:"Igor", title:"El Alto", role:"ARCANISTA", sign:"I", icon:"✧", detail:"Estudia artes prohibidas.", trait:"Escucha voces en las ruinas" },
+    { id:"tracker", name:"Ivan", title:"El Gordo", role:"RASTREADOR", sign:"V", icon:"➶", detail:"Explorador y tirador.", trait:"Siempre encuentra un camino" },
+    { id:"alchemist", name:"Alex", title:"El Mujeriego", role:"ALQUIMISTA", sign:"A", icon:"⚗", detail:"Prepara remedios y mezclas.", trait:"La muerte puede esperar" }
   ];
 
   const regions = [
@@ -105,23 +105,54 @@
     try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (error) {}
   }
 
+  function getUnlockedRegionIndex(completedSites) {
+    let unlocked = 0;
+    for (let i = 0; i < regions.length - 1; i += 1) {
+      const boss = regions[i].sites.find((site) => site.boss);
+      if (boss && completedSites.includes(boss.id)) unlocked = i + 1;
+      else break;
+    }
+    return unlocked;
+  }
+
+  function isRegionUnlocked(regionIndex, completedSites) {
+    return regionIndex >= 0 && regionIndex <= getUnlockedRegionIndex(completedSites || state.visitedSites);
+  }
+
+  function isSiteUnlocked(region, siteIndex, completedSites) {
+    const index = regions.findIndex((entry) => entry.id === region.id);
+    const completed = completedSites || state.visitedSites;
+    if (siteIndex < 0 || index < 0 || !isRegionUnlocked(index, completed)) return false;
+    return region.sites.slice(0, siteIndex).every((site) => completed.includes(site.id));
+  }
+
+  function getFirstAvailableSite(region, completedSites) {
+    const completed = completedSites || state.visitedSites;
+    const index = region.sites.findIndex((site, siteIndex) => isSiteUnlocked(region, siteIndex, completed) && !completed.includes(site.id));
+    return index >= 0 ? region.sites[index].id : region.sites[region.sites.length - 1].id;
+  }
+
   function getSavedState() {
     try {
       const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || "null");
       if (!saved || !Array.isArray(saved.party) || !saved.hp) return null;
+      const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
       const merged = Object.assign(defaultState(), saved, {
         inventory:Object.assign(defaultState().inventory, saved.inventory || {}),
-        hp:Object.assign(defaultState().hp, saved.hp || {})
+        hp:Object.assign(defaultState().hp, saved.hp || {}),
+        visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
-      const validRegion = regions.find((region) => region.id === merged.selectedRegion) || regions[0];
-      merged.selectedRegion = validRegion.id;
-      if (!validRegion.sites.some((site) => site.id === merged.selectedSite)) {
-        merged.selectedSite = validRegion.sites[0].id;
-      }
-      const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
-      merged.visitedSites = (merged.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId));
       merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
       if (merged.party.length === 0) merged.party = defaultState().party;
+      const maximumRegion = getUnlockedRegionIndex(merged.visitedSites);
+      let selectedIndex = regions.findIndex((region) => region.id === merged.selectedRegion);
+      if (selectedIndex < 0 || selectedIndex > maximumRegion) selectedIndex = maximumRegion;
+      merged.selectedRegion = regions[selectedIndex].id;
+      const selected = regions[selectedIndex];
+      const siteIndex = selected.sites.findIndex((site) => site.id === merged.selectedSite);
+      if (siteIndex < 0 || !isSiteUnlocked(selected,siteIndex,merged.visitedSites)) {
+        merged.selectedSite = getFirstAvailableSite(selected,merged.visitedSites);
+      }
       return merged;
     } catch (error) { return null; }
   }
@@ -188,6 +219,11 @@
     if (!state) return;
     resources.gold.textContent = String(state.gold);
     resources.rations.textContent = String(state.rations);
+    const averageLife = Math.round(state.party.reduce((sum,id) => sum + (state.hp[id] || 100),0) / Math.max(1,state.party.length));
+    const lifeCount = document.getElementById("life-count");
+    const healthResource = document.getElementById("health-resource");
+    if (lifeCount) lifeCount.textContent = averageLife + "%";
+    if (healthResource) healthResource.dataset.low = String(averageLife <= 35);
     campaignTitle.textContent = state.tab === "bastion" ? "BASTIÓN DEL ÚLTIMO FAROL" :
       state.tab === "company" ? "REGISTRO DE LA COMPAÑÍA" :
       state.tab === "route" ? "MAPA DE LAS TIERRAS MALDITAS" :
@@ -207,24 +243,24 @@
   function renderBastion() {
     const peek = characters.map((character) => {
       const active = state.party.includes(character.id);
-      return '<div class="peek-member"><span class="member-sigil">' + character.sign + '</span><div><strong>' + character.name + '</strong><small>' + character.role + '</small></div><span class="peek-status">' + (active ? "EN RUTA" : "EN RESERVA") + '</span></div>';
+      return '<div class="peek-member"><span class="member-sigil">' + character.sign + '</span><div><strong>' + character.name + ' <em>«' + character.title + '»</em></strong><small>' + character.role + '</small></div><span class="peek-status">' + (active ? "EN RUTA" : "RESERVA") + '</span></div>';
     }).join("");
-    const regionPreview = regions.map((region) =>
-      '<div class="region-preview-item"><strong>' + region.index + ' · ' + region.name + '</strong><small>' + region.sites.length + ' LOCALIZACIONES · JEFE: ' + region.boss + '</small></div>'
+    const unlocked = getUnlockedRegionIndex(state.visitedSites);
+    const regionPreview = regions.map((region,index) =>
+      '<div class="region-preview-item ' + (index > unlocked ? "is-locked" : "") + '"><strong>' + (index > unlocked ? "🔒 " : region.index + " · ") + region.name + '</strong><small>' + (index > unlocked ? "BLOQUEADO" : region.sites.length + " PARADAS") + '</small></div>'
     ).join("");
-
     return '<div class="campaign-page">' +
-      '<div class="page-heading"><div><span class="section-eyebrow">ZONA SEGURA · SIN AMENAZAS CONOCIDAS</span><h2>El Bastión del Último Farol</h2><p>Un refugio levantado alrededor de una llama que se niega a morir. Aquí la compañía puede prepararse antes de cruzar las murallas.</p></div><span class="route-legend">CAMPAMENTO PRINCIPAL</span></div>' +
+      '<div class="page-heading"><div><span class="section-eyebrow">REFUGIO</span><h2>El Bastión</h2></div></div>' +
       '<div class="bastion-grid">' +
-        '<section class="camp-panel bastion-intro"><span class="section-eyebrow">EL ÚLTIMO LUGAR ENCENDIDO</span><h3>La noche no ha conseguido entrar… todavía.</h3><p>Tras las puertas del bastión, los cinco juramentos permanecen unidos. Fuera esperan tres territorios corrompidos, cada uno gobernado por una criatura que guarda parte de la maldición.</p><div class="bastion-quote">«Descansad mientras la llama siga viva.»</div></section>' +
-        '<aside class="camp-panel company-peek"><div class="panel-heading"><h3>La compañía</h3><span>05 DESTINOS</span></div><div class="peek-roster">' + peek + '</div></aside>' +
+        '<section class="camp-panel bastion-intro"><span class="section-eyebrow">ZONA SEGURA</span><h3>Preparaos para salir.</h3><div class="bastion-quote">«La próxima ruta os espera.»</div></section>' +
+        '<aside class="camp-panel company-peek"><div class="panel-heading"><h3>Los cinco</h3><span>05</span></div><div class="peek-roster">' + peek + '</div></aside>' +
       '</div>' +
       '<div class="sanctuary-strip">' +
-        '<button class="sanctuary-tile" type="button" data-tab="rest"><span class="sanctuary-icon">✚</span><span><strong>Descansar</strong><small>Recuperar fuerzas y heridas</small></span></button>' +
-        '<button class="sanctuary-tile" type="button" data-tab="shop"><span class="sanctuary-icon">⚒</span><span><strong>Mercader</strong><small>Comprar suministros para la ruta</small></span></button>' +
-        '<button class="sanctuary-tile" type="button" data-tab="route"><span class="sanctuary-icon">⌖</span><span><strong>Partir de expedición</strong><small>Elegir uno de los tres territorios</small></span></button>' +
+        '<button class="sanctuary-tile" type="button" data-tab="rest"><span class="sanctuary-icon">✚</span><span><strong>Descansar</strong><small>Recuperar vida</small></span></button>' +
+        '<button class="sanctuary-tile" type="button" data-tab="shop"><span class="sanctuary-icon">⚒</span><span><strong>Tienda</strong><small>Comprar objetos</small></span></button>' +
+        '<button class="sanctuary-tile" type="button" data-tab="route"><span class="sanctuary-icon">⌖</span><span><strong>Rutas</strong><small>Elegir destino</small></span></button>' +
       '</div>' +
-      '<section class="camp-panel region-preview"><div class="panel-heading"><h3>La ruta que aguarda más allá</h3><span>03 TERRITORIOS · 03 JEFES</span></div><div class="region-preview-list">' + regionPreview + '</div></section>' +
+      '<section class="camp-panel region-preview"><div class="panel-heading"><h3>Territorios</h3><span>' + (unlocked + 1) + ' / 3 ABIERTOS</span></div><div class="region-preview-list">' + regionPreview + '</div></section>' +
       '<p class="campaign-notice">' + state.notice + '</p>' +
     '</div>';
   }
@@ -236,54 +272,58 @@
       const disabled = !active && state.party.length >= 4;
       return '<article class="character-row ' + (active ? "is-active" : "") + '">' +
         '<div class="character-portrait">' + character.sign + '</div>' +
-        '<div class="character-meta"><strong>' + character.name + '</strong><small>' + character.role + ' · ' + character.title.toUpperCase() + '</small><p>' + character.detail + '</p></div>' +
-        '<div class="character-side"><small>VITALIDAD ' + hp + '%</small><button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + character.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN EL GRUPO" : "EN RESERVA") + '</button></div>' +
+        '<div class="character-meta"><strong>' + character.name + ' <em>«' + character.title + '»</em></strong><small>' + character.role + '</small><div class="character-health"><span style="width:' + hp + '%"></span></div></div>' +
+        '<div class="character-side"><small>' + hp + '% VIDA</small><button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + character.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN GRUPO" : "EN RESERVA") + '</button></div>' +
       '</article>';
     }).join("");
-    const remaining = 4 - state.party.length;
     const slots = [0,1,2,3].map((n) => '<span class="party-slot ' + (n < state.party.length ? "filled" : "") + '"></span>').join("");
-    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">CINCO PERSONAS · UNA COMPAÑÍA</span><h2>Los cinco juramentos</h2><p>La expedición admite cuatro miembros. El quinto permanece en el bastión y puede entrar en el grupo cuando reorganices la compañía.</p></div></div>' +
+    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">PERSONAJES</span><h2>La compañía</h2></div></div>' +
       '<div class="company-layout"><section class="character-roster">' + rows + '</section>' +
-      '<aside class="camp-panel party-summary"><span class="section-eyebrow">GRUPO DE EXPEDICIÓN</span><div class="party-number">' + state.party.length + '<small> / 4</small></div><div class="party-slots">' + slots + '</div><div class="panel-heading"><h3>Los elegidos</h3><span>' + (remaining === 0 ? "LISTOS" : "FALTAN " + remaining) + '</span></div>' +
-      '<p>Selecciona cuatro héroes para salir del bastión. Para cambiar a uno, primero retira a alguien del grupo y después incorpora al personaje que está en reserva.</p><p>Las clases y los rasgos son provisionales. Los cinco nombres y apodos ya están fijados.</p><button class="game-action" type="button" data-tab="route">PREPARAR RUTA →</button></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
+      '<aside class="camp-panel party-summary"><span class="section-eyebrow">GRUPO ACTIVO</span><div class="party-number">' + state.party.length + '<small> / 4</small></div><div class="party-slots">' + slots + '</div><button class="game-action" type="button" data-tab="route">IR A RUTAS →</button></aside></div></div>';
   }
 
   function renderRoute() {
+    const unlockedRegionIndex = getUnlockedRegionIndex(state.visitedSites);
+    if (!isRegionUnlocked(regions.findIndex((region) => region.id === state.selectedRegion), state.visitedSites)) {
+      state.selectedRegion = regions[unlockedRegionIndex].id;
+      state.selectedSite = getFirstAvailableSite(regions[unlockedRegionIndex], state.visitedSites);
+    }
     const selectedRegion = regions.find((region) => region.id === state.selectedRegion) || regions[0];
-    const selectedSite = selectedRegion.sites.find((site) => site.id === state.selectedSite);
-    const bossSelected = Boolean(selectedSite && selectedSite.boss);
+    let selectedSite = selectedRegion.sites.find((site) => site.id === state.selectedSite);
+    if (!selectedSite) {
+      state.selectedSite = getFirstAvailableSite(selectedRegion, state.visitedSites);
+      selectedSite = selectedRegion.sites.find((site) => site.id === state.selectedSite);
+    }
+    const bossSelected = Boolean(selectedSite.boss);
     const cards = regions.map((region) => {
+      const regionIndex = regions.findIndex((entry) => entry.id === region.id);
+      const regionUnlocked = isRegionUnlocked(regionIndex, state.visitedSites);
       const selected = region.id === selectedRegion.id;
-      const sites = region.sites.map((site) => {
-        const visited = state.visitedSites.includes(site.id);
+      const sites = region.sites.map((site, siteIndex) => {
+        const siteUnlocked = isSiteUnlocked(region, siteIndex, state.visitedSites);
+        const completed = state.visitedSites.includes(site.id);
         const active = state.selectedSite === site.id;
+        const locked = !regionUnlocked || !siteUnlocked;
         const action = site.boss ? "select-boss" : "select-site";
-        const kind = site.boss ? "JEFE FINAL" : site.kind;
-        return '<button class="site-node ' + (active ? "is-selected " : "") + (site.boss ? "boss-node" : "") + '" type="button" data-action="' + action + '" data-region="' + region.id + '" data-site="' + site.id + '">' +
-          '<span class="node-number">' + site.icon + '</span><span><strong>' + site.name + '</strong><small>' + (visited ? "VISITADO" : kind) + '</small></span></button>';
+        const status = completed ? "SUPERADO" : locked ? "BLOQUEADO" : site.boss ? "JEFE FINAL" : "DISPONIBLE";
+        return '<button class="site-node ' + (active ? "is-selected " : "") + (site.boss ? "boss-node " : "") + (locked ? "is-locked" : "") + '" type="button" data-action="' + action + '" data-region="' + region.id + '" data-site="' + site.id + '" ' + (locked ? 'disabled aria-disabled="true"' : "") + '>' +
+          '<span class="node-number">' + (completed ? "✓" : locked ? "🔒" : site.icon) + '</span><span><strong>' + site.name + '</strong><small>' + status + '</small></span></button>';
       }).join("");
-      return '<article class="region-column ' + (selected ? "is-selected" : "") + '">' +
-        '<div class="region-topline"><span>REGIÓN ' + region.index + '</span><span>' + region.short + '</span></div>' +
-        '<h3>' + region.name + '</h3><p class="region-description">' + region.atmosphere + '</p>' +
-        '<button class="game-action secondary" type="button" data-action="select-region" data-region="' + region.id + '">VER TERRITORIO</button>' +
+      return '<article class="region-column ' + (selected ? "is-selected " : "") + (regionUnlocked ? "" : "is-locked") + '">' +
+        '<div class="region-topline"><span>ZONA ' + region.index + '</span><span>' + (regionUnlocked ? region.short : "🔒 CERRADA") + '</span></div>' +
+        '<h3>' + region.name + '</h3>' +
+        (regionUnlocked ? '<button class="game-action secondary" type="button" data-action="select-region" data-region="' + region.id + '">ENTRAR</button>' : '<div class="region-seal">🔒 BLOQUEADA</div>') +
         '<div class="route-sites">' + sites + '</div>' +
       '</article>';
     }).join("");
-
-    let detailTitle = selectedSite ? selectedSite.name : selectedRegion.boss;
-    let detailType = selectedSite ? selectedSite.kind : "JEFE FINAL";
-    let detailText = selectedSite ? selectedSite.description : selectedRegion.bossDescription;
-    let detailAction = selectedSite && !bossSelected && state.visitedSites.includes(selectedSite.id)
-      ? '<span class="section-eyebrow">LOCALIZACIÓN REGISTRADA</span>'
-      : bossSelected
-        ? '<button class="game-action" type="button" data-action="boss-preview">INSPECCIONAR JEFE →</button>'
-        : '<button class="game-action" type="button" data-action="visit-site" data-site="' + (selectedSite ? selectedSite.id : "") + '">REGISTRAR VISITA</button>';
-
-    if (bossSelected) detailType = "JEFE FINAL · " + selectedRegion.bossRole;
-
-    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">TRES ZONAS · CUATRO PARADAS POR RUTA</span><h2>La ruta de la maldición</h2><p>Cada zona contiene tres localizaciones de avance y una sala final donde espera su jefe.</p></div><span class="route-legend">⌖ SELECCIONA UNA PARADA</span></div>' +
+    const siteCompleted = state.visitedSites.includes(selectedSite.id);
+    const detailType = selectedSite.boss ? (siteCompleted ? "JEFE DERROTADO" : "JEFE FINAL") : (siteCompleted ? "LOCALIZACIÓN SUPERADA" : "LOCALIZACIÓN");
+    const detailAction = selectedSite.boss
+      ? (siteCompleted ? '<span class="progress-complete">✓ JEFE SUPERADO</span>' : '<button class="game-action" type="button" data-action="boss-preview">VER JEFE →</button>')
+      : (siteCompleted ? '<span class="progress-complete">✓ NIVEL SUPERADO</span>' : '<button class="game-action" type="button" data-action="complete-site" data-site="' + selectedSite.id + '">SUPERAR NIVEL →</button>');
+    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">PROGRESO ' + (unlockedRegionIndex + 1) + ' / 3 ZONAS</span><h2>Mapa de rutas</h2></div><span class="route-legend">🔒 CERRADO · ✓ SUPERADO</span></div>' +
       '<div class="route-layout">' + cards + '</div>' +
-      '<section class="site-detail"><div><span class="section-eyebrow">' + selectedRegion.name.toUpperCase() + ' · ' + detailType + '</span><h3>' + detailTitle + '</h3><p>' + detailText + '</p></div><div class="site-detail-actions">' + detailAction + '<button class="game-action secondary" type="button" data-action="prepare-expedition">PREPARAR EXPEDICIÓN</button></div></section>' +
+      '<section class="site-detail"><div><span class="section-eyebrow">' + selectedRegion.name.toUpperCase() + ' · ' + detailType + '</span><h3>' + selectedSite.name + '</h3></div><div class="site-detail-actions">' + detailAction + '<button class="game-action secondary" type="button" data-action="prepare-expedition">PREPARAR GRUPO</button></div></section>' +
       '<p class="campaign-notice">' + state.notice + '</p></div>';
   }
 
@@ -327,14 +367,20 @@
     }
     if (kind === "boss") {
       const region = regions.find((entry) => entry.id === state.selectedRegion) || regions[0];
+      const boss = region.sites.find((site) => site.boss);
+      const bossIndex = region.sites.findIndex((site) => site.boss);
+      const unlocked = isSiteUnlocked(region,bossIndex,state.visitedSites);
+      const defeated = state.visitedSites.includes(boss.id);
       dialogEyebrow.textContent = region.bossRole;
       dialogTitle.textContent = region.boss;
-      dialogContent.innerHTML = '<p class="dialog-emphasis">' + region.name + '</p><p>' + region.bossDescription + '</p><p>El jefe está definido en el mapa. Su combate, patrones y recompensas se desarrollarán en la siguiente fase del juego.</p>';
-      dialogActions.innerHTML = '<button class="dialog-button" type="button" data-action="close-dialog">Volver al mapa <span>←</span></button>';
+      dialogContent.innerHTML = '<p class="dialog-emphasis">' + region.name + '</p><p>' + region.bossDescription + '</p><p class="dialog-caveat">El combate real se añadirá en una próxima versión.</p>';
+      dialogActions.innerHTML = defeated
+        ? '<button class="dialog-button" type="button" data-action="close-dialog">Cerrar <span>←</span></button>'
+        : (unlocked ? '<button class="dialog-button" type="button" data-action="defeat-boss">SIMULAR VICTORIA <span>✦</span></button>' : '<button class="dialog-button" type="button" data-action="close-dialog">Volver al mapa <span>←</span></button>');
     }
     if (kind === "expedition") {
       const region = regions.find((entry) => entry.id === state.selectedRegion) || regions[0];
-      const partyNames = characters.filter((entry) => state.party.includes(entry.id)).map((entry) => entry.name).join(", ");
+      const partyNames = characters.filter((entry) => state.party.includes(entry.id)).map((entry) => entry.name + " «" + entry.title + "»").join(", ");
       dialogEyebrow.textContent = "ORDEN DE MARCHA";
       dialogTitle.textContent = "La compañía está preparada";
       dialogContent.innerHTML = '<p class="dialog-emphasis">' + region.name + '</p><p>Partirán: ' + partyNames + '.</p><p>Esta versión contiene el mapa, las localizaciones y la preparación de expedición. El desplazamiento y el combate táctico se añadirán después.</p>';
@@ -356,10 +402,46 @@
     saveState();
   }
 
-  function visitSite(siteId) {
+  function completeSite(siteId) {
+    const region = regions.find((entry) => entry.sites.some((site) => site.id === siteId));
+    if (!region) return;
+    const siteIndex = region.sites.findIndex((site) => site.id === siteId);
+    if (!isSiteUnlocked(region, siteIndex, state.visitedSites)) return showNotice("Esta parada sigue bloqueada. Supera la anterior para continuar.");
+    if (region.sites[siteIndex].boss) return openDialog("boss");
     if (!state.visitedSites.includes(siteId)) state.visitedSites.push(siteId);
-    state.selectedSite = siteId;
-    showNotice("Localización registrada en el diario de ruta. La siguiente fase añadirá encuentros y recompensas para cada lugar.");
+    const nextSite = region.sites[siteIndex + 1];
+    state.selectedRegion = region.id;
+    if (nextSite) {
+      state.selectedSite = nextSite.id;
+      state.notice = "Nivel superado. Se ha abierto: " + nextSite.name + ".";
+    } else {
+      state.selectedSite = region.sites[region.sites.length - 1].id;
+      state.notice = "Las tres paradas están superadas. ¡La sala del jefe está abierta!";
+    }
+    saveState();
+    renderCampaign();
+  }
+
+  function defeatBoss() {
+    const regionIndex = regions.findIndex((region) => region.id === state.selectedRegion);
+    const region = regions[regionIndex];
+    const boss = region.sites.find((site) => site.boss);
+    const bossIndex = region.sites.findIndex((site) => site.boss);
+    if (!isSiteUnlocked(region,bossIndex,state.visitedSites)) return showNotice("El jefe permanece protegido. Supera primero todas las localizaciones.");
+    if (!state.visitedSites.includes(boss.id)) state.visitedSites.push(boss.id);
+    if (regions[regionIndex + 1]) {
+      const nextRegion = regions[regionIndex + 1];
+      state.selectedRegion = nextRegion.id;
+      state.selectedSite = nextRegion.sites[0].id;
+      state.tab = "route";
+      state.notice = "Jefe superado. Se ha desbloqueado la zona " + nextRegion.name + ".";
+    } else {
+      state.selectedSite = boss.id;
+      state.notice = "Has superado el último jefe. La campaña de Pais Dungeon está completada.";
+    }
+    saveState();
+    closeDialog();
+    renderCampaign();
   }
 
   function restCompany() {
@@ -392,7 +474,8 @@
       if (state.party.length !== 4) return showNotice("Necesitas seleccionar exactamente cuatro héroes en la sección Compañía antes de partir.");
       return openDialog("expedition");
     }
-    if (action === "visit-site") return visitSite(target.dataset.site);
+    if (action === "complete-site" || action === "visit-site") return completeSite(target.dataset.site);
+    if (action === "defeat-boss") return defeatBoss();
     if (action === "rest") return restCompany();
     if (action === "buy") return buyItem(target.dataset.item);
     if (action === "toggle-party") {
@@ -407,24 +490,21 @@
       showNotice("Composición de la compañía actualizada.");
       return;
     }
-    if (action === "select-boss") {
-      state.selectedRegion = target.dataset.region;
-      state.selectedSite = state.selectedRegion + "-boss";
+    if (action === "select-boss" || action === "select-site") {
+      const region = regions.find((entry) => entry.id === target.dataset.region);
+      const siteIndex = region ? region.sites.findIndex((site) => site.id === target.dataset.site) : -1;
+      if (!region || !isSiteUnlocked(region,siteIndex,state.visitedSites)) return showNotice("Ruta bloqueada. Supera la parada anterior para continuar.");
+      state.selectedRegion = region.id;
+      state.selectedSite = target.dataset.site;
       renderCampaign();
       saveState();
       return;
     }
     if (action === "select-region") {
-      state.selectedRegion = target.dataset.region;
-      const region = regions.find((entry) => entry.id === state.selectedRegion) || regions[0];
-      state.selectedSite = region.sites[0].id;
-      renderCampaign();
-      saveState();
-      return;
-    }
-    if (action === "select-site") {
-      state.selectedRegion = target.dataset.region;
-      state.selectedSite = target.dataset.site;
+      const index = regions.findIndex((entry) => entry.id === target.dataset.region);
+      if (index < 0 || !isRegionUnlocked(index,state.visitedSites)) return showNotice("Esta zona está cerrada. Derrota al jefe de la zona anterior.");
+      state.selectedRegion = regions[index].id;
+      state.selectedSite = getFirstAvailableSite(regions[index],state.visitedSites);
       renderCampaign();
       saveState();
       return;
