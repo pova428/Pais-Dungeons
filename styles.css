@@ -2886,3 +2886,9 @@ body.reduce-motion .battle-action-sprite { animation:none !important; }
 }
 body.reduce-motion .battle-enemy.is-winding-up::before,
 body.reduce-motion .battle-enemy.is-attacking .battle-enemy-figure { animation:none !important; }
+
+
+/* Build 017 — final combat pacing and floating-number synchronization */
+.battle-floating-number { backface-visibility:hidden; }
+.battle-enemy.is-winding-up { isolation:isolate; }
+.battle-enemy.is-impact-frame { isolation:isolate; }
