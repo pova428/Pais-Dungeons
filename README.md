@@ -51,6 +51,6 @@ GitHub Pages usa la rama main y la carpeta root.
 ## Salim «El Moro» — retrato y sprite
 
 - `assets/salim-portrait.webp`: retrato pixel art para el selector de personajes.
-- `assets/salim-sprites.webp`: atlas 4×4 con filas de reposo (4), caminar (4), ataque (4) y daño (2).
+- `assets/salim-sprites.webp`: atlas 4×4 (48×49 px por fotograma) con filas de reposo (4), caminar (4), ataque (4) y daño (2).
 - La ficha de Salim muestra su retrato, alias, clase Duelista, vida, sprite animado y cuatro espacios de habilidad.
 - El ataque básico queda señalado como animación preparada; las otras habilidades se mantienen como «Por definir» hasta diseñarlas.

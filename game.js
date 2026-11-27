@@ -27,7 +27,7 @@
       detail:"Combatiente ágil y preciso.", trait:"Nunca ataca dos veces igual",
       portrait:"assets/salim-portrait.webp",
       sprites:"assets/salim-sprites.webp",
-      spriteFrame:{width:64,height:65,columns:4,rows:{idle:0,walk:1,attack:2,damage:3}},
+      spriteFrame:{width:48,height:49,columns:4,rows:{idle:0,walk:1,attack:2,damage:3}},
       skills:[
         {name:"Ataque básico",detail:"Secuencia de cortes con dagas",status:"ANIMACIÓN PREPARADA",ready:true,icon:"⚔"},
         {name:"Habilidad I",detail:"Efecto por diseñar",status:"POR DEFINIR",ready:false,icon:"✦"},
