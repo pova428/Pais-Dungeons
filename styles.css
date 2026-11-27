@@ -2822,3 +2822,67 @@ body.reduce-motion .battle-floating-number,body.reduce-motion .battle-impact-bur
 body.reduce-motion .battle-stage.is-impacting,body.reduce-motion .battle-ally.is-attacking .battle-pixel-figure,
 body.reduce-motion .battle-enemy.is-attacking .battle-enemy-figure,body.reduce-motion .battle-unit.is-hit .battle-unit-art,
 body.reduce-motion .battle-action-sprite { animation:none !important; }
+
+
+/* Build 016 — slower enemy telegraphs and non-restarting damage popups */
+.battle-floating-number {
+  animation-duration:1350ms;
+  animation-timing-function:cubic-bezier(.18,.72,.3,1);
+  animation-fill-mode:both;
+  will-change:transform,opacity;
+}
+.battle-enemy.is-attacking .battle-enemy-figure {
+  animation:enemy-action-lunge-slow 2.2s steps(10,end) both;
+}
+.battle-enemy.is-winding-up::before {
+  content:"⚠ PREPARA EL GOLPE";
+  background:#5a3824;
+  border-color:#e0a260;
+  color:#ffe0ad;
+  box-shadow:0 0 0 2px rgba(226,155,83,.17),0 0 22px rgba(228,135,72,.26);
+  animation:enemy-telegraph-pulse .52s steps(2,end) infinite alternate;
+}
+.battle-enemy.is-impact-frame::before {
+  content:"▼ IMPACTO";
+  background:#672b27;
+  border-color:#e07c68;
+  color:#ffe1d2;
+  box-shadow:0 0 0 3px rgba(208,80,66,.16),0 0 24px rgba(230,71,55,.3);
+}
+.battle-enemy.is-winding-up .battle-unit-info {
+  border-color:#d49a5e;
+  box-shadow:0 0 13px rgba(220,137,67,.16);
+}
+.battle-enemy.is-impact-frame .battle-unit-info {
+  border-color:#d77b69;
+}
+.battle-stage:has(.battle-enemy.is-winding-up) .battle-stage-topline span:last-child {
+  color:#e7b17b;
+}
+@keyframes enemy-action-lunge-slow {
+  0% { transform:translateX(0) translateY(0) scale(1); }
+  10% { transform:translateX(-2px) translateY(0) scale(.99); }
+  22% { transform:translateX(-8px) translateY(-2px) scale(.98); }
+  34% { transform:translateX(-14px) translateY(-5px) scale(.97); }
+  44% { transform:translateX(-24px) translateY(-7px) scale(1.08); }
+  56% { transform:translateX(-32px) translateY(0) scale(1.05); }
+  66% { transform:translateX(-21px) translateY(0) scale(1.02); }
+  78% { transform:translateX(-10px) translateY(0) scale(1); }
+  100% { transform:translateX(0) translateY(0) scale(1); }
+}
+@keyframes enemy-telegraph-pulse {
+  from { filter:brightness(.92); }
+  to { filter:brightness(1.24); }
+}
+@media(max-width:600px) {
+  .battle-enemy.is-winding-up::before,.battle-enemy.is-impact-frame::before {
+    font-size:6px;
+    padding:3px 5px;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .battle-enemy.is-winding-up::before { animation:none !important; }
+  .battle-enemy.is-attacking .battle-enemy-figure { animation:none !important; }
+}
+body.reduce-motion .battle-enemy.is-winding-up::before,
+body.reduce-motion .battle-enemy.is-attacking .battle-enemy-figure { animation:none !important; }
