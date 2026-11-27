@@ -314,6 +314,14 @@
           battle.turnIndex += 1;
           continue;
         }
+        const character = characters.find((entry) => entry.id === actor.id);
+        const maxMana = getCharacterStats(character,state.levels[actor.id] || 1).mp;
+        const currentMana = Math.max(0,Number(state.mp[actor.id]) || 0);
+        const recoveredMana = Math.min(3,maxMana-currentMana);
+        if (recoveredMana > 0) {
+          state.mp[actor.id] = currentMana+recoveredMana;
+          pushBattleLog(character.name + " recupera " + recoveredMana + " PM al comenzar su turno.");
+        }
         battle.pendingSkillId = null;
         battle.targetMode = null;
         state.selectedCharacter = actor.id;
@@ -321,12 +329,28 @@
         saveState();
         return;
       }
+
       const enemy = battle.enemies.find((entry) => entry.id === actor.id);
-      if (enemy && enemy.hp > 0) {
+      if (!enemy || enemy.hp <= 0) {
+        battle.turnIndex += 1;
+        continue;
+      }
+
+      state.notice = "Turno de " + enemy.name + ".";
+      saveState();
+      renderCampaign();
+      window.setTimeout(() => {
+        if (!state || state.tab !== "battle" || state.battle !== battle || battle.status !== "active") return;
+        const stillCurrent = getActiveBattleActor();
+        if (!stillCurrent || stillCurrent.side !== "enemy" || stillCurrent.id !== enemy.id) return;
         applyBurnAtEnemyTurn(enemy);
         if (enemy.hp > 0) performEnemyTurn(enemy);
-      }
-      battle.turnIndex += 1;
+        battle.turnIndex += 1;
+        processBattleUntilPlayerTurn();
+        saveState();
+        renderCampaign();
+      },520);
+      return;
     }
     saveState();
   }
