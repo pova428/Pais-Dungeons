@@ -1138,6 +1138,7 @@
       const shield=battle.shields[id]||0;
       const shieldTurns=battle.shieldTurns[id]||0;
       const buff=battle.buffs[id]||null;
+      const debuff=battle.debuffs[id]||null;
       const targetAttrs=isTarget ? 'data-action="battle-target" data-target-id="'+id+'" data-target-side="ally" role="button" tabindex="0" aria-label="Elegir a '+character.name+' como objetivo"' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
@@ -1149,6 +1150,7 @@
           '<div class="battle-unit-mana"><span>✦ PM</span><b>'+currentMp+'/'+maxMp+'</b></div><div class="battle-mp-track"><i style="width:'+mpRatio+'%"></i></div>' +
           (shield>0?'<small class="battle-shield-value">ESCUDO '+shield+' · '+shieldTurns+'T</small>':"")+
           (buff && buff.turns>0?'<small class="battle-buff-value">MEJORA '+buff.turns+'T · ATQ +'+Math.round(buff.attack*100)+'% · VEL +'+Math.round(buff.speed*100)+'%</small>':"")+
+          (debuff && debuff.turns>0?'<small class="battle-curse-value">MALDICIÓN '+debuff.turns+'T · RECIBE +18% DAÑO</small>':"")+
         '</div></article>';
     }).join("");
 
@@ -1159,7 +1161,7 @@
       const targetAttrs=isTarget?'data-action="battle-target" data-target-id="'+enemy.id+'" data-target-side="enemy" role="button" tabindex="0" aria-label="Atacar a '+enemy.name+'"':'';
       return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">E0'+(index+1)+'</span>' +
-          '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>' +
+          '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>' +
           '<span class="battle-unit-role">'+enemy.role+'</span></div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+enemy.name+'</strong></div>' +
           '<div class="battle-unit-life"><span>♥ PV</span><b>'+enemy.hp+'/'+enemy.maxHp+'</b></div><div class="battle-hp-track enemy-hp-track"><i style="width:'+ratio+'%"></i></div>' +
@@ -1197,7 +1199,7 @@
         '<div class="battle-round-mark"><small>RONDA</small><strong>'+String(battle.round).padStart(2,"0")+'</strong></div>' +
         '<div class="battle-turn-order"><span>ORDEN DE TURNO</span><div>'+orderMarkup+'</div></div></div>'+
       '<section class="battle-stage" aria-label="Campo de batalla por turnos">'+
-        '<div class="battle-room-wall"><div class="battle-window"><i></i><i></i><i></i><i></i></div><div class="battle-blackboard"><span>PROGRAMACIÓN</span><b>if (fear) { run(); }</b><small>// SISTEMA EN ESTADO CRÍTICO</small></div><div class="battle-wall-clock"><i></i></div><div class="battle-server-rack"><i></i><i></i><i></i><i></i><b>SYS</b></div><div class="battle-desk desk-one"><i></i><b></b></div><div class="battle-desk desk-two"><i></i><b></b></div><div class="battle-room-fog"></div></div>'+
+        '<div class="battle-room-wall battle-room-'+site.id+'"><img class="battle-scene-image" src="assets/battles/backgrounds/'+site.id+'.jpg" alt="" onerror="this.remove()"><div class="battle-window"><i></i><i></i><i></i><i></i></div><div class="battle-blackboard"><span>PROGRAMACIÓN</span><b>if (fear) { run(); }</b><small>// SISTEMA EN ESTADO CRÍTICO</small></div><div class="battle-wall-clock"><i></i></div><div class="battle-server-rack"><i></i><i></i><i></i><i></i><b>SYS</b></div><div class="battle-desk desk-one"><i></i><b></b></div><div class="battle-desk desk-two"><i></i><b></b></div><div class="battle-room-fog"></div></div>'+
         '<div class="battle-stage-topline"><span>COMPAÑÍA <b>‹</b> ENEMIGOS</span><span>UNA SOLA SALA · ENCUENTRO '+(battle.status==="active"?"ACTIVO":battle.status==="victory"?"COMPLETADO":"FALLIDO")+'</span></div>'+
         '<div class="battle-lineup battle-allies-line">'+allyUnits+'</div>'+
         '<div class="battle-lineup battle-enemies-line">'+enemyUnits+'</div>'+
