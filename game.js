@@ -292,68 +292,67 @@
   }
 
   function processBattleUntilPlayerTurn() {
-    const battle = state.battle;
-    if (!battle || battle.status !== "active") return;
-    let safety = 0;
-    while (battle.status === "active" && safety < 30) {
-      safety += 1;
-      if (battle.enemies.every((enemy) => enemy.hp <= 0)) {
-        setBattleVictory();
-        break;
+    const battle=state.battle;
+    if(!battle || battle.status!=="active") return;
+    let safety=0;
+    while(battle.status==="active" && safety<30) {
+      safety+=1;
+      if(battle.enemies.every((enemy)=>enemy.hp<=0)) { setBattleVictory(); break; }
+      if(getAliveParty().length===0) { setBattleDefeat(); break; }
+      if(battle.turnIndex>=battle.order.length) {
+        battle.round+=1;
+        battle.order=getBattleOrder();
+        battle.turnIndex=0;
+        battle.currentTurnStarted=null;
+        pushBattleLog("Comienza la ronda "+battle.round+".");
+        if(!battle.order.length) { setBattleDefeat(); break; }
       }
-      if (getAliveParty().length === 0) {
-        setBattleDefeat();
-        break;
-      }
-      if (battle.turnIndex >= battle.order.length) {
-        battle.round += 1;
-        battle.order = getBattleOrder();
-        battle.turnIndex = 0;
-        pushBattleLog("Comienza la ronda " + battle.round + ".");
-        if (!battle.order.length) {
-          setBattleDefeat();
-          break;
-        }
-      }
-      const actor = battle.order[battle.turnIndex];
-      if (!actor) break;
-      if (actor.side === "ally") {
-        if ((Number(state.hp[actor.id]) || 0) <= 0) {
-          battle.turnIndex += 1;
+      const actor=battle.order[battle.turnIndex];
+      if(!actor) break;
+      if(actor.side==="ally") {
+        if((Number(state.hp[actor.id])||0)<=0) {
+          battle.currentTurnStarted=null;
+          battle.turnIndex+=1;
           continue;
         }
-        const character = characters.find((entry) => entry.id === actor.id);
-        const maxMana = getCharacterStats(character,state.levels[actor.id] || 1).mp;
-        const currentMana = Math.max(0,Number(state.mp[actor.id]) || 0);
-        const recoveredMana = Math.min(3,maxMana-currentMana);
-        if (recoveredMana > 0) {
-          state.mp[actor.id] = currentMana+recoveredMana;
-          pushBattleLog(character.name + " recupera " + recoveredMana + " PM al comenzar su turno.");
+        const character=characters.find((entry)=>entry.id===actor.id);
+        if(battle.currentTurnStarted!==actor.id) {
+          const maxMana=getCharacterStats(character,state.levels[actor.id]||1).mp;
+          const currentMana=Math.max(0,Number(state.mp[actor.id])||0);
+          const recoveredMana=Math.min(3,maxMana-currentMana);
+          if(recoveredMana>0) {
+            state.mp[actor.id]=currentMana+recoveredMana;
+            pushBattleLog(character.name+" recupera "+recoveredMana+" PM al comenzar su turno.");
+          }
+          battle.currentTurnStarted=actor.id;
         }
-        battle.pendingSkillId = null;
-        battle.targetMode = null;
-        state.selectedCharacter = actor.id;
-        state.notice = "Turno de " + actor.name + ". Elige una habilidad.";
+        state.selectedCharacter=actor.id;
+        state.notice=battle.pendingSkillId
+          ? "Elige el objetivo de "+character.name+"."
+          : "Turno de "+character.name+". Elige una habilidad.";
         saveState();
         return;
       }
-
-      const enemy = battle.enemies.find((entry) => entry.id === actor.id);
-      if (!enemy || enemy.hp <= 0) {
-        battle.turnIndex += 1;
+      const enemy=battle.enemies.find((entry)=>entry.id===actor.id);
+      if(!enemy || enemy.hp<=0) {
+        battle.currentTurnStarted=null;
+        battle.turnIndex+=1;
         continue;
       }
-
-      state.notice = "Turno de " + enemy.name + ".";
+      state.notice="Turno de "+enemy.name+".";
+      battle.currentTurnStarted=enemy.id;
       saveState();
       renderCampaign();
-      window.setTimeout(() => {
-        if (!state || state.tab !== "battle" || state.battle !== battle || battle.status !== "active") return;
-        const stillCurrent = getActiveBattleActor();
-        if (!stillCurrent || stillCurrent.side !== "enemy" || stillCurrent.id !== enemy.id) return;
+      if(battleTurnTimer!==null) return;
+      battleTurnTimer=window.setTimeout(()=>{
+        battleTurnTimer=null;
+        if(!state || campaign.hidden || state.tab!=="battle" || state.battle!==battle || battle.status!=="active") return;
+        const stillCurrent=getActiveBattleActor();
+        if(!stillCurrent || stillCurrent.side!=="enemy" || stillCurrent.id!==enemy.id) return;
         applyBurnAtEnemyTurn(enemy);
-        if (enemy.hp > 0) performEnemyTurn(enemy);
-        battle.turnIndex += 1;
+        if(enemy.hp>0) performEnemyTurn(enemy);
+        battle.currentTurnStarted=null;
+        battle.turnIndex+=1;
         processBattleUntilPlayerTurn();
         saveState();
         renderCampaign();
@@ -364,6 +363,7 @@
   }
 
   function beginBattle(siteId) {
+    clearBattleTimer();
     state.battleSiteId = siteId;
     state.selectedRegion = regions.find((entry) => entry.sites.some((site) => site.id === siteId)).id;
     state.selectedSite = siteId;
@@ -374,6 +374,21 @@
     processBattleUntilPlayerTurn();
     saveState();
     renderCampaign();
+  }
+
+  function retryBattle() {
+    const previous=state.battle;
+    if(previous && previous.startingVitals) {
+      Object.entries(previous.startingVitals).forEach(([id,vitals])=>{
+        if(!state.party.includes(id)) return;
+        const character=characters.find((entry)=>entry.id===id);
+        if(!character) return;
+        const stats=getCharacterStats(character,state.levels[id]||1);
+        state.hp[id]=Math.max(0,Math.min(stats.hp,Number(vitals.hp)||0));
+        state.mp[id]=Math.max(0,Math.min(stats.mp,Number(vitals.mp)||0));
+      });
+    }
+    beginBattle(state.battleSiteId||"institute-programming");
   }
 
   function chooseBattleSkill(skillId) {
@@ -1173,7 +1188,7 @@
       return;
     }
     if (action === "retry-battle") {
-      beginBattle(state.battleSiteId || "institute-programming");
+      retryBattle();
       return;
     }
     if (action === "battle-skill") {
