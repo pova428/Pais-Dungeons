@@ -24,7 +24,7 @@ La primera sala de **Programacion**, en el Instituto Camí de Mar, dispone de un
 - Los ataques, la curación, los escudos, la quemadura, el derribo y la mejora de Alex tienen efectos.
 - Los escudos duran dos turnos del héroe protegido y desaparecen antes si se consumen.
 - Victoria al derrotar a todos los enemigos; derrota al caer toda la compañía.
-- La victoria completa Programacion, concede 45 XP y abre Base de Datos.
+- La victoria completa Programacion, concede 45 XP y abre Base de Datos. La partida se puede reanudar durante un turno enemigo o una selección de objetivo.
 - Tras una derrota, reintentar restaura los PV/PM con los que la compañía entró en la sala.
 - Una partida guardada puede continuar incluso si se recarga el navegador durante un turno enemigo o una selección de objetivo.
 - Descansar consume una ración y recupera un 25% de PV y PM máximos de cada héroe.
