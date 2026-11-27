@@ -2168,3 +2168,174 @@ body.reduce-motion .battle-pixel-figure,body.reduce-motion .battle-enemy-figure 
   .battle-unit.is-targetable { animation:none; }
 }
 body.reduce-motion .battle-unit.is-targetable { animation:none !important; }
+
+
+/* Build 012 — finishing pass for the turn-based battlefield */
+.battle-topbar { min-width:0; }
+.battle-turn-order { min-width:0; }
+.battle-turn-order > div { scrollbar-width:thin; scrollbar-color:#78543c rgba(14,10,12,.8); }
+.battle-initiative-chip { flex-shrink:0; }
+.battle-initiative-chip[aria-current="step"] { outline:1px solid rgba(255,220,159,.55); outline-offset:2px; }
+.battle-initiative-chip[title] { cursor:help; }
+
+.battle-unit.is-active-turn::before {
+  content:"▼ TU TURNO";
+  z-index:6;
+  font-size:8px;
+  letter-spacing:.08em;
+}
+.battle-enemy.is-active-turn::before {
+  content:"▼ TURNO ENEMIGO";
+  border-color:#c47b68;
+  background:#542a2a;
+  color:#ffe0d2;
+  box-shadow:0 0 0 2px rgba(194,84,68,.15),0 0 15px rgba(204,83,65,.25);
+}
+.battle-unit.is-active-turn { z-index:4; }
+.battle-unit.is-targetable { z-index:5; }
+.battle-unit.is-targetable:focus-visible {
+  outline:3px solid #f3d28d;
+  outline-offset:3px;
+  animation:none;
+}
+.battle-ally.is-targetable:hover,.battle-enemy.is-targetable:hover {
+  transform:translateY(-5px);
+  border-color:#f0b16f;
+}
+.battle-unit.is-fallen { pointer-events:none; }
+
+.battle-shield-value,.battle-buff-value,.battle-status-tag,.battle-stun-tag {
+  display:block;
+  margin-top:4px;
+  padding:3px 4px;
+  text-align:center;
+  font:7px var(--pixel);
+  letter-spacing:.03em;
+}
+.battle-shield-value {
+  border:1px solid rgba(111,169,211,.34);
+  background:rgba(20,45,63,.55);
+  color:#a7d8f2;
+}
+.battle-buff-value {
+  border:1px solid rgba(202,165,96,.4);
+  background:rgba(77,48,19,.48);
+  color:#f0cc83;
+  line-height:1.5;
+}
+.battle-status-tag {
+  border:1px solid rgba(206,114,79,.35);
+  background:rgba(76,31,23,.52);
+  color:#f1a16d;
+}
+.battle-stun-tag {
+  border:1px solid rgba(192,161,115,.38);
+  background:rgba(70,54,30,.58);
+  color:#e6c78e;
+}
+.battle-unit-info { overflow-wrap:anywhere; }
+.battle-unit-life b,.battle-unit-mana b { white-space:nowrap; }
+
+.battle-command { box-shadow:inset 0 0 20px rgba(0,0,0,.16); }
+.battle-command-heading { min-height:42px; }
+.battle-command-heading .section-eyebrow { color:#c98d68; }
+.battle-command-heading h3 { line-height:1.25; }
+.battle-cancel-target { transition:background .15s,border-color .15s; }
+.battle-cancel-target:hover { border-color:#e3b87a; background:#382421; }
+.battle-skill-button {
+  min-width:0;
+  min-height:88px;
+  align-content:center;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);
+}
+.battle-skill-button:focus-visible,.battle-bottom-bar .game-action:focus-visible {
+  outline:2px solid #f1d08e;
+  outline-offset:3px;
+}
+.battle-skill-button:disabled { cursor:not-allowed; }
+.battle-skill-button:disabled .battle-skill-cost { color:#9a7964; }
+.battle-skill-button.is-selected {
+  background:linear-gradient(135deg,rgba(111,73,43,.83),rgba(38,22,24,.98));
+}
+.battle-skill-copy { line-height:1.4; }
+.battle-skill-copy em { min-height:2.6em; }
+.battle-skill-cost { padding:2px 4px; background:rgba(7,10,15,.56); }
+.battle-log-panel { min-height:100%; }
+.battle-log-panel ul { padding-left:15px; }
+.battle-log-panel li { line-height:1.55; }
+.battle-result-panel { gap:14px; }
+.battle-result-panel .game-action { white-space:nowrap; }
+.battle-bottom-bar { border-top:1px solid rgba(169,126,86,.15); }
+.battle-bottom-bar > div { line-height:1.5; }
+.battle-stage { contain:layout paint; }
+.battle-stage-topline,.battle-stage-foot { pointer-events:none; }
+.battle-pixel-figure,.battle-enemy-figure { image-rendering:pixelated; }
+.battle-pixel-figure { will-change:transform; }
+.battle-enemy-figure { will-change:transform,opacity; }
+
+@media(max-width:1150px) {
+  .battle-topbar { grid-template-columns:minmax(0,1fr) auto; }
+  .battle-turn-order { grid-column:1 / -1; }
+  .battle-stage { height:600px; }
+  .battle-lineup { gap:4px; }
+  .battle-ally .battle-unit-art { min-height:218px; }
+  .battle-enemy .battle-unit-art { min-height:155px; }
+  .battle-unit-info { padding:6px 4px; }
+}
+@media(max-width:900px) {
+  .battle-topbar { grid-template-columns:minmax(0,1fr) auto; }
+  .battle-turn-order { grid-column:1 / -1; }
+  .battle-stage { height:650px; }
+  .battle-allies-line { left:2%; width:96%; bottom:210px; }
+  .battle-enemies-line { left:8%; right:8%; width:84%; bottom:38px; }
+  .battle-ally .battle-unit-art { min-height:190px; }
+  .battle-enemy .battle-unit-art { min-height:110px; }
+}
+@media(max-width:600px) {
+  .battle-topbar { gap:8px; }
+  .battle-topbar h2 { font-size:22px; }
+  .battle-round-mark { min-width:54px; }
+  .battle-round-mark strong { font-size:21px; }
+  .battle-initiative-chip { flex-basis:36px; width:36px; height:35px; }
+  .battle-stage { height:690px; min-height:690px; }
+  .battle-allies-line { left:1%; width:98%; bottom:247px; gap:2px; }
+  .battle-enemies-line { left:2%; right:2%; width:96%; bottom:38px; gap:3px; }
+  .battle-ally .battle-unit-art { min-height:155px; }
+  .battle-pixel-figure { transform:scale(.72); }
+  .battle-enemy .battle-unit-art { min-height:93px; }
+  .battle-enemy-figure { transform:scale(.65); }
+  .battle-ally .battle-unit-info { padding:5px 3px; }
+  .battle-unit-name { min-height:30px; }
+  .battle-unit-name strong { font-size:8px; }
+  .battle-unit-name em { font-size:6px; }
+  .battle-unit-life,.battle-unit-mana { font-size:6px; }
+  .battle-unit-life b,.battle-unit-mana b { font-size:6px; }
+  .battle-unit-role { display:none; }
+  .battle-skill-row { grid-template-columns:1fr; }
+  .battle-skill-button { min-height:65px; }
+  .battle-skill-copy strong { font-size:10px; }
+  .battle-skill-copy em { -webkit-line-clamp:1; min-height:1.2em; }
+  .battle-result-panel { flex-wrap:wrap; }
+  .battle-stage-foot span:last-child { display:none; }
+}
+@media(max-width:420px) {
+  .battle-stage { height:730px; min-height:730px; }
+  .battle-allies-line { bottom:268px; }
+  .battle-enemies-line { gap:2px; }
+  .battle-unit-info { padding:4px 2px; }
+  .battle-unit-life,.battle-unit-mana { font-size:5px; }
+  .battle-unit-life b,.battle-unit-mana b { font-size:6px; }
+  .battle-unit-name strong { font-size:7px; }
+  .battle-unit-name em { font-size:5px; }
+  .battle-hp-track { height:6px; }
+  .battle-mp-track { height:4px; }
+  .battle-skill-cost { font-size:7px; }
+  .battle-stage-topline { font-size:6px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .battle-unit.is-targetable { animation:none; }
+  .battle-pixel-figure,.battle-enemy-figure { animation:none; }
+}
+body.reduce-motion .battle-unit.is-targetable,
+body.reduce-motion .battle-pixel-figure,
+body.reduce-motion .battle-enemy-figure { animation:none !important; }
