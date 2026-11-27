@@ -1685,13 +1685,13 @@
         return '<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+offset+'px;animation-delay:-'+animationDelay+'ms" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>';
       }).join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite hero-action-sprite" src="'+getHeroAnimationFrameUrl(id,animation.actionId,animation.frame)+'" alt="" draggable="false" onload="this.parentElement.classList.add(&quot;has-action-sprite&quot;)" onerror="this.remove()">' : "";
-      const idleMarkup=!isAttacking && !isHit && currentHp>0
+      const idleMarkup=!isHit && currentHp>0
         ? '<div class="battle-idle-frames" aria-hidden="true">'+[1,2,3].map((frame)=>'<img class="battle-idle-frame idle-frame-'+frame+'" src="'+getHeroAnimationFrameUrl(id,"idle",frame)+'" alt="" draggable="false" onload="this.parentElement.dataset.loaded=String((Number(this.parentElement.dataset.loaded)||0)+1);if(Number(this.parentElement.dataset.loaded)>=3)this.parentElement.parentElement.classList.add(&quot;has-idle-sprite&quot;)" onerror="this.remove()">').join("")+'</div>'
         : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
-          '<div class="battle-character-visual"><div class="battle-pixel-figure figure-'+id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(1120,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>'+idleMarkup+spriteMarkup+'</div>'+impactMarkup+floatingMarkup+
+          '<div class="battle-character-visual'+(id==="duelist"?" is-duelist-sprite":"")+'">'+(id==="duelist"?"":'<div class="battle-pixel-figure figure-'+id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(1120,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>')+idleMarkup+spriteMarkup+'</div>'+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+character.role+'</span>' +
         '</div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+character.name+'</strong><em>«'+character.title+'»</em></div>' +
