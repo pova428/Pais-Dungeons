@@ -2,7 +2,7 @@
 
 RPG táctico por turnos de fantasía oscura protagonizado por cinco amigos.
 
-## Build 010 — Primer combate por turnos
+## Build 011 — Primer combate por turnos
 
 La primera sala de **Programacion**, en el Instituto Camí de Mar, ahora incorpora un combate provisional por turnos inspirado en la disposición clásica de los RPG tácticos de grupo.
 
