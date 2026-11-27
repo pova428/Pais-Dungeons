@@ -152,6 +152,9 @@
     });
     return stats;
   }
+  function getRarityClass(rarity) {
+    return ({ "Común":"common","Poco común":"uncommon","Rara":"rare","Épica":"epic","Legendaria":"legendary","Hyperrara":"hyperrare" })[rarity] || "common";
+  }
   function getEquipmentBonusText(item) {
     const labels={attack:"ATQ",magic:"MAG",defense:"DEF",speed:"VEL",agility:"AGI",critChance:"CRÍTICO",healingBonus:"CURACIÓN",shieldBonus:"ESCUDO"};
     return Object.entries(item && item.bonuses || {}).map(([key,value])=>
@@ -1424,6 +1427,24 @@
     }).join("");
     const statLabels = [["hp","VIDA","♥"],["attack","ATAQUE","⚔"],["magic","MAGIA","✧"],["defense","DEFENSA","⬟"],["speed","VELOCIDAD","➤"],["agility","AGILIDAD","◇"]];
     const statMarkup = statLabels.map(([key,label,icon]) => '<div class="hero-stat"><span>' + icon + ' ' + label + '</span><strong>' + stats[key] + '</strong></div>').join("");
+    const equippedIds=getCharacterEquipmentIds(selected.id);
+    const equipmentSlots=Array.from({length:MAX_EQUIPPED_ITEMS},(_,index)=>{
+      const uid=equippedIds[index],item=uid?getEquipmentDefinition(uid):null;
+      return item
+        ? '<div class="equipment-slot is-filled rarity-'+getRarityClass(item.rarity)+'"><span>'+item.icon+'</span><div><b>'+item.name+'</b><small>'+getEquipmentBonusText(item)+'</small></div><button type="button" data-action="unequip-item" data-character="'+selected.id+'" data-uid="'+uid+'">×</button></div>'
+        : '<div class="equipment-slot is-empty"><span>'+(index+1)+'</span><div><b>Ranura vacía</b><small>Disponible para equipo</small></div></div>';
+    }).join("");
+    const equippedUidSet=new Set(equippedIds.map(String));
+    const ownedMarkup=state.equipmentInventory.map((owned)=>{
+      const item=EQUIPMENT_ITEMS.find((entry)=>entry.id===owned.itemId);
+      if(!item) return "";
+      const equippedBy=characters.find((character)=>getCharacterEquipmentIds(character.id).some((uid)=>String(uid)===String(owned.uid)));
+      const locked=item.character && item.character!==selected.id;
+      const alreadyEquipped=equippedUidSet.has(String(owned.uid));
+      const full=equippedIds.length>=MAX_EQUIPPED_ITEMS;
+      return '<article class="owned-equipment-card rarity-'+getRarityClass(item.rarity)+'"><span class="owned-equipment-icon">'+item.icon+'</span><div><b>'+item.name+'</b><small>'+item.rarity+' · '+getEquipmentBonusText(item)+'</small>'+(equippedBy?'<em>EQUIPADO POR '+equippedBy.name.toUpperCase()+'</em>':"")+'</div>'+(alreadyEquipped?'<span class="owned-state">EQUIPADO</span>':'<button type="button" data-action="equip-item" data-character="'+selected.id+'" data-uid="'+owned.uid+'" '+(locked||full||equippedBy?"disabled":"")+'>'+(locked?"VINCULADO A OTRO HÉROE":full?"5 / 5 OCUPADAS":"EQUIPAR")+'</button>')+'</article>';
+    }).join("");
+    const equipmentMarkup='<section class="character-equipment-panel"><div class="character-skill-heading"><span>EQUIPAMIENTO</span><small>'+equippedIds.length+' / '+MAX_EQUIPPED_ITEMS+' RANURAS</small></div><div class="equipment-slot-grid">'+equipmentSlots+'</div><div class="owned-equipment-heading"><b>OBJETOS EN LA COLECCIÓN</b><small>'+state.equipmentInventory.length+' PIEZAS</small></div><div class="owned-equipment-list">'+(ownedMarkup||'<div class="equipment-empty">Todavía no tienes objetos. Visita el Mercado y prueba suerte en el Gachapón.</div>')+'</div></section>';
     const levelSteps = Array.from({length:10},(_,index) => {
       const stepLevel=index+1, stepStats=getEffectiveCharacterStats(selected,stepLevel);
       return '<div class="level-step ' + (stepLevel===level ? "is-current" : stepLevel<level ? "is-passed" : "") + '">' +
@@ -1449,6 +1470,7 @@
             '<div class="character-xp"><div><span>EXPERIENCIA</span><b>' + xp + (nextLevelXP===null ? " XP · NIVEL MÁXIMO" : " / " + nextLevelXP + " XP") + '</b></div><div class="character-xp-bar"><span style="width:' + xpProgress + '%"></span></div>' + (nextLevelXP===null ? "" : '<small>FALTAN ' + xpRemaining + ' XP PARA NIVEL ' + (level+1) + '</small>') + '</div>' +
             '<div class="hero-stat-grid">' + statMarkup + '</div>' +
             '<div class="hero-traits"><div><span>FORTALEZA</span><p>' + selected.strengths + '</p></div><div><span>DEBILIDAD</span><p>' + selected.weaknesses + '</p></div></div>' +
+            equipmentMarkup+
             '<div class="character-skill-heading"><span>HABILIDADES</span><small>DESBLOQUEO EN NIVELES 1 · 4 · 10</small></div>' +
             '<div class="character-skill-grid">' + skills +
               '<div class="character-skill character-passive-card is-locked"><span class="character-skill-icon">✧</span><div><strong>Pasiva · Por diseñar</strong><small>Espacio reservado para la habilidad pasiva del héroe.</small><em>SE DESBLOQUEARÁ EN NIVEL 3</em></div></div>' +
@@ -1670,15 +1692,33 @@
   }
 
   function renderShop() {
-    const offers = items.map((item) => {
-      const owned = item.kind === "rations" ? state.rations : (state.inventory[item.kind] || 0);
-      return '<div class="supply-item"><span class="supply-icon">' + item.icon + '</span><div><strong>' + item.name + '</strong><small>' + item.desc + '</small><em>' + item.price + ' ORO · EN BOLSA: ' + owned + '</em></div><button class="buy-button" type="button" data-action="buy" data-item="' + item.id + '" ' + (state.gold < item.price ? "disabled" : "") + '>COMPRAR</button></div>';
+    ensureShopStock();
+    const stock=state.shopStock.map((id)=>{
+      const item=EQUIPMENT_ITEMS.find((entry)=>entry.id===id);
+      if(!item) return "";
+      const rarityClass=getRarityClass(item.rarity);
+      return '<article class="merchant-item-card rarity-'+rarityClass+'"><div class="merchant-item-art"><img src="assets/items/'+item.id+'.png" alt="" onerror="this.remove()"><span>'+item.icon+'</span><small>'+item.type+'</small></div><div class="merchant-item-copy"><span class="rarity-label">'+item.rarity+'</span><strong>'+item.name+'</strong><small>'+item.description+'</small><em>'+getEquipmentBonusText(item)+'</em></div><div class="merchant-item-buy"><b>'+item.price+' ◈</b><button class="buy-button" type="button" data-action="buy-equipment" data-item="'+item.id+'" '+(state.gold<item.price?"disabled":"")+ '>COMPRAR</button></div></article>';
     }).join("");
-    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">SUMINISTROS PARA QUIENES SE ATREVEN A SALIR</span><h2>El mercader del bastión</h2><p>No pregunta qué habéis visto en el camino. Solo cuánto oro queda y cuánto tiempo podéis aguantar fuera.</p></div><span class="route-legend">◈ ' + state.gold + ' MONEDAS</span></div>' +
-      '<div class="shop-layout"><section class="supply-list">' + offers + '</section><aside class="camp-panel inventory-panel"><div class="panel-heading"><h3>Inventario de la compañía</h3><span>MOCHILA</span></div>' +
-      '<div class="inventory-row"><span>Raciones de marcha</span><strong>' + state.rations + '</strong></div><div class="inventory-row"><span>Vendas de lino</span><strong>' + state.inventory.bandage + '</strong></div><div class="inventory-row"><span>Tónicos de raíz negra</span><strong>' + state.inventory.tonic + '</strong></div><div class="inventory-row"><span>Aceite de lámpara</span><strong>' + state.inventory.oil + '</strong></div><p class="campaign-notice">Los objetos están preparados como estructura inicial. Sus efectos en combate se añadirán cuando desarrollemos el sistema de batalla.</p></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
+    const supplyOffers=items.map((item)=>{
+      const owned=item.kind==="rations" ? state.rations : (state.inventory[item.kind]||0);
+      return '<div class="merchant-supply-row"><span class="supply-icon">'+item.icon+'</span><span><b>'+item.name+'</b><small>'+item.desc+'</small></span><em>'+item.price+' ◈</em><button type="button" data-action="buy" data-item="'+item.id+'" '+(state.gold<item.price?"disabled":"")+ '>+</button><small class="supply-owned">×'+owned+'</small></div>';
+    }).join("");
+    const last=state.lastGachaResult;
+    const lastItem=last && last.itemId ? EQUIPMENT_ITEMS.find((item)=>item.id===last.itemId) : null;
+    const resultMarkup=last ? (last.duplicate
+      ? '<div class="gacha-result is-duplicate"><span>↻</span><div><b>COLECCIÓN COMPLETA</b><small>Compensación: '+last.refund+' monedas</small></div></div>'
+      : '<div class="gacha-result rarity-'+getRarityClass(last.rarity)+'"><span class="gacha-result-icon">'+(lastItem?lastItem.icon:"✦")+'</span><div><small>ÚLTIMA TIRADA · '+last.rarity+'</small><b>'+(lastItem?lastItem.name:"Objeto desconocido")+'</b><em>'+(lastItem?getEquipmentBonusText(lastItem):"")+'</em></div></div>') : '<div class="gacha-result is-idle"><span>?</span><div><b>LA CÁPSULA TE ESPERA</b><small>Una tirada cuesta '+GACHA_COST+' monedas.</small></div></div>';
+    const hyperItems=EQUIPMENT_ITEMS.filter((item)=>item.rarity==="Hyperrara").map((item)=>{
+      const owner=characters.find((character)=>character.id===item.character);
+      const owned=state.equipmentInventory.some((entry)=>entry.itemId===item.id);
+      return '<div class="hyperrare-preview '+(owned?"is-owned":"")+'"><span>'+item.icon+'</span><div><b>'+item.name+'</b><small>'+owner.name+' · '+(owned?"CONSEGUIDO":"0,5% TOTAL")+'</small></div></div>';
+    }).join("");
+    return '<div class="campaign-page merchant-page"><div class="page-heading merchant-heading"><div><span class="section-eyebrow">PLAZA DEL ÚLTIMO FAROL</span><h2>El Mercado</h2><p>El mercader exhibe lo que encuentra en sus viajes. Al fondo, una máquina antigua ofrece premios impredecibles.</p></div><span class="route-legend">◈ '+state.gold+' MONEDAS</span></div>'+
+      '<section class="merchant-scene" aria-label="Mercado medieval de pixel art"><div class="market-trees tree-left"></div><div class="market-trees tree-right"></div><div class="market-roof"><span>✦ CASA DEL MERCADER ✦</span></div><div class="market-arch"><div class="market-fireplace"><span>🔥</span><small>EL ÚLTIMO FAROL</small></div></div><div class="market-counter market-left-counter"><span>ARMAS Y RELIQUIAS</span><i>⚔　✧　⬡</i></div><div class="market-counter market-right-counter"><span>OBJETOS Y AMULETOS</span><i>◉　♢　✚</i></div><div class="market-shelf shelf-left"><i>⚔</i><i>◉</i><i>♧</i><i>✧</i></div><div class="market-shelf shelf-right"><i>♢</i><i>✚</i><i>♛</i><i>⬡</i></div><div class="market-stone-floor"></div><div class="market-sign"><b>ABIERTO</b><small>EL MERCADO NO DUERME</small></div><div class="market-merchant"><span>◉</span><b>EL MERCADER</b></div><div class="market-chest"><span>✦</span></div><div class="market-gacha-prop"><span>?</span><b>GACHAPÓN</b></div></section>'+
+      '<div class="merchant-main-grid"><section class="merchant-stock-panel camp-panel"><div class="panel-heading"><div><span class="section-eyebrow">MERCANCÍA LIMITADA</span><h3>Expositores del mercader</h3></div><span>ROTACIÓN '+String(state.shopRotation||0).padStart(2,"0")+'</span></div><div class="merchant-stock-grid">'+(stock||'<div class="merchant-empty">Los estantes están vacíos.</div>')+'</div><div class="merchant-stock-footer"><small>El stock se renueva al superar una sala. También puedes pagar '+SHOP_REFRESH_COST+' monedas para renovar los expositores.</small><button class="game-action secondary" type="button" data-action="refresh-shop" '+(state.gold<SHOP_REFRESH_COST?"disabled":"")+ '>↻ RENOVAR · '+SHOP_REFRESH_COST+' ◈</button></div><div class="merchant-supply-heading"><span>SUMINISTROS PARA LA RUTA</span><small>OBJETOS DE CONSUMO</small></div><div class="merchant-supplies">'+supplyOffers+'</div></section>'+
+      '<aside class="gacha-panel camp-panel"><div class="gacha-panel-heading"><span class="section-eyebrow">AZAR Y DESTINO</span><h3>El Gachapón</h3><p>Introduce oro. La cápsula revelará un objeto de rareza impredecible.</p></div><div class="gacha-machine"><div class="gacha-machine-top">PAIS · CAPSULE SYSTEM</div><div class="gacha-machine-glass"><div class="gacha-orb orb-one"></div><div class="gacha-orb orb-two"></div><div class="gacha-orb orb-three"></div><span>?</span></div><div class="gacha-machine-slot">◈　◈　◈</div></div>'+resultMarkup+'<button class="game-action gacha-pull-button" type="button" data-action="gacha-roll" '+(state.gold<GACHA_COST?"disabled":"")+ '>TIRAR · '+GACHA_COST+' ◈</button><div class="gacha-rates"><b>PROBABILIDADES</b>'+GACHA_RARITY_RATES.map((entry)=>'<div><span>'+entry.rarity+'</span><strong>'+String(entry.chance).replace(".",",")+'%</strong></div>').join("")+'</div><div class="hyperrare-vault"><b>COLECCIÓN HYPERRARA · 5 PIEZAS</b>'+hyperItems+'</div></aside></div>'+
+      '<section class="merchant-collection-strip"><div><b>COLECCIÓN DE LA COMPAÑÍA</b><small>'+state.equipmentInventory.length+' OBJETOS · MÁXIMO 5 EQUIPADOS POR PERSONAJE</small></div><button class="game-action secondary" type="button" data-tab="company">GESTIONAR OBJETOS →</button></section><p class="campaign-notice">'+state.notice+'</p></div>';
   }
-
   function openDialog(kind) {
     lastFocusedElement = document.activeElement;
     backdrop.hidden = false;
