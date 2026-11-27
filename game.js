@@ -84,7 +84,7 @@
     selectedRegion:"institute",
     selectedSite:"institute-programming",
     visitedSites:[],
-    notice:"La compañía se reúne en el bastión. La ruta aguarda al otro lado de las murallas."
+    notice:"Elige una ruta y supera cada parada para avanzar."
   });
 
   let state = null;
@@ -362,7 +362,7 @@
     if (kind === "credits") {
       dialogEyebrow.textContent = "REGISTRO DE LA COMPAÑÍA";
       dialogTitle.textContent = "Créditos";
-      dialogContent.innerHTML = '<div class="credits-list"><div class="credit-item"><span class="credit-role">CONCEPTO Y DESARROLLO</span><span class="credit-name">THE FIVE — La Maldición</span></div><div class="credit-item"><span class="credit-role">DIRECCIÓN ARTÍSTICA</span><span class="credit-name">Fantasía oscura · Pixel art original</span></div><div class="credit-item"><span class="credit-role">ESTADO</span><span class="credit-name">Build 002 — esqueleto de campaña</span></div></div>';
+      dialogContent.innerHTML = '<div class="credits-list"><div class="credit-item"><span class="credit-role">CONCEPTO Y DESARROLLO</span><span class="credit-name">PAIS DUNGEON</span></div><div class="credit-item"><span class="credit-role">DIRECCIÓN ARTÍSTICA</span><span class="credit-name">Fantasía oscura · Pixel art original</span></div><div class="credit-item"><span class="credit-role">ESTADO</span><span class="credit-name">Build 002 — esqueleto de campaña</span></div></div>';
       dialogActions.innerHTML = '<button class="dialog-button" type="button" data-action="close-dialog">Volver al menú <span>←</span></button>';
     }
     if (kind === "boss") {
