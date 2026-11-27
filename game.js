@@ -366,10 +366,14 @@
     const characterMenu = characters.map((character) => {
       const isSelected = character.id === selected.id;
       const isActive = state.party.includes(character.id);
+      const charLevel = state.levels[character.id] || 1;
+      const charMaxHp = getCharacterStats(character,charLevel).hp;
+      const charHp = Math.min(charMaxHp,Math.max(0,Number(state.hp[character.id]) || 0));
+      const charHpPercent = Math.round(charHp/charMaxHp*100);
       const portrait = character.portrait ? '<img src="' + character.portrait + '" alt="" loading="lazy" onerror="this.remove()">' : "";
       return '<button class="character-nav-entry ' + (isSelected ? "is-selected" : "") + '" type="button" data-character-select="' + character.id + '" aria-pressed="' + isSelected + '">' +
         '<span class="character-nav-avatar"><b>' + character.sign + '</b>' + portrait + '</span>' +
-        '<span class="character-nav-copy"><strong>' + character.name + '</strong><small>«' + character.title + '»</small></span>' +
+        '<span class="character-nav-copy"><strong>' + character.name + '</strong><small>«' + character.title + '»</small><span class="character-nav-health"><i><b style="width:' + charHpPercent + '%"></b></i><em>' + charHp + '/' + charMaxHp + ' PV</em></span></span>' +
         '<span class="character-nav-state ' + (isActive ? "is-active" : "") + '">' + (isActive ? "●" : "○") + '</span></button>';
     }).join("");
     const portraitImage = selected.portrait ? '<img class="character-portrait-art" src="' + selected.portrait + '" alt="Retrato pixel art de ' + selected.name + ' ' + selected.title + '" loading="eager" onerror="this.remove()">' : "";
