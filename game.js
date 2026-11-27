@@ -692,7 +692,7 @@
     const actor=getActiveBattleActor();
     if(!actor || actor.side!=="ally") return;
     const character=characters.find((entry)=>entry.id===actor.id);
-    const skill=character.skills.find((entry)=>entry.id===battle.pendingSkillId);
+    const skill=battle.pendingSkillId===BASIC_ATTACK.id ? BASIC_ATTACK : character.skills.find((entry)=>entry.id===battle.pendingSkillId);
     if(!skill) return;
     const expectedSide=skill.target==="enemy" ? "enemy" : "ally";
     if(targetSide && targetSide!==expectedSide) return showNotice("Ese objetivo no es válido para esta habilidad.");
