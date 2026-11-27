@@ -471,41 +471,6 @@ body.reduce-motion .embers { display: none; }
   font:9px var(--pixel);
   letter-spacing:.1em;
 }
-.salim-mini-sprite {
-  width:72px;
-  height:74px;
-  background-repeat:no-repeat;
-  background-size:288px 294px;
-  background-position:0 0;
-  image-rendering:pixelated;
-  animation:salim-idle .92s steps(1) infinite;
-  filter:drop-shadow(0 4px 3px rgba(0,0,0,.75));
-}
-.salim-feature-card:hover .salim-mini-sprite { animation-name:salim-walk; animation-duration:.7s; }
-@keyframes salim-idle {
-  0%,24.99% { background-position:0 0; }
-  25%,49.99% { background-position:-72px 0; }
-  50%,74.99% { background-position:-144px 0; }
-  75%,100% { background-position:-216px 0; }
-}
-@keyframes salim-walk {
-  0%,24.99% { background-position:0 -74px; }
-  25%,49.99% { background-position:-72px -74px; }
-  50%,74.99% { background-position:-144px -74px; }
-  75%,100% { background-position:-216px -74px; }
-}
-@keyframes salim-attack {
-  0%,24.99% { background-position:0 -148px; }
-  25%,49.99% { background-position:-72px -148px; }
-  50%,74.99% { background-position:-144px -148px; }
-  75%,100% { background-position:-216px -148px; }
-}
-@keyframes salim-hurt {
-  0%,49.99% { background-position:0 -222px; }
-  50%,100% { background-position:-72px -222px; }
-}
-.salim-mini-sprite.is-attacking { animation:salim-attack .62s steps(1) infinite; }
-.salim-mini-sprite.is-hurt { animation:salim-hurt .45s steps(1) infinite; }
 
 .salim-profile { min-width:0; display:flex; flex-direction:column; gap:12px; padding:4px 4px 2px 0; }
 .salim-profile-head { display:flex; align-items:center; justify-content:space-between; gap:15px; padding-bottom:10px; border-bottom:1px solid rgba(177,132,95,.28); }
@@ -561,10 +526,8 @@ body.reduce-motion .embers { display: none; }
 @media(max-width:480px) {
   .salim-feature-card { grid-template-columns:96px minmax(0,1fr); gap:9px; }
   .salim-portrait-art { max-width:96px; }
-  .salim-mini-sprite { transform:scale(.85); transform-origin:center top; margin-bottom:-10px; }
   .salim-skill-heading small { display:none; }
 }
-body.reduce-motion .salim-mini-sprite { animation:none !important; background-position:0 0 !important; }
 
 /* Salim travels with the active expedition */
 .route-salim {
@@ -577,21 +540,6 @@ body.reduce-motion .salim-mini-sprite { animation:none !important; background-po
 }
 .route-salim > span { color:#cdb995; font:600 9px var(--pixel); white-space:nowrap; }
 .route-salim em { display:block; margin-top:2px; color:#bd6452; font-style:normal; }
-.route-salim-sprite {
-  width:56px;
-  height:58px;
-  flex:0 0 56px;
-  transform:scale(.9);
-  transform-origin:center;
-  animation:salim-walk .75s steps(1) infinite;
-  background-size:288px 294px;
-}
-@media(max-width:700px) {
-  .route-salim { min-width:auto; padding:2px 4px; }
-  .route-salim > span { display:none; }
-  .route-salim-sprite { width:46px; height:48px; flex-basis:46px; transform:scale(.72); }
-}
-body.reduce-motion .route-salim-sprite { animation:none !important; background-position:0 -74px !important; }
 
 
 /* Character management — one shared hero sheet for all five friends */
@@ -759,7 +707,7 @@ body.reduce-motion .route-salim-sprite { animation:none !important; background-p
   background-size:288px 294px;
   background-position:0 0;
   image-rendering:pixelated;
-  animation:salim-idle .92s steps(1) infinite;
+  animation:hero-sheet-idle .92s steps(1) infinite;
   filter:drop-shadow(0 4px 3px rgba(0,0,0,.75));
 }
 .character-sprite-window.has-sprite .character-sprite-animation { display:block; }
@@ -1572,9 +1520,6 @@ body.reduce-motion .character-sprite-animation { animation:none !important; back
 .figure-guardian .figure-body,.figure-guardian .figure-arm { background:#55516b; }
 .figure-guardian .figure-hair { background:#2b2639; }
 .figure-guardian .figure-weapon { background:#a0a3cf; }
-.figure-duelist .figure-body,.figure-duelist .figure-arm { background:#3e3433; }
-.figure-duelist .figure-hair { background:#211717; }
-.figure-duelist .figure-weapon { background:#c0b1a0; }
 .figure-arcanist .figure-body,.figure-arcanist .figure-arm { background:#3b6150; }
 .figure-arcanist .figure-hair { background:#263a31; }
 .figure-arcanist .figure-weapon { background:#99c39e; }
@@ -4644,4 +4589,98 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
     flex-basis:104px;
   }
   .battle-hero-duelist .battle-unit-art { min-height:148px; }
+}
+
+/* Build 028 — remove the old Salim spritesheet everywhere and use the three new PNG frames */
+@keyframes hero-sheet-idle {
+  0%,24.99% { background-position:0 0; }
+  25%,49.99% { background-position:-72px 0; }
+  50%,74.99% { background-position:-144px 0; }
+  75%,100% { background-position:-216px 0; }
+}
+.character-sprite-window.has-png-sprite .character-sprite-empty { display:none; }
+.duelist-png-preview {
+  position:relative;
+  width:100%;
+  height:110px;
+  flex:0 0 110px;
+  overflow:visible;
+  image-rendering:pixelated;
+}
+.duelist-preview-frame {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center bottom;
+  image-rendering:pixelated;
+  opacity:0;
+}
+.duelist-preview-frame.preview-frame-1 { animation:duelist-preview-one 3s steps(1,end) infinite; }
+.duelist-preview-frame.preview-frame-2 { animation:duelist-preview-two 3s steps(1,end) infinite; }
+.duelist-preview-frame.preview-frame-3 { animation:duelist-preview-three 3s steps(1,end) infinite; }
+@keyframes duelist-preview-one { 0%,32.99% {opacity:1} 33%,100% {opacity:0} }
+@keyframes duelist-preview-two { 0%,32.99% {opacity:0} 33%,65.99% {opacity:1} 66%,100% {opacity:0} }
+@keyframes duelist-preview-three { 0%,65.99% {opacity:0} 66%,100% {opacity:1} }
+.route-salim-png {
+  position:relative;
+  width:68px;
+  height:72px;
+  flex:0 0 68px;
+  overflow:visible;
+  image-rendering:pixelated;
+}
+.route-salim-frame {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center bottom;
+  image-rendering:pixelated;
+  opacity:0;
+}
+.route-frame-1 { animation:duelist-preview-one 3s steps(1,end) infinite; }
+.route-frame-2 { animation:duelist-preview-two 3s steps(1,end) infinite; }
+.route-frame-3 { animation:duelist-preview-three 3s steps(1,end) infinite; }
+@media(max-width:700px) {
+  .route-salim-png { width:56px;height:60px;flex-basis:56px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .duelist-preview-frame,.route-salim-frame { animation:none !important; }
+  .duelist-preview-frame.preview-frame-1,.route-frame-1 { opacity:1; }
+}
+
+/* Larger Salim PNGs, with one scale shared by idle and every combat action */
+.battle-character-visual.is-duelist-sprite {
+  width:min(148px,100%);
+  height:190px;
+  flex:0 1 148px;
+  overflow:visible;
+}
+.battle-character-visual.is-duelist-sprite .battle-idle-frame,
+.battle-character-visual.is-duelist-sprite > .battle-action-sprite {
+  left:-21%;
+  bottom:0;
+  width:142%;
+  height:142%;
+  max-width:none;
+  max-height:none;
+  object-fit:contain;
+  object-position:center bottom;
+  image-rendering:pixelated;
+}
+.battle-hero-duelist .battle-unit-art { min-height:198px; }
+@media(max-width:900px) {
+  .battle-character-visual.is-duelist-sprite { width:min(132px,100%);height:172px;flex-basis:132px; }
+  .battle-hero-duelist .battle-unit-art { min-height:184px; }
+}
+@media(max-width:600px) {
+  .battle-character-visual.is-duelist-sprite { width:min(120px,100%);height:158px;flex-basis:120px; }
+  .battle-hero-duelist .battle-unit-art { min-height:168px; }
+}
+@media(max-width:420px) {
+  .battle-character-visual.is-duelist-sprite { width:min(112px,100%);height:148px;flex-basis:112px; }
+  .battle-hero-duelist .battle-unit-art { min-height:158px; }
 }

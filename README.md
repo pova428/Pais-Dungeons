@@ -1,5 +1,10 @@
 # PAIS DUNGEON
 
+## Build 028 — Eliminación del spritesheet antiguo de Salim
+
+Se elimina el spritesheet heredado `assets/salim-sprites.webp` y sus referencias en todo el juego. La ficha de personaje y la ruta muestran ahora la animación idle con los mismos PNG nuevos de tres frames que utiliza el combate. El PNG de combate se amplía y conserva una escala idéntica en reposo y ataque.
+
+
 ## Build 027 — Sprite real de Salim sin figura provisional y tamaño ampliado
 
 Salim ya no incluye la silueta CSS provisional en la escena de combate. Solo utiliza sus PNG reales para reposo y ataques. La animación idle se mantiene detrás de la de ataque hasta que el PNG correspondiente carga, por lo que un retraso o error de carga no hace reaparecer el personaje antiguo. El mismo lienzo de mayor tamaño y la misma escala se aplican a reposo y ataques, con ajustes específicos para móvil.

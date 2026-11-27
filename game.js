@@ -26,7 +26,7 @@
       {id:"burn-mark",manaCost:15,target:"enemy",name:"Marca ígnea",detail:"Quema a un enemigo: 55% de MAG y daño durante 2 turnos.",unlockLevel:4,icon:"♨",kind:"MAGIA"},
       {id:"nova",manaCost:26,target:"all-enemies",name:"Nova elemental",detail:"Explosión mágica que golpea a todos los enemigos: 85% de MAG.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.png",sprites:"assets/salim-sprites.webp",base:{hp:48,attack:13,magic:1,defense:3,speed:17,agility:18,mp:36},growth:{hp:4,attack:1,magic:0,defense:1,speed:1,agility:1,mp:3},skills:[
+    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.png",base:{hp:48,attack:13,magic:1,defense:3,speed:17,agility:18,mp:36},growth:{hp:4,attack:1,magic:0,defense:1,speed:1,agility:1,mp:3},skills:[
       {id:"stab",manaCost:8,target:"enemy",name:"Navajazo",detail:"Corte rápido a un enemigo: 100% de ATQ.",unlockLevel:1,icon:"🗡",kind:"BÁSICA"},
       {id:"multi-stab",manaCost:17,target:"enemy",name:"Navajazos múltiples",detail:"Tres cortes consecutivos de 35% de ATQ cada uno.",unlockLevel:4,icon:"⚔",kind:"ATAQUE"},
       {id:"brothers",manaCost:28,target:"all-enemies",name:"Llamar a sus hermanos",detail:"Ataque conjunto contra todos los enemigos con dos impactos de 50% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
@@ -1510,8 +1510,10 @@
         '<span class="character-nav-state ' + (isActive ? "is-active" : "") + '">' + (isActive ? "●" : "○") + '</span></button>';
     }).join("");
     const portraitImage = selected.portrait ? '<img class="character-portrait-art" src="' + selected.portrait + '" alt="Retrato pixel art de ' + selected.name + ' ' + selected.title + '" loading="eager" onerror="this.remove()">' : "";
-    const spriteMarkup = selected.sprites ? '<img class="sprite-load-probe" src="' + selected.sprites + '" alt="" onload="this.parentElement.classList.add(&quot;has-sprite&quot;);this.remove()" onerror="this.parentElement.classList.add(&quot;no-sprite&quot;);this.remove()"><div class="character-sprite-animation" style="background-image:url(' + selected.sprites + ')"></div>' : "";
-    const spriteNote = selected.id === "duelist" ? "REPOSO ×4 · CAMINAR ×4 · ATAQUE ×4 · DAÑO ×2" : "ANIMACIONES POR AÑADIR";
+    const spriteMarkup = selected.id==="duelist"
+      ? '<div class="duelist-png-preview" aria-label="Animación pixel art de Salim">'+[1,2,3].map((frame)=>'<img class="duelist-preview-frame preview-frame-'+frame+'" src="assets/battles/animations/heroes/duelist/idle/frame-0'+frame+'.png" alt="" draggable="false" onload="this.parentElement.parentElement.classList.add(&quot;has-png-sprite&quot;)" onerror="this.remove()">').join("")+'</div>'
+      : selected.sprites ? '<img class="sprite-load-probe" src="' + selected.sprites + '" alt="" onload="this.parentElement.classList.add(&quot;has-sprite&quot;);this.remove()" onerror="this.parentElement.classList.add(&quot;no-sprite&quot;);this.remove()"><div class="character-sprite-animation" style="background-image:url(' + selected.sprites + ')"></div>' : "";
+    const spriteNote = selected.id === "duelist" ? "REPOSO PNG ×3 · ATAQUES PNG ×3" : "ANIMACIONES POR AÑADIR";
     const skills = selected.skills.map((skill) => {
       const unlocked = level >= skill.unlockLevel;
       return '<div class="character-skill ' + (unlocked ? "is-ready" : "is-locked") + '">' +
@@ -1611,7 +1613,7 @@
     }).join("");
     const siteCompleted = state.visitedSites.includes(selectedSite.id);
     const salimInParty = state.party.includes("duelist");
-    const routeCompanion = salimInParty ? '<div class="route-salim"><div class="salim-mini-sprite route-salim-sprite"></div><span>SALIM <em>«EL MORO»</em></span></div>' : '';
+    const routeCompanion = salimInParty ? '<div class="route-salim"><div class="route-salim-png" aria-hidden="true">'+[1,2,3].map((frame)=>'<img class="route-salim-frame route-frame-'+frame+'" src="assets/battles/animations/heroes/duelist/idle/frame-0'+frame+'.png" alt="" draggable="false" onerror="this.remove()">').join("")+'</div><span>SALIM <em>«EL MORO»</em></span></div>' : '';
     const detailType = selectedSite.boss ? (siteCompleted ? "JEFE DERROTADO" : "JEFE FINAL") : (siteCompleted ? "LOCALIZACIÓN SUPERADA" : "LOCALIZACIÓN");
     const detailAction = selectedSite.boss
       ? (siteCompleted ? '<span class="progress-complete">✓ JEFE SUPERADO</span>' : '<button class="game-action" type="button" data-action="enter-battle" data-site="' + selectedSite.id + '">ENTRAR AL JEFE →</button>')
