@@ -21,30 +21,30 @@
   const continueButton = document.getElementById("continue-button");
 
   const characters = [
-    {id:"guardian",name:"Pol",title:"El Flaco",role:"MAGO",sign:"P",icon:"✧",detail:"Mago veloz y frágil, especialista en daño mágico.",strengths:"Mayor velocidad y agilidad. Magia muy potente y gran evasión.",weaknesses:"Poca vida, defensa baja y daño físico reducido.",portrait:"assets/pol-portrait.png",sprites:"assets/pol-sprites.png",base:{hp:68,attack:7,magic:16,defense:5,speed:20,agility:20,mp:90},growth:{hp:6,attack:1,magic:2,defense:1,speed:1,agility:1,mp:5},skills:[
-      {id:"arcane-bolt",manaCost:10,target:"enemy",name:"Chispa arcana",detail:"Daño mágico a un enemigo: 120% de MAG.",unlockLevel:1,icon:"✧",kind:"BÁSICA"},
-      {id:"burn-mark",manaCost:16,target:"enemy",name:"Marca ígnea",detail:"Quema a un enemigo: 70% de MAG y daño durante 3 turnos.",unlockLevel:4,icon:"♨",kind:"MAGIA"},
-      {id:"nova",manaCost:28,target:"all-enemies",name:"Nova elemental",detail:"Explosión mágica que golpea a todos los enemigos: 115% de MAG.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"guardian",name:"Pol",title:"El Flaco",role:"MAGO",sign:"P",icon:"✧",detail:"Mago veloz y frágil, especialista en daño mágico.",strengths:"Mayor velocidad y agilidad. Magia muy potente y gran evasión.",weaknesses:"Poca vida, defensa baja y daño físico reducido.",portrait:"assets/pol-portrait.png",sprites:"assets/pol-sprites.png",base:{hp:58,attack:5,magic:12,defense:4,speed:18,agility:17,mp:60},growth:{hp:5,attack:1,magic:1,defense:1,speed:1,agility:1,mp:4},skills:[
+      {id:"arcane-bolt",manaCost:9,target:"enemy",name:"Chispa arcana",detail:"Daño mágico a un enemigo: 90% de MAG.",unlockLevel:1,icon:"✧",kind:"BÁSICA"},
+      {id:"burn-mark",manaCost:15,target:"enemy",name:"Marca ígnea",detail:"Quema a un enemigo: 55% de MAG y daño durante 2 turnos.",unlockLevel:4,icon:"♨",kind:"MAGIA"},
+      {id:"nova",manaCost:26,target:"all-enemies",name:"Nova elemental",detail:"Explosión mágica que golpea a todos los enemigos: 85% de MAG.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.png",sprites:"assets/salim-sprites.webp",base:{hp:54,attack:17,magic:1,defense:4,speed:18,agility:19,mp:40},growth:{hp:5,attack:2,magic:0,defense:1,speed:1,agility:1,mp:2},skills:[
-      {id:"stab",manaCost:7,target:"enemy",name:"Navajazo",detail:"Corte rápido a un enemigo: 135% de ATQ.",unlockLevel:1,icon:"🗡",kind:"BÁSICA"},
-      {id:"multi-stab",manaCost:18,target:"enemy",name:"Navajazos múltiples",detail:"Tres cortes consecutivos de 55% de ATQ cada uno.",unlockLevel:4,icon:"⚔",kind:"ATAQUE"},
-      {id:"brothers",manaCost:30,target:"all-enemies",name:"Llamar a sus hermanos",detail:"Ataque conjunto con tres impactos de 75% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.png",sprites:"assets/salim-sprites.webp",base:{hp:48,attack:13,magic:1,defense:3,speed:17,agility:18,mp:36},growth:{hp:4,attack:1,magic:0,defense:1,speed:1,agility:1,mp:3},skills:[
+      {id:"stab",manaCost:8,target:"enemy",name:"Navajazo",detail:"Corte rápido a un enemigo: 100% de ATQ.",unlockLevel:1,icon:"🗡",kind:"BÁSICA"},
+      {id:"multi-stab",manaCost:17,target:"enemy",name:"Navajazos múltiples",detail:"Tres cortes consecutivos de 35% de ATQ cada uno.",unlockLevel:4,icon:"⚔",kind:"ATAQUE"},
+      {id:"brothers",manaCost:28,target:"all-enemies",name:"Llamar a sus hermanos",detail:"Ataque conjunto contra todos los enemigos con dos impactos de 50% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"arcanist",name:"Igor",title:"El Alto",role:"SANADOR",sign:"I",icon:"✚",detail:"Sanador equilibrado que mantiene al grupo en pie.",strengths:"Curación potente, buena vida y estadísticas equilibradas.",weaknesses:"Menor daño directo que los atacantes y velocidad moderada.",portrait:"assets/igor-portrait.png",sprites:"assets/igor-sprites.png",base:{hp:88,attack:8,magic:14,defense:9,speed:11,agility:11,mp:100},growth:{hp:8,attack:1,magic:2,defense:1,speed:1,agility:1,mp:5},skills:[
-      {id:"antivirus",manaCost:12,target:"ally",name:"Antivirus",detail:"Cura a un aliado: 145% de MAG + 10 PV.",unlockLevel:1,icon:"✚",kind:"BÁSICA"},
-      {id:"life-drain",manaCost:18,target:"enemy",name:"Drenaje de vida",detail:"Roba vida a un enemigo y recupera el 50% del daño causado.",unlockLevel:4,icon:"☯",kind:"APOYO"},
-      {id:"reboot",manaCost:32,target:"all-allies",name:"Reinicio total",detail:"Cura hasta a tres aliados: 115% de MAG + 12 PV a cada uno.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"arcanist",name:"Igor",title:"El Alto",role:"SANADOR",sign:"I",icon:"✚",detail:"Sanador equilibrado que mantiene al grupo en pie.",strengths:"Curación potente, buena vida y estadísticas equilibradas.",weaknesses:"Menor daño directo que los atacantes y velocidad moderada.",portrait:"assets/igor-portrait.png",sprites:"assets/igor-sprites.png",base:{hp:78,attack:6,magic:11,defense:8,speed:10,agility:10,mp:80},growth:{hp:7,attack:1,magic:1,defense:1,speed:1,agility:1,mp:5},skills:[
+      {id:"antivirus",manaCost:12,target:"ally",name:"Antivirus",detail:"Cura a un aliado: 90% de MAG + 6 PV.",unlockLevel:1,icon:"✚",kind:"BÁSICA"},
+      {id:"life-drain",manaCost:18,target:"enemy",name:"Drenaje de vida",detail:"Roba vida a un enemigo y recupera el 35% del daño causado.",unlockLevel:4,icon:"☯",kind:"APOYO"},
+      {id:"reboot",manaCost:30,target:"all-allies",name:"Reinicio total",detail:"Cura hasta a tres aliados: 75% de MAG + 8 PV a cada uno.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"tracker",name:"Ivan",title:"El Gordo",role:"TANQUE",sign:"V",icon:"⬟",detail:"Tanque del equipo. Aguanta golpes y protege a los demás.",strengths:"Mayor vida y defensa. Escudos fuertes y gran capacidad de protección.",weaknesses:"El más lento y menos ágil. Magia y daño explosivo muy bajos.",portrait:"assets/ivan-portrait.png",sprites:"assets/ivan-sprites.png",base:{hp:135,attack:10,magic:1,defense:17,speed:5,agility:5,mp:50},growth:{hp:13,attack:1,magic:0,defense:2,speed:0,agility:0,mp:2},skills:[
-      {id:"protective-shield",manaCost:10,target:"ally",name:"Escudo protector",detail:"Aplica a un aliado un escudo del 30% de su vida máxima durante 2 turnos.",unlockLevel:1,icon:"⬡",kind:"BÁSICA"},
-      {id:"knockdown",manaCost:16,target:"enemy",name:"Derribo",detail:"Golpea a un enemigo: 115% de ATQ y lo derriba, retrasando su turno.",unlockLevel:4,icon:"⚒",kind:"CONTROL"},
-      {id:"team-bastion",manaCost:28,target:"all-allies",name:"Bastión de equipo",detail:"Protege a todo el grupo con un escudo del 20% de su vida máxima durante 2 turnos.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"tracker",name:"Ivan",title:"El Gordo",role:"TANQUE",sign:"V",icon:"⬟",detail:"Tanque del equipo. Aguanta golpes y protege a los demás.",strengths:"Mayor vida y defensa. Escudos fuertes y gran capacidad de protección.",weaknesses:"El más lento y menos ágil. Magia y daño explosivo muy bajos.",portrait:"assets/ivan-portrait.png",sprites:"assets/ivan-sprites.png",base:{hp:116,attack:8,magic:1,defense:15,speed:5,agility:4,mp:48},growth:{hp:11,attack:1,magic:0,defense:1,speed:0,agility:0,mp:3},skills:[
+      {id:"protective-shield",manaCost:11,target:"ally",name:"Escudo protector",detail:"Aplica a un aliado un escudo del 22% de su vida máxima durante 2 turnos.",unlockLevel:1,icon:"⬡",kind:"BÁSICA"},
+      {id:"knockdown",manaCost:16,target:"enemy",name:"Derribo",detail:"Golpea a un enemigo: 90% de ATQ y lo derriba, retrasando su turno.",unlockLevel:4,icon:"⚒",kind:"CONTROL"},
+      {id:"team-bastion",manaCost:28,target:"all-allies",name:"Bastión de equipo",detail:"Protege a todo el grupo con un escudo del 15% de su vida máxima durante 2 turnos.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"alchemist",name:"Alex",title:"El Mujeriego",role:"DUELISTA",sign:"A",icon:"⚔",detail:"Duelista equilibrado, combina daño, resistencia y mejoras propias.",strengths:"Buen daño físico y vida. Puede potenciarse antes de atacar.",weaknesses:"No destaca en magia ni supera a Salim en daño o a Ivan en resistencia.",portrait:"assets/alex-portrait.png",sprites:"assets/alex-sprites.png",base:{hp:105,attack:13,magic:2,defense:10,speed:12,agility:12,mp:65},growth:{hp:9,attack:2,magic:0,defense:1,speed:1,agility:1,mp:3},skills:[
-      {id:"balonazo",manaCost:8,target:"enemy",name:"Balonazo",detail:"Lanza un balón contra un enemigo: 125% de ATQ.",unlockLevel:1,icon:"⚽",kind:"BÁSICA"},
-      {id:"modo-mujer",manaCost:15,target:"self",name:"Modo Mujer",detail:"Se potencia durante 2 turnos: +30% de ATQ y +20% de VEL.",unlockLevel:4,icon:"♛",kind:"MEJORA"},
-      {id:"field-finish",manaCost:28,target:"all-enemies",name:"Remate de campo",detail:"Remate explosivo que golpea a todos los enemigos: 105% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"alchemist",name:"Alex",title:"El Mujeriego",role:"DUELISTA",sign:"A",icon:"⚔",detail:"Duelista equilibrado, combina daño, resistencia y mejoras propias.",strengths:"Buen daño físico y vida. Puede potenciarse antes de atacar.",weaknesses:"No destaca en magia ni supera a Salim en daño o a Ivan en resistencia.",portrait:"assets/alex-portrait.png",sprites:"assets/alex-sprites.png",base:{hp:86,attack:10,magic:1,defense:8,speed:12,agility:12,mp:52},growth:{hp:8,attack:1,magic:0,defense:1,speed:1,agility:1,mp:4},skills:[
+      {id:"balonazo",manaCost:9,target:"enemy",name:"Balonazo",detail:"Lanza un balón contra un enemigo: 105% de ATQ.",unlockLevel:1,icon:"⚽",kind:"BÁSICA"},
+      {id:"modo-mujer",manaCost:16,target:"self",name:"Modo Mujer",detail:"Se potencia durante 2 turnos: +20% de ATQ y +10% de VEL.",unlockLevel:4,icon:"♛",kind:"MEJORA"},
+      {id:"field-finish",manaCost:27,target:"all-enemies",name:"Remate de campo",detail:"Remate explosivo que golpea a todos los enemigos: 80% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]}
   ];
 
@@ -138,21 +138,84 @@
     });
   }
 
-  const BATTLE_ENEMIES = [
-    {id:"error",name:"Proceso corrupto",role:"ERROR DE SISTEMA",maxHp:74,attack:11,speed:15,mark:"404",mana:0},
-    {id:"virus",name:"Virus de aula",role:"AMENAZA",maxHp:62,attack:9,speed:10,mark:"!",mana:0},
-    {id:"glitch",name:"Fragmento de código",role:"ANOMALÍA",maxHp:88,attack:8,speed:8,mark:"//",mana:0}
-  ];
+  const ENEMY_TYPES = {
+    "process-wisp":{name:"Eco de proceso",role:"ESPÍRITU DIGITAL",maxHp:46,attack:7,speed:16,mark:"404",ai:"hunter",asset:"process-wisp"},
+    "virus-larva":{name:"Larva de virus",role:"PLAGA",maxHp:40,attack:6,speed:12,mark:"!",ai:"hexer",asset:"virus-larva"},
+    "code-fragment":{name:"Fragmento de código",role:"ANOMALÍA",maxHp:52,attack:8,speed:8,mark:"//",ai:"bruiser",asset:"code-fragment"},
+
+    "archive-mimic":{name:"Mímico de archivo",role:"DEPREDADOR",maxHp:48,attack:7,speed:9,mark:"DB",ai:"support",asset:"archive-mimic"},
+    "query-leech":{name:"Sanguijuela SQL",role:"PARÁSITO",maxHp:44,attack:7,speed:14,mark:"SQL",ai:"hunter",asset:"query-leech"},
+    "null-sentinel":{name:"Centinela nulo",role:"GUARDIÁN",maxHp:61,attack:9,speed:6,mark:"0",ai:"bruiser",asset:"null-sentinel"},
+
+    "ash-hound":{name:"Sabueso de ceniza",role:"CAZADOR",maxHp:50,attack:8,speed:17,mark:"H",ai:"hunter",asset:"ash-hound"},
+    "yard-haunt":{name:"Aparición del patio",role:"ESPECTRO",maxHp:48,attack:7,speed:11,mark:"✦",ai:"hexer",asset:"yard-haunt"},
+    "broken-desk":{name:"Pupitre roto",role:"BRUTO",maxHp:60,attack:9,speed:7,mark:"▰",ai:"bruiser",asset:"broken-desk"},
+
+    "router-wraith":{name:"Espectro del router",role:"JEFE · REDES",maxHp:112,attack:10,speed:13,mark:"R",ai:"boss",asset:"router-wraith",boss:true},
+    "cable-stalker":{name:"Acechador de cable",role:"CAZADOR",maxHp:52,attack:8,speed:17,mark:"~",ai:"hunter",asset:"cable-stalker"},
+    "firewall-drone":{name:"Dron cortafuegos",role:"SOPORTE",maxHp:56,attack:8,speed:9,mark:"FW",ai:"support",asset:"firewall-drone"},
+
+    "pin-ghoul":{name:"Necrófago de bolera",role:"BRUTO",maxHp:58,attack:8,speed:11,mark:"9",ai:"bruiser",asset:"pin-ghoul"},
+    "lane-phantom":{name:"Fantasma de pista",role:"ESPECTRO",maxHp:50,attack:8,speed:14,mark:"X",ai:"hexer",asset:"lane-phantom"},
+    "ball-mauler":{name:"Aplastabolos",role:"BRUTO",maxHp:64,attack:9,speed:7,mark:"●",ai:"bruiser",asset:"ball-mauler"},
+
+    "asphalt-reaver":{name:"Desollador de asfalto",role:"CAZADOR",maxHp:60,attack:9,speed:14,mark:"N",ai:"hunter",asset:"asphalt-reaver"},
+    "signal-crawler":{name:"Rastrero de señal",role:"PARÁSITO",maxHp:52,attack:8,speed:12,mark:"≈",ai:"hexer",asset:"signal-crawler"},
+    "wreck-hound":{name:"Sabueso de chatarra",role:"BRUTO",maxHp:67,attack:10,speed:8,mark:"W",ai:"bruiser",asset:"wreck-hound"},
+
+    "screen-haunt":{name:"Aparición de pantalla",role:"ESPECTRO",maxHp:62,attack:9,speed:12,mark:"▣",ai:"hexer",asset:"screen-haunt"},
+    "frame-mimic":{name:"Mímico de fotograma",role:"SOPORTE",maxHp:58,attack:9,speed:10,mark:"F",ai:"support",asset:"frame-mimic"},
+    "usher-wraith":{name:"Acomodador espectral",role:"CAZADOR",maxHp:52,attack:10,speed:16,mark:"U",ai:"hunter",asset:"usher-wraith"},
+
+    "sushi-chef":{name:"El chef de la última mesa",role:"JEFE · SUSHI",maxHp:132,attack:11,speed:14,mark:"寿",ai:"boss",asset:"sushi-chef",boss:true},
+    "wasabi-fiend":{name:"Demonio de wasabi",role:"CAZADOR",maxHp:61,attack:9,speed:17,mark:"辣",ai:"hunter",asset:"wasabi-fiend"},
+    "soy-shadow":{name:"Sombra de soja",role:"ESPECTRO",maxHp:66,attack:9,speed:10,mark:"影",ai:"hexer",asset:"soy-shadow"},
+
+    "camera-stalker":{name:"Acechador de cámara",role:"CAZADOR",maxHp:68,attack:10,speed:17,mark:"REC",ai:"hunter",asset:"camera-stalker"},
+    "clip-fiend":{name:"Demonio de clip",role:"PARÁSITO",maxHp:59,attack:9,speed:13,mark:"▶",ai:"hexer",asset:"clip-fiend"},
+    "recording-ghost":{name:"Fantasma grabado",role:"SOPORTE",maxHp:65,attack:9,speed:9,mark:"◉",ai:"support",asset:"recording-ghost"},
+
+    "maze-binder":{name:"Tejedor del laberinto",role:"ESPECTRO",maxHp:72,attack:10,speed:12,mark:"⌘",ai:"hexer",asset:"maze-binder"},
+    "thorn-minotaur":{name:"Minotauro de espinas",role:"BRUTO",maxHp:82,attack:11,speed:7,mark:"M",ai:"bruiser",asset:"thorn-minotaur"},
+    "wall-crawler":{name:"Rastrero de pared",role:"CAZADOR",maxHp:66,attack:10,speed:16,mark:"W",ai:"hunter",asset:"wall-crawler"},
+
+    "faceless-runner":{name:"Corredor sin rostro",role:"CAZADOR",maxHp:72,attack:10,speed:18,mark:"?",ai:"hunter",asset:"faceless-runner"},
+    "yellow-mimic":{name:"Mímico amarillo",role:"SOPORTE",maxHp:70,attack:10,speed:11,mark:"Y",ai:"support",asset:"yellow-mimic"},
+    "ceiling-watcher":{name:"Vigía del techo",role:"ESPECTRO",maxHp:76,attack:11,speed:8,mark:"⌃",ai:"hexer",asset:"ceiling-watcher"},
+
+    "club-master":{name:"Maestro de Clubes",role:"JEFE FINAL · STEAM",maxHp:158,attack:12,speed:15,mark:"DJ",ai:"boss",asset:"club-master",boss:true},
+    "bass-brute":{name:"Bruto del bajo",role:"BRUTO",maxHp:78,attack:11,speed:8,mark:"♬",ai:"bruiser",asset:"bass-brute"},
+    "strobe-witch":{name:"Bruja estroboscópica",role:"ESPECTRO",maxHp:74,attack:10,speed:17,mark:"✧",ai:"hexer",asset:"strobe-witch"}
+  };
+
+  const SITE_ENCOUNTERS = {
+    "institute-programming":["process-wisp","virus-larva","code-fragment"],
+    "institute-database":["archive-mimic","query-leech","null-sentinel"],
+    "institute-yard":["ash-hound","yard-haunt","broken-desk"],
+    "institute-networks":["router-wraith","cable-stalker","firewall-drone"],
+    "baix-bowling":["pin-ghoul","lane-phantom","ball-mauler"],
+    "baix-n340":["asphalt-reaver","signal-crawler","wreck-hound"],
+    "baix-cinema":["screen-haunt","frame-mimic","usher-wraith"],
+    "baix-sushi":["sushi-chef","wasabi-fiend","soy-shadow"],
+    "steam-content-warning":["camera-stalker","clip-fiend","recording-ghost"],
+    "steam-labyrinthine":["maze-binder","thorn-minotaur","wall-crawler"],
+    "steam-backrooms":["faceless-runner","yellow-mimic","ceiling-watcher"],
+    "steam-clubs":["club-master","bass-brute","strobe-witch"]
+  };
 
   function createBattleState(siteId) {
-    const startingVitals = {};
-    state.party.forEach((id) => {
-      startingVitals[id] = {hp:Number(state.hp[id]) || 0,mp:Number(state.mp[id]) || 0};
+    const startingVitals={};
+    state.party.forEach((id)=>{
+      startingVitals[id]={hp:Number(state.hp[id])||0,mp:Number(state.mp[id])||0};
+    });
+    const enemyIds=SITE_ENCOUNTERS[siteId]||SITE_ENCOUNTERS["institute-programming"];
+    const enemies=enemyIds.map((enemyId)=>{
+      const template=ENEMY_TYPES[enemyId];
+      return Object.assign({id:enemyId},template,{hp:template.maxHp,burn:0,stun:0,shield:0,enraged:false});
     });
     return {
-      siteId,round:1,order:[],turnIndex:0,currentTurnStarted:null,startingVitals,
-      enemies:BATTLE_ENEMIES.map((enemy) => Object.assign({},enemy,{hp:enemy.maxHp,burn:0,stun:0})),
-      shields:{},shieldTurns:{},buffs:{},pendingSkillId:null,targetMode:null,status:"active",
+      siteId,encounterVersion:2,round:1,order:[],turnIndex:0,currentTurnStarted:null,startingVitals,
+      enemies,shields:{},shieldTurns:{},buffs:{},debuffs:{},pendingSkillId:null,targetMode:null,status:"active",
       log:["La compañía entra en la sala. ¡Comienza el combate!"]
     };
   }
@@ -189,25 +252,39 @@
   }
 
   function setBattleVictory() {
-    const battle = state.battle;
-    if (battle.status !== "active") return;
+    const battle=state.battle;
+    if(battle.status!=="active") return;
     clearBattleTimer();
-    battle.status = "victory";
-    battle.pendingSkillId = null;
-    battle.targetMode = null;
-    if (!state.visitedSites.includes(battle.siteId)) {
+    battle.status="victory";
+    battle.pendingSkillId=null;
+    battle.targetMode=null;
+    const region=regions.find((entry)=>entry.sites.some((site)=>site.id===battle.siteId));
+    const site=region ? region.sites.find((entry)=>entry.id===battle.siteId) : null;
+    const reward=site && site.boss ? 120 : 45;
+    if(!state.visitedSites.includes(battle.siteId)) {
       state.visitedSites.push(battle.siteId);
-      awardPartyExperience(45);
+      awardPartyExperience(reward);
     }
-    const region = regions.find((entry) => entry.sites.some((site) => site.id === battle.siteId));
-    if (region) {
-      const index = region.sites.findIndex((site) => site.id === battle.siteId);
-      const next = region.sites[index+1];
-      state.selectedSite = next ? next.id : battle.siteId;
-      state.selectedRegion = region.id;
+    if(region && site && site.boss) {
+      const regionIndex=regions.findIndex((entry)=>entry.id===region.id);
+      const nextRegion=regions[regionIndex+1];
+      if(nextRegion) {
+        state.selectedRegion=nextRegion.id;
+        state.selectedSite=getFirstAvailableSite(nextRegion,state.visitedSites);
+        state.notice="Jefe derrotado. Se ha desbloqueado "+nextRegion.name+".";
+      } else {
+        state.selectedRegion=region.id;
+        state.selectedSite=site.id;
+        state.notice="Has derrotado al último jefe. La campaña provisional está completada.";
+      }
+    } else if(region) {
+      const index=region.sites.findIndex((entry)=>entry.id===battle.siteId);
+      const next=region.sites[index+1];
+      state.selectedRegion=region.id;
+      state.selectedSite=next ? next.id : battle.siteId;
+      state.notice=next ? "Sala superada. Se ha desbloqueado "+next.name+"." : "La zona está lista para su jefe final.";
     }
-    pushBattleLog("¡Victoria! La sala queda despejada. La compañía obtiene 45 XP.");
-    state.notice = "Sala superada. La siguiente localización ya está disponible.";
+    pushBattleLog("¡Victoria! La compañía obtiene "+reward+" XP.");
     saveState();
   }
 
@@ -235,6 +312,11 @@
     const level = state.levels[heroId] || 1;
     const maxHp = getCharacterStats(character,level).hp;
     let damage = Math.max(1,Math.round(amount));
+    const curse=state.battle.debuffs[heroId];
+    if(curse && curse.turns>0) {
+      damage=Math.ceil(damage*(1+(curse.damageTaken||.18)));
+      pushBattleLog(character.name+" sufre daño amplificado por la maldición.");
+    }
     const shield = state.battle.shields[heroId] || 0;
     if (shield > 0) {
       const absorbed = Math.min(shield,damage);
@@ -275,19 +357,69 @@
     if (enemy.hp <= 0) pushBattleLog(enemy.name + " cae por la quemadura.");
   }
 
+  function chooseEnemyTarget(enemy,candidates) {
+    const battle=state.battle;
+    const scored=candidates.map((id)=>{
+      const character=characters.find((entry)=>entry.id===id);
+      const stats=getCharacterStats(character,state.levels[id]||1);
+      const maxHp=Math.max(1,stats.hp);
+      const hpRatio=(Number(state.hp[id])||0)/maxHp;
+      const shield=battle.shields[id]||0;
+      let score=(1-hpRatio)*3 + (stats.defense<=5?2:stats.defense<=8?1:0) + (shield>0?-1:0);
+      if(id==="arcanist") score+=5;
+      if(id==="guardian") score+=3;
+      if(enemy.ai==="hunter" && (id==="arcanist"||id==="guardian")) score+=3;
+      if(enemy.ai==="hexer" && (id==="arcanist"||id==="guardian")) score+=4;
+      if(enemy.ai==="bruiser" && hpRatio<.55) score+=3;
+      if(enemy.ai==="boss" && id===enemy.focusTargetId) score+=2;
+      if(battle.buffs[id] && battle.buffs[id].turns>0) score+=1;
+      return {id,score};
+    });
+    scored.sort((a,b)=>b.score-a.score || candidates.indexOf(a.id)-candidates.indexOf(b.id));
+    const targetId=scored[0].id;
+    enemy.focusTargetId=targetId;
+    return targetId;
+  }
+
   function performEnemyTurn(enemy) {
-    if (enemy.hp <= 0) return;
-    if (enemy.stun > 0) {
-      enemy.stun -= 1;
-      pushBattleLog(enemy.name + " pierde su turno por el derribo.");
+    if(enemy.hp<=0) return;
+    if(enemy.stun>0) {
+      enemy.stun-=1;
+      pushBattleLog(enemy.name+" pierde su turno por el derribo.");
       return;
     }
-    const candidates = getAliveParty();
-    if (!candidates.length) return;
-    const targetId = candidates[Math.floor(Math.random()*candidates.length)];
-    const target = characters.find((character) => character.id === targetId);
-    const targetStats = getCharacterStats(target,state.levels[targetId] || 1);
-    const rawDamage = Math.max(4,enemy.attack-Math.floor(targetStats.defense*0.35));
+    const candidates=getAliveParty();
+    if(!candidates.length) return;
+
+    if(enemy.ai==="support") {
+      const wounded=state.battle.enemies
+        .filter((other)=>other.id!==enemy.id && other.hp>0 && other.hp<other.maxHp*.78)
+        .sort((a,b)=>(a.hp/a.maxHp)-(b.hp/b.maxHp))[0];
+      if(wounded) {
+        const healed=Math.min(wounded.maxHp-wounded.hp,Math.max(5,Math.round(wounded.maxHp*.13)));
+        wounded.hp+=healed;
+        pushBattleLog(enemy.name+" repara a "+wounded.name+" y recupera "+healed+" PV.");
+        return;
+      }
+    }
+
+    const targetId=chooseEnemyTarget(enemy,candidates);
+    const target=characters.find((character)=>character.id===targetId);
+    const targetStats=getCharacterStats(target,state.levels[targetId]||1);
+
+    if(enemy.ai==="hexer" && !state.battle.debuffs[targetId]) {
+      state.battle.debuffs[targetId]={turns:2,damageTaken:.18};
+      pushBattleLog(enemy.name+" maldice a "+target.name+". Recibirá un 18% más de daño durante 2 turnos.");
+      return;
+    }
+
+    if(enemy.ai==="boss" && !enemy.enraged && enemy.hp<=enemy.maxHp*.4) {
+      enemy.enraged=true;
+      enemy.attack+=2;
+      pushBattleLog(enemy.name+" entra en fase de furia. Sus ataques se vuelven más peligrosos.");
+    }
+    const defenceMitigation=Math.floor(targetStats.defense*.45);
+    const rawDamage=Math.max(3,enemy.attack-defenceMitigation+(enemy.ai==="bruiser"?1:0));
     applyHeroDamage(targetId,rawDamage);
   }
 
@@ -431,63 +563,63 @@
     switch(skill.id) {
       case "arcane-bolt":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(1.2,true)+3);
+        applyEnemyDamage(enemy,targetDamage(.9,true)+1);
         break;
       case "burn-mark":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(.7,true)+2);
-        if (enemy.hp > 0) { enemy.burn=3; enemy.burnDamage=Math.max(3,Math.round(stats.magic*.3)); }
+        applyEnemyDamage(enemy,targetDamage(.55,true)+1);
+        if (enemy.hp > 0) { enemy.burn=2; enemy.burnDamage=Math.max(2,Math.round(stats.magic*.2)); }
         break;
       case "nova":
-        battle.enemies.filter((entry) => entry.hp>0).forEach((entry) => applyEnemyDamage(entry,targetDamage(1.15,true)));
+        battle.enemies.filter((entry) => entry.hp>0).forEach((entry) => applyEnemyDamage(entry,targetDamage(.85,true)));
         break;
       case "stab":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(1.35,false)+2);
+        applyEnemyDamage(enemy,targetDamage(1,false)+1);
         break;
       case "multi-stab":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        for(let hit=0;hit<3 && enemy.hp>0;hit++) applyEnemyDamage(enemy,targetDamage(.55,false));
+        for(let hit=0;hit<3 && enemy.hp>0;hit++) applyEnemyDamage(enemy,targetDamage(.35,false));
         break;
       case "brothers":
         battle.enemies.filter((entry) => entry.hp>0).slice(0,3).forEach((entry) => {
-          for(let hit=0;hit<3 && entry.hp>0;hit++) applyEnemyDamage(entry,targetDamage(.75,false));
+          for(let hit=0;hit<2 && entry.hp>0;hit++) applyEnemyDamage(entry,targetDamage(.5,false));
         });
         break;
       case "antivirus":
         if (!ally) return showNotice("Selecciona un compañero válido.");
-        healHero(ally.id,stats.magic*1.45+10);
+        healHero(ally.id,stats.magic*.9+6);
         break;
       case "life-drain":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        const drained = targetDamage(1.1,true)+3;
+        const drained = targetDamage(.8,true)+2;
         applyEnemyDamage(enemy,drained);
-        healHero(character.id,Math.ceil(drained*.5));
+        healHero(character.id,Math.ceil(drained*.35));
         break;
       case "reboot":
         getAliveParty().sort((a,b)=>{
           const ca=characters.find((entry)=>entry.id===a),cb=characters.find((entry)=>entry.id===b);
           return state.hp[a]/getCharacterStats(ca,state.levels[a]||1).hp-state.hp[b]/getCharacterStats(cb,state.levels[b]||1).hp;
-        }).slice(0,3).forEach((id)=>healHero(id,stats.magic*1.15+12));
+        }).slice(0,3).forEach((id)=>healHero(id,stats.magic*.75+8));
         break;
       case "protective-shield":
         if (!ally) return showNotice("Selecciona un compañero válido.");
         const allyMax=getCharacterStats(ally,state.levels[ally.id]||1).hp;
-        battle.shields[ally.id]=Math.round(allyMax*.3);
+        battle.shields[ally.id]=Math.round(allyMax*.22);
         battle.shieldTurns[ally.id]=2;
         freshShieldIds.add(ally.id);
         pushBattleLog(ally.name+" recibe un escudo de "+battle.shields[ally.id]+" puntos durante sus próximos 2 turnos.");
         break;
       case "knockdown":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(1.15,false));
+        applyEnemyDamage(enemy,targetDamage(.9,false));
         if(enemy.hp>0){enemy.stun=1;pushBattleLog(enemy.name+" queda derribado.");}
         break;
       case "team-bastion":
         getAliveParty().forEach((id)=>{
           const allyChar=characters.find((entry)=>entry.id===id);
           const max=getCharacterStats(allyChar,state.levels[id]||1).hp;
-          battle.shields[id]=(battle.shields[id]||0)+Math.round(max*.2);
+          battle.shields[id]=(battle.shields[id]||0)+Math.round(max*.15);
           battle.shieldTurns[id]=Math.max(2,battle.shieldTurns[id]||0);
           freshShieldIds.add(id);
         });
@@ -495,10 +627,10 @@
         break;
       case "balonazo":
         if (!enemy) return showNotice("Selecciona un enemigo válido.");
-        applyEnemyDamage(enemy,targetDamage(1.25,false)+2);
+        applyEnemyDamage(enemy,targetDamage(.8,false)+1);
         break;
       case "modo-mujer":
-        battle.buffs[character.id]={attack:.3,speed:.2,turns:2};
+        battle.buffs[character.id]={attack:.2,speed:.1,turns:2};
         pushBattleLog("Alex activa Modo Mujer: su ataque y velocidad aumentan.");
         break;
       case "field-finish":
@@ -527,6 +659,14 @@
     battle.pendingSkillId=null;
     battle.targetMode=null;
     battle.currentTurnStarted=null;
+    const curse=battle.debuffs[character.id];
+    if(curse && curse.turns>0) {
+      curse.turns-=1;
+      if(curse.turns<=0) {
+        delete battle.debuffs[character.id];
+        pushBattleLog("La maldición sobre "+character.name+" desaparece.");
+      }
+    }
     if (battle.enemies.every((entry)=>entry.hp<=0)) {
       setBattleVictory();
     } else {
@@ -558,8 +698,8 @@
     gold:120,
     rations:2,
     inventory:{bandage:0,tonic:0,oil:0},
-    hp:{guardian:68,duelist:54,arcanist:88,tracker:135,alchemist:105},
-    mp:{guardian:90,duelist:40,arcanist:100,tracker:50,alchemist:65},
+    hp:{guardian:58,duelist:48,arcanist:78,tracker:116,alchemist:86},
+    mp:{guardian:60,duelist:36,arcanist:80,tracker:48,alchemist:52},
     levels:{guardian:1,duelist:1,arcanist:1,tracker:1,alchemist:1},
     xp:{guardian:0,duelist:0,arcanist:0,tracker:0,alchemist:0},
     battle:null,
@@ -676,11 +816,17 @@
         if (merged.tab === "battle") merged.tab = "route";
       }
       if (merged.tab === "battle" && (!merged.battle || merged.battle.siteId !== merged.battleSiteId)) merged.tab = "route";
+      if (merged.battle && merged.battle.encounterVersion !== 2) {
+        merged.battle=null;
+        if (merged.tab === "battle") merged.tab="route";
+        merged.notice="El encuentro ha cambiado. Puedes volver a entrar para probar el nuevo balance.";
+      }
       if (merged.battle) {
         const savedBattle=merged.battle;
         if (!savedBattle.shields || typeof savedBattle.shields !== "object") savedBattle.shields={};
         if (!savedBattle.shieldTurns || typeof savedBattle.shieldTurns !== "object") savedBattle.shieldTurns={};
         if (!savedBattle.buffs || typeof savedBattle.buffs !== "object") savedBattle.buffs={};
+        if (!savedBattle.debuffs || typeof savedBattle.debuffs !== "object") savedBattle.debuffs={};
         if (!savedBattle.startingVitals) {
           savedBattle.startingVitals={};
           merged.party.forEach((id)=>{
@@ -931,7 +1077,7 @@
       return '<article class="region-column ' + (selected ? "is-selected " : "") + (regionUnlocked ? "" : "is-locked") + '">' +
         '<div class="region-topline"><span>ZONA ' + region.index + '</span><span>' + (regionUnlocked ? region.short : "🔒 CERRADA") + '</span></div>' +
         '<h3>' + region.name + '</h3>' +
-        (regionUnlocked ? '<button class="game-action secondary" type="button" data-action="select-region" data-region="' + region.id + '">ENTRAR</button>' : '<div class="region-seal">🔒 BLOQUEADA</div>') +
+        (regionUnlocked ? '<button class="game-action secondary" type="button" data-action="enter-region" data-region="' + region.id + '">' + (selected ? 'CONTINUAR' : 'ENTRAR') + '</button>' : '<div class="region-seal">🔒 BLOQUEADA</div>') +
         '<div class="route-sites">' + sites + '</div>' +
       '</article>';
     }).join("");
@@ -940,7 +1086,7 @@
     const routeCompanion = salimInParty ? '<div class="route-salim"><div class="salim-mini-sprite route-salim-sprite"></div><span>SALIM <em>«EL MORO»</em></span></div>' : '';
     const detailType = selectedSite.boss ? (siteCompleted ? "JEFE DERROTADO" : "JEFE FINAL") : (siteCompleted ? "LOCALIZACIÓN SUPERADA" : "LOCALIZACIÓN");
     const detailAction = selectedSite.boss
-      ? (siteCompleted ? '<span class="progress-complete">✓ JEFE SUPERADO</span>' : '<button class="game-action" type="button" data-action="boss-preview">VER JEFE →</button>')
+      ? (siteCompleted ? '<span class="progress-complete">✓ JEFE SUPERADO</span>' : '<button class="game-action" type="button" data-action="enter-battle" data-site="' + selectedSite.id + '">ENTRAR AL JEFE →</button>')
       : (siteCompleted
           ? '<span class="progress-complete">✓ NIVEL SUPERADO</span>'
           : '<button class="game-action" type="button" data-action="enter-battle" data-site="' + selectedSite.id + '">ENTRAR EN SALA →</button>');
@@ -956,7 +1102,7 @@
     const region=regions.find((entry)=>entry.sites.some((site)=>site.id===siteId));
     const site=region ? region.sites.find((entry)=>entry.id===siteId) : null;
     const siteIndex=region ? region.sites.findIndex((entry)=>entry.id===siteId) : -1;
-    if(!site || site.boss || !isSiteUnlocked(region,siteIndex,state.visitedSites) || !battle || battle.siteId!==siteId) {
+    if(!site || !isSiteUnlocked(region,siteIndex,state.visitedSites) || !battle || battle.siteId!==siteId) {
       state.tab="route";
       return renderRoute();
     }
@@ -1221,11 +1367,28 @@
       if (state.party.length !== 4) return showNotice("Necesitas seleccionar exactamente cuatro héroes en la sección Compañía antes de partir.");
       return openDialog("expedition");
     }
+    if (action === "enter-region") {
+      const region=regions.find((entry)=>entry.id===target.dataset.region);
+      const regionIndex=region ? regions.findIndex((entry)=>entry.id===region.id) : -1;
+      if(!region || !isRegionUnlocked(regionIndex,state.visitedSites)) return showNotice("Esta zona está cerrada. Derrota al jefe de la zona anterior.");
+      const nextIndex=region.sites.findIndex((site,index)=>isSiteUnlocked(region,index,state.visitedSites) && !state.visitedSites.includes(site.id));
+      if(nextIndex<0) {
+        state.selectedRegion=region.id;
+        state.selectedSite=region.sites[region.sites.length-1].id;
+        return showNotice("Ya has superado todas las localizaciones de "+region.name+".");
+      }
+      if(state.party.length!==4) return showNotice("Selecciona exactamente cuatro personajes en Compañía para entrar en la sala.");
+      const site=region.sites[nextIndex];
+      state.selectedRegion=region.id;
+      state.selectedSite=site.id;
+      beginBattle(site.id);
+      return;
+    }
     if (action === "enter-battle") {
       const siteId = target.dataset.site;
       const region = regions.find((entry) => entry.sites.some((site) => site.id === siteId));
       const siteIndex = region ? region.sites.findIndex((site) => site.id === siteId) : -1;
-      if (!region || siteIndex < 0 || region.sites[siteIndex].boss || !isSiteUnlocked(region,siteIndex,state.visitedSites)) {
+      if (!region || siteIndex < 0 || !isSiteUnlocked(region,siteIndex,state.visitedSites)) {
         return showNotice("Esta sala todavía está bloqueada.");
       }
       if (state.party.length !== 4) return showNotice("Selecciona exactamente cuatro personajes en Compañía para entrar en la sala.");
