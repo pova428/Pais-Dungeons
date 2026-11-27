@@ -998,7 +998,7 @@
       const battleSite = allSites.find((site) => site.id === merged.battleSiteId);
       const battleRegion = regions.find((region) => region.sites.some((site) => site.id === merged.battleSiteId));
       const battleSiteIndex = battleRegion ? battleRegion.sites.findIndex((site) => site.id === merged.battleSiteId) : -1;
-      if (!battleSite || battleSite.boss || !isSiteUnlocked(battleRegion,battleSiteIndex,merged.visitedSites)) {
+      if (!battleSite || !isSiteUnlocked(battleRegion,battleSiteIndex,merged.visitedSites)) {
         merged.battleSiteId = "institute-programming";
         if (merged.tab === "battle") merged.tab = "route";
       }
@@ -1343,7 +1343,7 @@
       const animation=battle.actionAnimation;
       const isAttacking=Boolean(animation && animation.side==="ally" && animation.actorId===id);
       const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="ally" && target.id===id));
-      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="ally" && number.targetId===id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-index:'+floatIndex+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="ally" && number.targetId===id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+((floatIndex%3)-1)*18+'px" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite hero-action-sprite" src="assets/battles/animations/heroes/'+id+'/'+animation.actionId+'/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
@@ -1368,7 +1368,7 @@
       const animation=battle.actionAnimation;
       const isAttacking=Boolean(animation && animation.side==="enemy" && animation.actorId===enemy.id);
       const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="enemy" && target.id===enemy.id));
-      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="enemy" && number.targetId===enemy.id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-index:'+floatIndex+'" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="enemy" && number.targetId===enemy.id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+((floatIndex%3)-1)*18+'px" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite enemy-action-sprite" src="assets/battles/animations/enemies/'+enemy.id+'/attack/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+'" '+targetAttrs+'>' +
