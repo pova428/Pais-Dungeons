@@ -26,6 +26,8 @@ Formato: PNG RGBA transparente, recomendado 512 × 640 px. Mantén el personaje 
 
 Consulta el README dentro de cada carpeta `idle` para ver la guía específica del personaje.
 
+**Salim (`duelist`)** tiene conectadas las secuencias `idle`, `basic-attack`, `stab`, `multi-stab` y `brothers`. Sus PNG se guardan en las carpetas correspondientes de `assets/battles/animations/heroes/duelist/` y se cargan automáticamente durante el combate.
+
 ## Animaciones de habilidades
 
 Las habilidades también tienen una carpeta propia con tres fotogramas:
