@@ -1,5 +1,14 @@
 # PAIS DUNGEON
 
+## Build 025 — Corrección de las animaciones de Salim
+
+- Las 15 imágenes PNG de Salim se han colocado en la estructura estándar `heroes/duelist/`, en vez de una carpeta anidada dentro de `guardian/`.
+- El combate resuelve la ruta de los sprites a partir del identificador del héroe y de la habilidad, tanto para la respiración idle como para los ataques.
+- Quedan conectadas las secuencias `idle`, `basic-attack`, `stab`, `multi-stab` y `brothers`.
+- Cada acción reproduce los tres PNG en orden: preparación, impacto y recuperación.
+- Cuando la imagen de ataque carga, se oculta la silueta provisional para evitar que aparezcan dos personajes superpuestos. Si el PNG falla, se conserva la figura provisional.
+
+
 ## Build 022 — Base de descanso y hoguera animada
 
 La pantalla de descanso se ha rediseñado como un campamento nocturno en torno a una hoguera central.
