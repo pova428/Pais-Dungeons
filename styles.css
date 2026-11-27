@@ -2892,3 +2892,535 @@ body.reduce-motion .battle-enemy.is-attacking .battle-enemy-figure { animation:n
 .battle-floating-number { backface-visibility:hidden; }
 .battle-enemy.is-winding-up { isolation:isolate; }
 .battle-enemy.is-impact-frame { isolation:isolate; }
+
+
+/* Build 018 — medieval market, rotating equipment displays, gachapon and rarity styling */
+.merchant-page { max-width:1500px; }
+.merchant-heading { align-items:center; }
+.merchant-heading .route-legend { flex:0 0 auto; color:#e2bd78; font:700 14px var(--pixel); letter-spacing:.09em; }
+.merchant-scene {
+  position:relative;
+  isolation:isolate;
+  height:clamp(245px,29vw,360px);
+  min-height:245px;
+  margin:0 0 18px;
+  overflow:hidden;
+  border:2px solid rgba(157,117,79,.58);
+  background:
+    linear-gradient(180deg,rgba(9,8,12,.08),rgba(9,8,12,.12) 45%,rgba(9,8,12,.8) 100%),
+    repeating-linear-gradient(90deg,rgba(9,8,9,.16) 0 4px,transparent 4px 24px),
+    linear-gradient(180deg,#304234 0%,#34313a 18%,#55343b 48%,#28232a 72%,#17151a 100%);
+  box-shadow:inset 0 0 0 4px rgba(5,5,7,.36),0 9px 23px rgba(0,0,0,.28);
+  image-rendering:pixelated;
+}
+.merchant-scene::before {
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(8,7,9,.15),transparent 18%,transparent 82%,rgba(8,7,9,.22)),
+    linear-gradient(0deg,rgba(9,7,9,.34),transparent 45%,rgba(9,7,9,.16));
+}
+.merchant-scene-background {
+  position:absolute;
+  z-index:0;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  image-rendering:pixelated;
+  opacity:.58;
+  filter:saturate(.78) contrast(1.08) brightness(.68);
+}
+.market-roof {
+  position:absolute;
+  z-index:2;
+  top:0;
+  left:18%;
+  right:18%;
+  height:31%;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:12px;
+  background:
+    repeating-linear-gradient(0deg,rgba(34,16,25,.6) 0 4px,transparent 4px 10px),
+    repeating-linear-gradient(90deg,#553444 0 11px,#704657 11px 19px,#412938 19px 24px);
+  border:4px solid #2a2028;
+  border-bottom:5px solid #a18a70;
+  clip-path:polygon(0 20%,15% 20%,50% 0,85% 20%,100% 20%,100% 100%,0 100%);
+  box-shadow:inset 0 -8px rgba(10,8,10,.4),0 7px 0 rgba(0,0,0,.24);
+}
+.market-roof span {
+  color:#d0b68b;
+  font:700 clamp(8px,1vw,11px) var(--pixel);
+  letter-spacing:.2em;
+  text-shadow:2px 2px #24151a;
+}
+.market-arch {
+  position:absolute;
+  z-index:2;
+  top:23%;
+  left:38%;
+  width:24%;
+  height:57%;
+  border:9px solid #6b6256;
+  border-bottom:0;
+  border-radius:48% 48% 0 0;
+  background:linear-gradient(180deg,#211b20,#100e12 75%);
+  box-shadow:inset 0 0 0 4px #31282a,0 0 0 3px rgba(13,10,12,.55);
+}
+.market-arch::before,.market-arch::after {
+  content:"";
+  position:absolute;
+  bottom:-3px;
+  width:14px;
+  height:100%;
+  background:repeating-linear-gradient(180deg,#867a67 0 19px,#504b47 19px 23px);
+  border:2px solid #282329;
+}
+.market-arch::before { left:-22px; }
+.market-arch::after { right:-22px; }
+.market-fireplace {
+  position:absolute;
+  inset:24% 13% 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:radial-gradient(ellipse at 50% 73%,rgba(245,98,35,.22),transparent 60%);
+}
+.market-fireplace span {
+  font-size:clamp(30px,5vw,58px);
+  line-height:1;
+  filter:drop-shadow(0 0 12px rgba(241,91,33,.9));
+  animation:market-fire-flicker .9s steps(3,end) infinite alternate;
+}
+.market-fireplace small {
+  color:#ad8b69;
+  font:7px var(--mono);
+  letter-spacing:.15em;
+}
+.market-counter {
+  position:absolute;
+  z-index:3;
+  top:38%;
+  width:20%;
+  min-height:37%;
+  padding:8px 9px;
+  border:5px solid #3a2925;
+  border-bottom:9px solid #221916;
+  background:
+    repeating-linear-gradient(0deg,rgba(15,11,12,.2) 0 4px,transparent 4px 15px),
+    linear-gradient(120deg,#74543b,#4b352c 50%,#2e2424);
+  box-shadow:inset 0 0 0 2px rgba(197,148,94,.22),6px 8px 0 rgba(0,0,0,.3);
+}
+.market-counter::before {
+  content:"";
+  position:absolute;
+  left:-5px;
+  right:-5px;
+  top:-9px;
+  height:9px;
+  border:2px solid #2b201e;
+  background:linear-gradient(90deg,#9a7450,#c09a6e,#74513d);
+}
+.market-counter span {
+  display:block;
+  color:#e1c393;
+  font:700 7px var(--pixel);
+  letter-spacing:.09em;
+  text-align:center;
+  text-shadow:1px 2px #27191a;
+}
+.market-counter i {
+  display:block;
+  margin-top:17px;
+  color:#d3b47a;
+  font:normal clamp(13px,2vw,22px) var(--pixel);
+  text-align:center;
+  text-shadow:2px 2px #271b1c;
+}
+.market-left-counter { left:8%; }
+.market-right-counter { right:8%; }
+.market-shelf {
+  position:absolute;
+  z-index:4;
+  top:31%;
+  width:21%;
+  height:8%;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:0 8px 3px;
+  border:3px solid #30201d;
+  background:linear-gradient(180deg,#916d4b,#4b3026);
+  box-shadow:0 4px 0 rgba(0,0,0,.28);
+}
+.market-shelf i {
+  display:grid;
+  place-items:center;
+  width:23px;
+  height:25px;
+  color:#e5c68b;
+  font:normal 15px var(--pixel);
+  text-shadow:1px 2px #241516;
+  background:rgba(23,15,17,.48);
+  border:1px solid rgba(198,153,105,.35);
+  font-style:normal;
+}
+.shelf-left { left:7.5%; }
+.shelf-right { right:7.5%; }
+.market-trees {
+  position:absolute;
+  z-index:3;
+  top:-7%;
+  bottom:23%;
+  width:12%;
+  opacity:.92;
+  background:
+    radial-gradient(ellipse at 25% 25%,#547a43 0 20%,transparent 21%),
+    radial-gradient(ellipse at 65% 12%,#365c39 0 25%,transparent 26%),
+    radial-gradient(ellipse at 38% 55%,#6d8e48 0 22%,transparent 23%),
+    radial-gradient(ellipse at 82% 53%,#304e35 0 26%,transparent 27%),
+    linear-gradient(90deg,transparent 39%,#392a20 40% 52%,transparent 53%);
+  filter:drop-shadow(2px 4px 2px rgba(0,0,0,.44));
+}
+.tree-left { left:0; }
+.tree-right { right:0; transform:scaleX(-1); }
+.market-stone-floor {
+  position:absolute;
+  z-index:2;
+  bottom:0;
+  left:0;
+  right:0;
+  height:31%;
+  border-top:5px solid #3b3030;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 16px,rgba(15,12,15,.55) 16px 19px),
+    repeating-linear-gradient(90deg,transparent 0 32px,rgba(15,12,15,.48) 32px 35px),
+    linear-gradient(180deg,#6c6253,#38343a);
+  clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
+}
+.market-sign {
+  position:absolute;
+  z-index:5;
+  left:30%;
+  bottom:8%;
+  display:grid;
+  gap:2px;
+  padding:5px 12px;
+  border:2px solid #463328;
+  background:#6f4c34;
+  box-shadow:3px 4px 0 rgba(0,0,0,.32);
+  text-align:center;
+  transform:rotate(-2deg);
+}
+.market-sign b { color:#f0d29d;font:700 11px var(--pixel); }
+.market-sign small { color:#c49b6d;font:6px var(--mono);letter-spacing:.12em; }
+.market-merchant {
+  position:absolute;
+  z-index:5;
+  bottom:8%;
+  left:49%;
+  display:grid;
+  justify-items:center;
+  gap:2px;
+  color:#e3c49a;
+  font:700 7px var(--pixel);
+  text-shadow:1px 2px #171116;
+}
+.market-merchant span {
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:34px;
+  border:2px solid #382a27;
+  background:linear-gradient(180deg,#9a7953,#4b3631);
+  color:#e5c58c;
+  font-size:18px;
+  box-shadow:0 0 0 2px rgba(18,12,12,.4);
+}
+.market-chest {
+  position:absolute;
+  z-index:5;
+  right:29%;
+  bottom:8%;
+  display:grid;
+  place-items:center;
+  width:37px;
+  height:26px;
+  border:3px solid #35241e;
+  border-top:5px solid #9b744b;
+  background:linear-gradient(90deg,#553c2b,#926644,#523b2b);
+  color:#eacb80;
+  box-shadow:0 4px 0 rgba(0,0,0,.35);
+}
+.market-gacha-prop {
+  position:absolute;
+  z-index:5;
+  right:4%;
+  bottom:8%;
+  width:58px;
+  display:grid;
+  justify-items:center;
+  gap:3px;
+  color:#e0c090;
+  font:700 7px var(--pixel);
+  text-shadow:1px 2px #1c1117;
+}
+.market-gacha-prop span {
+  display:grid;
+  place-items:center;
+  width:45px;
+  height:48px;
+  border:4px solid #44303c;
+  border-radius:16px 16px 5px 5px;
+  background:radial-gradient(circle at 50% 46%,#d6a25e 0 12%,#56425e 15% 38%,#201b28 42% 100%);
+  color:#ffe3a9;
+  font:700 22px var(--pixel);
+  box-shadow:inset 0 0 0 3px rgba(214,172,112,.27),0 5px 0 #150f15,0 0 13px rgba(197,140,89,.2);
+}
+@keyframes market-fire-flicker {
+  from { transform:scale(.96) rotate(-2deg);filter:brightness(.9) drop-shadow(0 0 8px rgba(241,91,33,.7)); }
+  to { transform:scale(1.07) rotate(2deg);filter:brightness(1.18) drop-shadow(0 0 16px rgba(255,133,45,.9)); }
+}
+
+.merchant-main-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(290px,.78fr);
+  align-items:start;
+  gap:16px;
+}
+.merchant-stock-panel,.gacha-panel { min-width:0;padding:17px; }
+.merchant-stock-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px; }
+.merchant-item-card {
+  min-width:0;
+  display:grid;
+  grid-template-columns:74px minmax(0,1fr);
+  grid-template-rows:1fr auto;
+  gap:9px;
+  padding:9px;
+  border:1px solid rgba(172,132,98,.32);
+  background:linear-gradient(145deg,rgba(28,20,22,.94),rgba(11,9,12,.97));
+  box-shadow:inset 0 0 18px rgba(0,0,0,.28);
+}
+.merchant-item-art {
+  position:relative;
+  grid-row:1 / 3;
+  display:grid;
+  place-items:center;
+  min-height:90px;
+  overflow:hidden;
+  border:1px solid rgba(174,132,92,.28);
+  background:radial-gradient(circle,rgba(145,103,68,.24),rgba(14,10,13,.84) 72%);
+}
+.merchant-item-art span {
+  color:#d8bc8e;
+  font:700 30px var(--pixel);
+  text-shadow:0 0 12px rgba(211,164,102,.35),2px 3px #171014;
+}
+.merchant-item-art img {
+  position:absolute;
+  inset:5px;
+  width:calc(100% - 10px);
+  height:calc(100% - 10px);
+  object-fit:contain;
+  image-rendering:pixelated;
+  filter:drop-shadow(0 4px 3px rgba(0,0,0,.6));
+}
+.merchant-item-art small {
+  position:absolute;
+  bottom:4px;
+  left:2px;
+  right:2px;
+  color:rgba(211,188,151,.45);
+  font:6px var(--mono);
+  letter-spacing:.08em;
+  text-align:center;
+}
+.merchant-item-copy { display:flex;flex-direction:column;gap:4px;min-width:0; }
+.merchant-item-copy strong { color:#e4d0aa;font:700 12px var(--pixel);line-height:1.25; }
+.merchant-item-copy small { color:rgba(202,183,152,.55);font:8px/1.5 var(--mono); }
+.merchant-item-copy em { margin-top:auto;color:#b9a27e;font:normal 7px/1.5 var(--mono); }
+.rarity-label { width:max-content;padding:2px 5px;border:1px solid currentColor;font:700 7px var(--pixel);letter-spacing:.08em; }
+.merchant-item-buy { grid-column:2;display:flex;align-items:center;justify-content:space-between;gap:8px; }
+.merchant-item-buy b { color:#e0bd77;font:700 11px var(--pixel);white-space:nowrap; }
+.merchant-item-buy .buy-button { min-width:80px;padding:7px 8px;font-size:8px; }
+.rarity-common { border-color:rgba(170,166,151,.36); }
+.rarity-uncommon { border-color:rgba(105,174,122,.5); }
+.rarity-rare { border-color:rgba(101,154,220,.55); }
+.rarity-epic { border-color:rgba(172,111,211,.58); }
+.rarity-legendary { border-color:rgba(220,170,85,.68);box-shadow:inset 0 0 20px rgba(198,145,58,.08); }
+.rarity-hyperrare { border-color:rgba(232,103,116,.78);box-shadow:inset 0 0 22px rgba(219,66,90,.14),0 0 12px rgba(205,66,78,.08); }
+.rarity-common .rarity-label { color:#b5b4a8; }
+.rarity-uncommon .rarity-label { color:#8dc99c; }
+.rarity-rare .rarity-label { color:#8fbbef; }
+.rarity-epic .rarity-label { color:#c9a1ef; }
+.rarity-legendary .rarity-label { color:#e7bd74; }
+.rarity-hyperrare .rarity-label { color:#f28b98; }
+.rarity-common .merchant-item-art span,.rarity-common .owned-equipment-icon { color:#c0b9a5; }
+.rarity-uncommon .merchant-item-art span,.rarity-uncommon .owned-equipment-icon { color:#9bdaa7; }
+.rarity-rare .merchant-item-art span,.rarity-rare .owned-equipment-icon { color:#a1c8f2; }
+.rarity-epic .merchant-item-art span,.rarity-epic .owned-equipment-icon { color:#d0a7f5; }
+.rarity-legendary .merchant-item-art span,.rarity-legendary .owned-equipment-icon { color:#f1ca7c; }
+.rarity-hyperrare .merchant-item-art span,.rarity-hyperrare .owned-equipment-icon { color:#ff9aa6;text-shadow:0 0 16px rgba(239,93,122,.42); }
+.merchant-empty { grid-column:1 / -1;padding:25px;text-align:center;color:rgba(204,181,148,.5);font:9px var(--mono); }
+.merchant-stock-footer { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px;padding-top:12px;border-top:1px solid rgba(169,128,89,.2); }
+.merchant-stock-footer small { max-width:360px;color:rgba(197,174,142,.55);font:8px/1.6 var(--mono); }
+.merchant-stock-footer .game-action { flex:0 0 auto;font-size:8px;padding:9px 10px; }
+.merchant-supply-heading { display:flex;justify-content:space-between;gap:10px;margin:17px 0 8px;padding-bottom:7px;border-bottom:1px solid rgba(169,128,89,.22);color:#d7c09b;font:700 9px var(--pixel);letter-spacing:.1em; }
+.merchant-supply-heading small { color:rgba(196,163,121,.5);font:7px var(--mono); }
+.merchant-supplies { display:grid;gap:5px; }
+.merchant-supply-row { display:grid;grid-template-columns:25px minmax(0,1fr) auto 25px 28px;align-items:center;gap:7px;padding:7px 5px;border-bottom:1px solid rgba(164,124,89,.12); }
+.merchant-supply-row .supply-icon { width:24px;height:25px;font-size:13px; }
+.merchant-supply-row b { display:block;color:#d6c29f;font:10px var(--pixel); }
+.merchant-supply-row small { display:block;margin-top:2px;color:rgba(192,168,136,.48);font:7px var(--mono); }
+.merchant-supply-row em { color:#d2ad70;font:normal 8px var(--mono);white-space:nowrap; }
+.merchant-supply-row button { width:24px;height:24px;border:1px solid rgba(175,132,93,.42);background:#2d2020;color:#e2c28a;cursor:pointer; }
+.merchant-supply-row button:disabled { opacity:.35;cursor:not-allowed; }
+.merchant-supply-row .supply-owned { color:rgba(209,194,162,.56);text-align:right; }
+
+.gacha-panel { background:linear-gradient(150deg,rgba(39,25,35,.95),rgba(15,10,15,.97)); }
+.gacha-panel-heading h3 { margin:4px 0 5px;color:#e7d2ad;font:700 20px var(--pixel); }
+.gacha-panel-heading p { margin:0 0 13px;color:rgba(205,183,154,.57);font:8px/1.6 var(--mono); }
+.gacha-machine {
+  position:relative;
+  width:min(100%,215px);
+  margin:0 auto 13px;
+  padding:10px 12px 12px;
+  border:4px solid #5b4650;
+  border-bottom:9px solid #35242d;
+  border-radius:12px 12px 5px 5px;
+  background:linear-gradient(90deg,#271d2b,#534052 48%,#251a27);
+  box-shadow:inset 0 0 0 2px rgba(213,173,122,.22),0 8px 0 rgba(0,0,0,.32),0 0 25px rgba(151,81,142,.12);
+}
+.gacha-machine-top { margin-bottom:8px;text-align:center;color:#d8bb92;font:700 7px var(--mono);letter-spacing:.14em; }
+.gacha-machine-glass {
+  position:relative;
+  display:grid;
+  place-items:center;
+  height:125px;
+  overflow:hidden;
+  border:4px solid #a18b80;
+  border-radius:48% 48% 10px 10px;
+  background:radial-gradient(circle at 50% 60%,#6c4e70,#2b253a 60%,#11131d);
+  box-shadow:inset 0 0 24px rgba(0,0,0,.6);
+}
+.gacha-machine-glass > span { z-index:2;color:#f0d4a5;font:700 42px var(--pixel);text-shadow:0 0 15px #d69c66,2px 3px #26151e; }
+.gacha-orb { position:absolute;width:29px;height:29px;border:3px solid rgba(235,198,142,.58);border-radius:50%;background:radial-gradient(circle at 35% 30%,#f5d6a5,#9b5866 45%,#292239 78%);box-shadow:0 0 13px rgba(235,166,110,.3); }
+.orb-one { left:16%;top:23%; }
+.orb-two { right:17%;top:31%;background:radial-gradient(circle at 35% 30%,#cfebd2,#5a9e84 47%,#28303e 80%); }
+.orb-three { left:34%;bottom:12%;background:radial-gradient(circle at 35% 30%,#e5d1ff,#906ab7 48%,#302344 80%); }
+.gacha-machine-slot { margin-top:8px;padding:5px;border:2px solid #2c2028;background:#120e14;color:#e5c38f;text-align:center;font:9px var(--pixel);letter-spacing:.3em; }
+.gacha-result { display:flex;align-items:center;gap:10px;min-height:55px;margin:10px 0;padding:9px;border:1px solid rgba(177,138,104,.3);background:rgba(8,7,10,.48); }
+.gacha-result > span:first-child { display:grid;place-items:center;width:36px;height:36px;flex:0 0 36px;border:1px solid rgba(198,155,111,.35);color:#dfc18a;font:700 22px var(--pixel); }
+.gacha-result b,.gacha-result small,.gacha-result em { display:block; }
+.gacha-result b { color:#e5d0aa;font:700 11px var(--pixel); }
+.gacha-result small { color:#b98d68;font:7px var(--mono); }
+.gacha-result em { margin-top:3px;color:#c8b38d;font:normal 7px var(--mono); }
+.gacha-result.is-idle > span { border-radius:50%;color:#e8bd75;font-size:26px; }
+.gacha-result.is-duplicate > span { color:#a7c5b0; }
+.gacha-pull-button { width:100%;margin:1px 0 12px;border-color:#a86b78;background:linear-gradient(180deg,#67343e,#321d2a);color:#f2d5b5; }
+.gacha-pull-button:not(:disabled):hover { box-shadow:0 0 17px rgba(197,88,112,.28); }
+.gacha-rates { display:grid;gap:4px;margin:9px 0 13px;padding:10px;border:1px solid rgba(179,136,102,.2);background:rgba(7,6,9,.35); }
+.gacha-rates > b { margin-bottom:3px;color:#d7bc93;font:700 8px var(--pixel);letter-spacing:.12em; }
+.gacha-rates > div { display:flex;justify-content:space-between;gap:10px;color:rgba(207,189,161,.65);font:8px var(--mono); }
+.gacha-rates > div:last-child { color:#f08d9d; }
+.gacha-rates strong { color:#e7c891; }
+.hyperrare-vault { padding:10px;border:1px solid rgba(224,113,128,.34);background:linear-gradient(135deg,rgba(73,32,43,.2),rgba(13,10,14,.6)); }
+.hyperrare-vault > b { display:block;margin-bottom:8px;color:#ef9ba8;font:700 8px var(--pixel);letter-spacing:.08em; }
+.hyperrare-preview { display:flex;align-items:center;gap:7px;padding:5px 0;border-top:1px solid rgba(174,118,120,.14);opacity:.7; }
+.hyperrare-preview.is-owned { opacity:1; }
+.hyperrare-preview > span { display:grid;place-items:center;width:26px;height:26px;border:1px solid rgba(219,113,128,.32);color:#f29aa8;font:15px var(--pixel); }
+.hyperrare-preview b { display:block;color:#e5c7b2;font:9px var(--pixel); }
+.hyperrare-preview small { display:block;margin-top:2px;color:rgba(207,171,158,.58);font:6px var(--mono); }
+.merchant-collection-strip { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:12px 14px;border:1px solid rgba(174,132,96,.25);background:rgba(17,12,15,.78); }
+.merchant-collection-strip b,.merchant-collection-strip small { display:block; }
+.merchant-collection-strip b { color:#ddc59e;font:700 10px var(--pixel); }
+.merchant-collection-strip small { margin-top:4px;color:rgba(192,169,135,.55);font:7px var(--mono); }
+.merchant-collection-strip .game-action { flex:0 0 auto;font-size:8px; }
+
+.character-equipment-panel { padding:13px 0 3px;border-top:1px solid rgba(177,132,95,.23); }
+.equipment-slot-grid { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:10px 0 13px; }
+.equipment-slot { min-width:0;min-height:66px;display:flex;align-items:center;gap:6px;padding:7px;border:1px solid rgba(164,125,94,.23);background:rgba(10,8,10,.48); }
+.equipment-slot > span { flex:0 0 25px;display:grid;place-items:center;width:25px;height:30px;color:#d4b986;font:700 17px var(--pixel); }
+.equipment-slot > div { flex:1;min-width:0; }
+.equipment-slot b,.equipment-slot small { display:block;overflow-wrap:anywhere; }
+.equipment-slot b { color:#ddc9a5;font:700 9px var(--pixel);line-height:1.25; }
+.equipment-slot small { margin-top:3px;color:rgba(196,173,140,.57);font:6px/1.35 var(--mono); }
+.equipment-slot > button { flex:0 0 20px;width:20px;height:20px;border:1px solid rgba(190,115,92,.35);background:rgba(76,34,35,.35);color:#e2a28d;cursor:pointer; }
+.equipment-slot.is-empty { border-style:dashed;opacity:.62; }
+.equipment-slot.is-empty > span { border:1px dashed rgba(183,144,102,.32);color:#9c8465;font:10px var(--mono); }
+.owned-equipment-heading { display:flex;justify-content:space-between;gap:8px;margin:0 0 7px;padding-top:7px;border-top:1px solid rgba(177,132,95,.16); }
+.owned-equipment-heading b { color:#d5bd96;font:700 8px var(--pixel); }
+.owned-equipment-heading small { color:rgba(187,159,124,.5);font:7px var(--mono); }
+.owned-equipment-list { display:grid;gap:5px; }
+.owned-equipment-card { display:grid;grid-template-columns:31px minmax(0,1fr) auto;align-items:center;gap:7px;padding:7px;border:1px solid rgba(166,127,92,.2);background:rgba(13,10,12,.6); }
+.owned-equipment-icon { display:grid;place-items:center;width:29px;height:29px;border:1px solid rgba(182,138,98,.28);color:#d8bd8c;font:16px var(--pixel); }
+.owned-equipment-card b,.owned-equipment-card small,.owned-equipment-card em { display:block; }
+.owned-equipment-card b { color:#dfcba9;font:700 9px var(--pixel); }
+.owned-equipment-card small { margin-top:3px;color:rgba(197,172,136,.55);font:6px var(--mono); }
+.owned-equipment-card em { margin-top:3px;color:#c99576;font:normal 6px var(--mono); }
+.owned-equipment-card button,.owned-state { padding:6px 7px;border:1px solid rgba(169,130,94,.34);background:rgba(57,39,32,.55);color:#e0c69a;font:700 7px var(--pixel);white-space:nowrap;cursor:pointer; }
+.owned-equipment-card button:disabled { opacity:.35;cursor:not-allowed; }
+.owned-state { border-color:rgba(102,157,115,.35);background:rgba(26,54,32,.38);color:#99c99f; }
+.equipment-empty { padding:13px;border:1px dashed rgba(176,137,96,.25);color:rgba(196,171,135,.5);font:8px/1.7 var(--mono);text-align:center; }
+
+@keyframes market-fire-flicker {
+  from { transform:scale(.96) rotate(-2deg);filter:brightness(.9) drop-shadow(0 0 8px rgba(241,91,33,.7)); }
+  to { transform:scale(1.07) rotate(2deg);filter:brightness(1.18) drop-shadow(0 0 16px rgba(255,133,45,.9)); }
+}
+@media(max-width:1050px) {
+  .merchant-main-grid { grid-template-columns:minmax(0,1fr); }
+  .gacha-panel { display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,.75fr);column-gap:14px; }
+  .gacha-panel-heading,.gacha-rates,.hyperrare-vault { grid-column:1 / -1; }
+  .gacha-machine { grid-column:1;grid-row:2 / 4; }
+  .gacha-result,.gacha-pull-button { grid-column:2; }
+  .gacha-pull-button { align-self:start; }
+  .equipment-slot-grid { grid-template-columns:repeat(5,minmax(0,1fr)); }
+}
+@media(max-width:760px) {
+  .merchant-scene { height:240px; }
+  .market-roof { left:15%;right:15%; }
+  .market-counter { width:25%; }
+  .market-left-counter { left:3%; }
+  .market-right-counter { right:3%; }
+  .market-shelf { width:25%; }
+  .shelf-left { left:2.5%; }
+  .shelf-right { right:2.5%; }
+  .merchant-stock-grid { grid-template-columns:minmax(0,1fr); }
+  .merchant-stock-footer { align-items:flex-start;flex-direction:column; }
+  .equipment-slot-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .gacha-panel { display:block; }
+  .gacha-machine { width:190px; }
+}
+@media(max-width:520px) {
+  .merchant-heading { align-items:flex-start;flex-direction:column; }
+  .merchant-scene { height:205px;min-height:205px; }
+  .market-roof { left:16%;right:16%;height:28%; }
+  .market-roof span { font-size:6px; }
+  .market-arch { left:35%;width:30%;top:27%;height:53%;border-width:6px; }
+  .market-counter { top:43%;width:27%;min-height:31%;padding:5px 3px;border-width:3px;border-bottom-width:6px; }
+  .market-counter span { font-size:5px; }
+  .market-counter i { margin-top:10px;font-size:12px; }
+  .market-shelf { top:34%;height:9%;width:27%;padding:0 2px; }
+  .market-shelf i { width:17px;height:18px;font-size:11px; }
+  .market-sign { left:26%;bottom:5%; }
+  .market-gacha-prop { right:1%;bottom:5%;transform:scale(.78);transform-origin:bottom right; }
+  .merchant-stock-panel,.gacha-panel { padding:11px; }
+  .merchant-item-card { grid-template-columns:62px minmax(0,1fr); }
+  .merchant-item-copy strong { font-size:11px; }
+  .merchant-item-copy small { font-size:7px; }
+  .merchant-item-buy .buy-button { min-width:66px;padding:6px 5px;font-size:7px; }
+  .merchant-collection-strip { align-items:flex-start;flex-direction:column; }
+  .merchant-collection-strip .game-action { width:100%; }
+  .merchant-supply-row { grid-template-columns:24px minmax(0,1fr) auto 24px; }
+  .merchant-supply-row .supply-owned { display:none; }
+  .equipment-slot-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .owned-equipment-card { grid-template-columns:26px minmax(0,1fr); }
+  .owned-equipment-card button,.owned-state { grid-column:2;justify-self:start; }
+}
