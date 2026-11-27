@@ -565,3 +565,30 @@ body.reduce-motion .embers { display: none; }
   .salim-skill-heading small { display:none; }
 }
 body.reduce-motion .salim-mini-sprite { animation:none !important; background-position:0 0 !important; }
+
+/* Salim travels with the active expedition */
+.route-salim {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:104px;
+  padding:4px 8px;
+  border-left:1px solid rgba(174,128,91,.32);
+}
+.route-salim > span { color:#cdb995; font:600 9px var(--pixel); white-space:nowrap; }
+.route-salim em { display:block; margin-top:2px; color:#bd6452; font-style:normal; }
+.route-salim-sprite {
+  width:56px;
+  height:58px;
+  flex:0 0 56px;
+  transform:scale(.9);
+  transform-origin:center;
+  animation:salim-walk .75s steps(1) infinite;
+  background-size:288px 294px;
+}
+@media(max-width:700px) {
+  .route-salim { min-width:auto; padding:2px 4px; }
+  .route-salim > span { display:none; }
+  .route-salim-sprite { width:46px; height:48px; flex-basis:46px; transform:scale(.72); }
+}
+body.reduce-motion .route-salim-sprite { animation:none !important; background-position:0 -74px !important; }

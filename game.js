@@ -355,13 +355,15 @@
       '</article>';
     }).join("");
     const siteCompleted = state.visitedSites.includes(selectedSite.id);
+    const salimInParty = state.party.includes("duelist");
+    const routeCompanion = salimInParty ? '<div class="route-salim"><div class="salim-mini-sprite route-salim-sprite"></div><span>SALIM <em>«EL MORO»</em></span></div>' : '';
     const detailType = selectedSite.boss ? (siteCompleted ? "JEFE DERROTADO" : "JEFE FINAL") : (siteCompleted ? "LOCALIZACIÓN SUPERADA" : "LOCALIZACIÓN");
     const detailAction = selectedSite.boss
       ? (siteCompleted ? '<span class="progress-complete">✓ JEFE SUPERADO</span>' : '<button class="game-action" type="button" data-action="boss-preview">VER JEFE →</button>')
       : (siteCompleted ? '<span class="progress-complete">✓ NIVEL SUPERADO</span>' : '<button class="game-action" type="button" data-action="complete-site" data-site="' + selectedSite.id + '">SUPERAR NIVEL →</button>');
     return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">PROGRESO ' + (unlockedRegionIndex + 1) + ' / 3 ZONAS</span><h2>Mapa de rutas</h2></div><span class="route-legend">🔒 CERRADO · ✓ SUPERADO</span></div>' +
       '<div class="route-layout">' + cards + '</div>' +
-      '<section class="site-detail"><div><span class="section-eyebrow">' + selectedRegion.name.toUpperCase() + ' · ' + detailType + '</span><h3>' + selectedSite.name + '</h3></div><div class="site-detail-actions">' + detailAction + '<button class="game-action secondary" type="button" data-action="prepare-expedition">PREPARAR GRUPO</button></div></section>' +
+      '<section class="site-detail"><div><span class="section-eyebrow">' + selectedRegion.name.toUpperCase() + ' · ' + detailType + '</span><h3>' + selectedSite.name + '</h3></div>' + routeCompanion + '<div class="site-detail-actions">' + detailAction + '<button class="game-action secondary" type="button" data-action="prepare-expedition">PREPARAR GRUPO</button></div></section>' +
       '<p class="campaign-notice">' + state.notice + '</p></div>';
   }
 
