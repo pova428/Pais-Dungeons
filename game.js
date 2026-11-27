@@ -1208,6 +1208,7 @@
         merged.equippedItems[character.id]=valid;
       });
       merged.equipmentInventory=merged.equipmentInventory.filter((entry)=>ownedUids.has(String(entry.uid)));
+      merged.equippedItems=Object.fromEntries(characters.map((character)=>[character.id,merged.equippedItems[character.id]]));
       merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
       if (merged.party.length === 0) merged.party = defaults.party;
       if (!characters.some((character) => character.id === merged.selectedCharacter)) merged.selectedCharacter = "duelist";
@@ -1717,7 +1718,7 @@
     const hyperItems=EQUIPMENT_ITEMS.filter((item)=>item.rarity==="Hyperrara").map((item)=>{
       const owner=characters.find((character)=>character.id===item.character);
       const owned=state.equipmentInventory.some((entry)=>entry.itemId===item.id);
-      return '<div class="hyperrare-preview '+(owned?"is-owned":"")+'"><span>'+item.icon+'</span><div><b>'+item.name+'</b><small>'+owner.name+' · '+(owned?"CONSEGUIDO":"0,5% TOTAL")+'</small></div></div>';
+      return '<div class="hyperrare-preview '+(owned?"is-owned":"")+'"><span>'+item.icon+'</span><div><b>'+item.name+'</b><small>'+owner.name+' · '+(owned?"CONSEGUIDO":"0,5% GLOBAL · REPARTIDO")+'</small></div></div>';
     }).join("");
     return '<div class="campaign-page merchant-page"><div class="page-heading merchant-heading"><div><span class="section-eyebrow">PLAZA DEL ÚLTIMO FAROL</span><h2>El Mercado</h2><p>El mercader exhibe lo que encuentra en sus viajes. Al fondo, una máquina antigua ofrece premios impredecibles.</p></div><span class="route-legend">◈ '+state.gold+' MONEDAS</span></div>'+
       '<section class="merchant-scene" aria-label="Mercado medieval de pixel art"><img class="merchant-scene-background" src="assets/shop/merchant-market.png" alt="" onerror="this.remove()"><div class="market-trees tree-left"></div><div class="market-trees tree-right"></div><div class="market-roof"><span>✦ CASA DEL MERCADER ✦</span></div><div class="market-arch"><div class="market-fireplace"><span>🔥</span><small>EL ÚLTIMO FAROL</small></div></div><div class="market-counter market-left-counter"><span>ARMAS Y RELIQUIAS</span><i>⚔　✧　⬡</i></div><div class="market-counter market-right-counter"><span>OBJETOS Y AMULETOS</span><i>◉　♢　✚</i></div><div class="market-shelf shelf-left"><i>⚔</i><i>◉</i><i>♧</i><i>✧</i></div><div class="market-shelf shelf-right"><i>♢</i><i>✚</i><i>♛</i><i>⬡</i></div><div class="market-stone-floor"></div><div class="market-sign"><b>ABIERTO</b><small>EL MERCADO NO DUERME</small></div><div class="market-merchant"><span>◉</span><b>EL MERCADER</b></div><div class="market-chest"><span>✦</span></div><div class="market-gacha-prop"><span>?</span><b>GACHAPÓN</b></div></section>'+
