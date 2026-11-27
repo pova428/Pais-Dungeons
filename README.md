@@ -1,5 +1,10 @@
 # PAIS DUNGEON
 
+## Build 027 — Sprite real de Salim sin figura provisional y tamaño ampliado
+
+Salim ya no incluye la silueta CSS provisional en la escena de combate. Solo utiliza sus PNG reales para reposo y ataques. La animación idle se mantiene detrás de la de ataque hasta que el PNG correspondiente carga, por lo que un retraso o error de carga no hace reaparecer el personaje antiguo. El mismo lienzo de mayor tamaño y la misma escala se aplican a reposo y ataques, con ajustes específicos para móvil.
+
+
 ## Build 026 — Escala coherente de sprites en combate
 
 - Las imágenes de reposo y ataque de los héroes comparten ahora el mismo marco visual.
