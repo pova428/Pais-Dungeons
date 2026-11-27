@@ -119,14 +119,16 @@
     const character = characters.find((entry) => entry.id === characterId);
     if (!character) return;
     const oldLevel = state.levels[characterId] || 1;
-    const oldMaxHp = getCharacterStats(character,oldLevel).hp;
+    const oldStats = getCharacterStats(character,oldLevel);
     state.xp[characterId] = (state.xp[characterId] || 0) + amount;
     const newLevel = getLevelForXP(state.xp[characterId]);
     if (newLevel > oldLevel) {
       state.levels[characterId] = newLevel;
-      const newMaxHp = getCharacterStats(character,newLevel).hp;
-      const currentHp = Number.isFinite(state.hp[characterId]) ? state.hp[characterId] : oldMaxHp;
-      state.hp[characterId] = Math.min(newMaxHp,currentHp + newMaxHp - oldMaxHp);
+      const newStats = getCharacterStats(character,newLevel);
+      const currentHp = Number.isFinite(state.hp[characterId]) ? state.hp[characterId] : oldStats.hp;
+      const currentMp = Number.isFinite(state.mp[characterId]) ? state.mp[characterId] : oldStats.mp;
+      state.hp[characterId] = Math.min(newStats.hp,currentHp + newStats.hp - oldStats.hp);
+      state.mp[characterId] = Math.min(newStats.mp,currentMp + newStats.mp - oldStats.mp);
     }
   }
 
