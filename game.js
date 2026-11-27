@@ -21,30 +21,30 @@
   const continueButton = document.getElementById("continue-button");
 
   const characters = [
-    {id:"guardian",name:"Pol",title:"El Flaco",role:"MAGO",sign:"P",icon:"✧",detail:"Mago veloz y frágil, especialista en daño mágico.",strengths:"Mayor velocidad y agilidad. Magia muy potente y gran evasión.",weaknesses:"Poca vida, defensa baja y daño físico reducido.",portrait:"assets/pol-portrait.png",sprites:"assets/pol-sprites.png",base:{hp:68,attack:7,magic:16,defense:5,speed:20,agility:20},growth:{hp:6,attack:1,magic:2,defense:1,speed:1,agility:1},skills:[
-      {name:"Chispa arcana",detail:"Daño mágico a un enemigo: 120% de MAG.",unlockLevel:1,icon:"✧",kind:"BÁSICA"},
-      {name:"Marca ígnea",detail:"Quema a un enemigo: 70% de MAG y daño durante 3 turnos.",unlockLevel:4,icon:"♨",kind:"MAGIA"},
-      {name:"Nova elemental",detail:"Explosión mágica que golpea a todos los enemigos: 115% de MAG.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"guardian",name:"Pol",title:"El Flaco",role:"MAGO",sign:"P",icon:"✧",detail:"Mago veloz y frágil, especialista en daño mágico.",strengths:"Mayor velocidad y agilidad. Magia muy potente y gran evasión.",weaknesses:"Poca vida, defensa baja y daño físico reducido.",portrait:"assets/pol-portrait.png",sprites:"assets/pol-sprites.png",base:{hp:68,attack:7,magic:16,defense:5,speed:20,agility:20,mp:90},growth:{hp:6,attack:1,magic:2,defense:1,speed:1,agility:1,mp:5},skills:[
+      {id:"arcane-bolt",manaCost:10,target:"enemy",name:"Chispa arcana",detail:"Daño mágico a un enemigo: 120% de MAG.",unlockLevel:1,icon:"✧",kind:"BÁSICA"},
+      {id:"burn-mark",manaCost:16,target:"enemy",name:"Marca ígnea",detail:"Quema a un enemigo: 70% de MAG y daño durante 3 turnos.",unlockLevel:4,icon:"♨",kind:"MAGIA"},
+      {id:"nova",manaCost:28,target:"all-enemies",name:"Nova elemental",detail:"Explosión mágica que golpea a todos los enemigos: 115% de MAG.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.webp",sprites:"assets/salim-sprites.webp",base:{hp:54,attack:17,magic:1,defense:4,speed:18,agility:19},growth:{hp:5,attack:2,magic:0,defense:1,speed:1,agility:1},skills:[
-      {name:"Navajazo",detail:"Corte rápido a un enemigo: 135% de ATQ.",unlockLevel:1,icon:"🗡",kind:"BÁSICA"},
-      {name:"Navajazos múltiples",detail:"Tres cortes consecutivos de 55% de ATQ cada uno.",unlockLevel:4,icon:"⚔",kind:"ATAQUE"},
-      {name:"Llamar a sus hermanos",detail:"Ataque conjunto con tres impactos de 75% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.png",sprites:"assets/salim-sprites.webp",base:{hp:54,attack:17,magic:1,defense:4,speed:18,agility:19,mp:40},growth:{hp:5,attack:2,magic:0,defense:1,speed:1,agility:1,mp:2},skills:[
+      {id:"stab",manaCost:7,target:"enemy",name:"Navajazo",detail:"Corte rápido a un enemigo: 135% de ATQ.",unlockLevel:1,icon:"🗡",kind:"BÁSICA"},
+      {id:"multi-stab",manaCost:18,target:"enemy",name:"Navajazos múltiples",detail:"Tres cortes consecutivos de 55% de ATQ cada uno.",unlockLevel:4,icon:"⚔",kind:"ATAQUE"},
+      {id:"brothers",manaCost:30,target:"all-enemies",name:"Llamar a sus hermanos",detail:"Ataque conjunto con tres impactos de 75% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"arcanist",name:"Igor",title:"El Alto",role:"SANADOR",sign:"I",icon:"✚",detail:"Sanador equilibrado que mantiene al grupo en pie.",strengths:"Curación potente, buena vida y estadísticas equilibradas.",weaknesses:"Menor daño directo que los atacantes y velocidad moderada.",portrait:"assets/igor-portrait.png",sprites:"assets/igor-sprites.png",base:{hp:88,attack:8,magic:14,defense:9,speed:11,agility:11},growth:{hp:8,attack:1,magic:2,defense:1,speed:1,agility:1},skills:[
-      {name:"Antivirus",detail:"Cura a un aliado: 145% de MAG + 10 PV.",unlockLevel:1,icon:"✚",kind:"BÁSICA"},
-      {name:"Drenaje de vida",detail:"Roba vida a un enemigo y recupera el 50% del daño causado.",unlockLevel:4,icon:"☯",kind:"APOYO"},
-      {name:"Reinicio total",detail:"Cura hasta a tres aliados: 115% de MAG + 12 PV a cada uno.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"arcanist",name:"Igor",title:"El Alto",role:"SANADOR",sign:"I",icon:"✚",detail:"Sanador equilibrado que mantiene al grupo en pie.",strengths:"Curación potente, buena vida y estadísticas equilibradas.",weaknesses:"Menor daño directo que los atacantes y velocidad moderada.",portrait:"assets/igor-portrait.png",sprites:"assets/igor-sprites.png",base:{hp:88,attack:8,magic:14,defense:9,speed:11,agility:11,mp:100},growth:{hp:8,attack:1,magic:2,defense:1,speed:1,agility:1,mp:5},skills:[
+      {id:"antivirus",manaCost:12,target:"ally",name:"Antivirus",detail:"Cura a un aliado: 145% de MAG + 10 PV.",unlockLevel:1,icon:"✚",kind:"BÁSICA"},
+      {id:"life-drain",manaCost:18,target:"enemy",name:"Drenaje de vida",detail:"Roba vida a un enemigo y recupera el 50% del daño causado.",unlockLevel:4,icon:"☯",kind:"APOYO"},
+      {id:"reboot",manaCost:32,target:"all-allies",name:"Reinicio total",detail:"Cura hasta a tres aliados: 115% de MAG + 12 PV a cada uno.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"tracker",name:"Ivan",title:"El Gordo",role:"TANQUE",sign:"V",icon:"⬟",detail:"Tanque del equipo. Aguanta golpes y protege a los demás.",strengths:"Mayor vida y defensa. Escudos fuertes y gran capacidad de protección.",weaknesses:"El más lento y menos ágil. Magia y daño explosivo muy bajos.",portrait:"assets/ivan-portrait.png",sprites:"assets/ivan-sprites.png",base:{hp:135,attack:10,magic:1,defense:17,speed:5,agility:5},growth:{hp:13,attack:1,magic:0,defense:2,speed:0,agility:0},skills:[
-      {name:"Escudo protector",detail:"Aplica a un aliado un escudo del 30% de su vida máxima durante 2 turnos.",unlockLevel:1,icon:"⬡",kind:"BÁSICA"},
-      {name:"Derribo",detail:"Golpea a un enemigo: 115% de ATQ y lo derriba, retrasando su turno.",unlockLevel:4,icon:"⚒",kind:"CONTROL"},
-      {name:"Bastión de equipo",detail:"Protege a todo el grupo con un escudo del 20% de su vida máxima durante 2 turnos.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"tracker",name:"Ivan",title:"El Gordo",role:"TANQUE",sign:"V",icon:"⬟",detail:"Tanque del equipo. Aguanta golpes y protege a los demás.",strengths:"Mayor vida y defensa. Escudos fuertes y gran capacidad de protección.",weaknesses:"El más lento y menos ágil. Magia y daño explosivo muy bajos.",portrait:"assets/ivan-portrait.png",sprites:"assets/ivan-sprites.png",base:{hp:135,attack:10,magic:1,defense:17,speed:5,agility:5,mp:50},growth:{hp:13,attack:1,magic:0,defense:2,speed:0,agility:0,mp:2},skills:[
+      {id:"protective-shield",manaCost:10,target:"ally",name:"Escudo protector",detail:"Aplica a un aliado un escudo del 30% de su vida máxima durante 2 turnos.",unlockLevel:1,icon:"⬡",kind:"BÁSICA"},
+      {id:"knockdown",manaCost:16,target:"enemy",name:"Derribo",detail:"Golpea a un enemigo: 115% de ATQ y lo derriba, retrasando su turno.",unlockLevel:4,icon:"⚒",kind:"CONTROL"},
+      {id:"team-bastion",manaCost:28,target:"all-allies",name:"Bastión de equipo",detail:"Protege a todo el grupo con un escudo del 20% de su vida máxima durante 2 turnos.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]},
-    {id:"alchemist",name:"Alex",title:"El Mujeriego",role:"DUELISTA",sign:"A",icon:"⚔",detail:"Duelista equilibrado, combina daño, resistencia y mejoras propias.",strengths:"Buen daño físico y vida. Puede potenciarse antes de atacar.",weaknesses:"No destaca en magia ni supera a Salim en daño o a Ivan en resistencia.",portrait:"assets/alex-portrait.png",sprites:"assets/alex-sprites.png",base:{hp:105,attack:13,magic:2,defense:10,speed:12,agility:12},growth:{hp:9,attack:2,magic:0,defense:1,speed:1,agility:1},skills:[
-      {name:"Balonazo",detail:"Lanza un balón contra un enemigo: 125% de ATQ.",unlockLevel:1,icon:"⚽",kind:"BÁSICA"},
-      {name:"Modo Mujer",detail:"Se potencia durante 2 turnos: +30% de ATQ y +20% de VEL.",unlockLevel:4,icon:"♛",kind:"MEJORA"},
-      {name:"Remate de campo",detail:"Remate explosivo que golpea a todos los enemigos: 105% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    {id:"alchemist",name:"Alex",title:"El Mujeriego",role:"DUELISTA",sign:"A",icon:"⚔",detail:"Duelista equilibrado, combina daño, resistencia y mejoras propias.",strengths:"Buen daño físico y vida. Puede potenciarse antes de atacar.",weaknesses:"No destaca en magia ni supera a Salim en daño o a Ivan en resistencia.",portrait:"assets/alex-portrait.png",sprites:"assets/alex-sprites.png",base:{hp:105,attack:13,magic:2,defense:10,speed:12,agility:12,mp:65},growth:{hp:9,attack:2,magic:0,defense:1,speed:1,agility:1,mp:3},skills:[
+      {id:"balonazo",manaCost:8,target:"enemy",name:"Balonazo",detail:"Lanza un balón contra un enemigo: 125% de ATQ.",unlockLevel:1,icon:"⚽",kind:"BÁSICA"},
+      {id:"modo-mujer",manaCost:15,target:"self",name:"Modo Mujer",detail:"Se potencia durante 2 turnos: +30% de ATQ y +20% de VEL.",unlockLevel:4,icon:"♛",kind:"MEJORA"},
+      {id:"field-finish",manaCost:28,target:"all-enemies",name:"Remate de campo",detail:"Remate explosivo que golpea a todos los enemigos: 105% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
     ]}
   ];
 
@@ -136,14 +136,365 @@
     });
   }
 
+  const BATTLE_ENEMIES = [
+    {id:"error",name:"Proceso corrupto",role:"ERROR DE SISTEMA",maxHp:74,attack:11,speed:15,mark:"404",mana:0},
+    {id:"virus",name:"Virus de aula",role:"AMENAZA",maxHp:62,attack:9,speed:10,mark:"!",mana:0},
+    {id:"glitch",name:"Fragmento de código",role:"ANOMALÍA",maxHp:88,attack:8,speed:8,mark:"//",mana:0}
+  ];
+
+  function createBattleState(siteId) {
+    return {
+      siteId,
+      round:1,
+      order:[],
+      turnIndex:0,
+      enemies:BATTLE_ENEMIES.map((enemy) => Object.assign({},enemy,{hp:enemy.maxHp,burn:0,stun:0})),
+      shields:{},
+      buffs:{},
+      pendingSkillId:null,
+      targetMode:null,
+      status:"active",
+      log:["La compañía entra en la sala. ¡Comienza el combate!"]
+    };
+  }
+
+  function getAliveParty() {
+    return state.party.filter((id) => {
+      const character = characters.find((entry) => entry.id === id);
+      return character && (Number(state.hp[id]) || 0) > 0;
+    });
+  }
+
+  function getBattleOrder() {
+    const allies = getAliveParty().map((id) => {
+      const character = characters.find((entry) => entry.id === id);
+      return {side:"ally",id,name:character.name,speed:getCharacterStats(character,state.levels[id] || 1).speed};
+    });
+    const enemies = state.battle.enemies.filter((enemy) => enemy.hp > 0).map((enemy) => ({
+      side:"enemy",id:enemy.id,name:enemy.name,speed:enemy.speed
+    }));
+    return allies.concat(enemies).sort((a,b) => b.speed-a.speed || a.id.localeCompare(b.id));
+  }
+
+  function getActiveBattleActor() {
+    if (!state.battle || state.battle.status !== "active") return null;
+    return state.battle.order[state.battle.turnIndex] || null;
+  }
+
+  function pushBattleLog(message) {
+    if (!state.battle) return;
+    state.battle.log.unshift(message);
+    state.battle.log = state.battle.log.slice(0,4);
+  }
+
+  function setBattleVictory() {
+    const battle = state.battle;
+    if (battle.status !== "active") return;
+    battle.status = "victory";
+    battle.pendingSkillId = null;
+    battle.targetMode = null;
+    if (!state.visitedSites.includes(battle.siteId)) {
+      state.visitedSites.push(battle.siteId);
+      awardPartyExperience(45);
+    }
+    const region = regions.find((entry) => entry.sites.some((site) => site.id === battle.siteId));
+    if (region) {
+      const index = region.sites.findIndex((site) => site.id === battle.siteId);
+      const next = region.sites[index+1];
+      state.selectedSite = next ? next.id : battle.siteId;
+      state.selectedRegion = region.id;
+    }
+    pushBattleLog("¡Victoria! La sala queda despejada. La compañía obtiene 45 XP.");
+    state.notice = "Sala superada. La siguiente localización ya está disponible.";
+    saveState();
+  }
+
+  function setBattleDefeat() {
+    const battle = state.battle;
+    if (battle.status !== "active") return;
+    battle.status = "defeat";
+    battle.pendingSkillId = null;
+    battle.targetMode = null;
+    pushBattleLog("La compañía ha caído. Podéis reintentar la sala.");
+    saveState();
+  }
+
+  function applyEnemyDamage(enemy,amount) {
+    const damage = Math.max(1,Math.round(amount));
+    enemy.hp = Math.max(0,enemy.hp-damage);
+    pushBattleLog(enemy.name + " recibe " + damage + " de daño.");
+    if (enemy.hp <= 0) pushBattleLog(enemy.name + " ha sido derrotado.");
+  }
+
+  function applyHeroDamage(heroId,amount) {
+    const character = characters.find((entry) => entry.id === heroId);
+    if (!character) return 0;
+    const level = state.levels[heroId] || 1;
+    const maxHp = getCharacterStats(character,level).hp;
+    let damage = Math.max(1,Math.round(amount));
+    const shield = state.battle.shields[heroId] || 0;
+    if (shield > 0) {
+      const absorbed = Math.min(shield,damage);
+      state.battle.shields[heroId] -= absorbed;
+      damage -= absorbed;
+      pushBattleLog(character.name + " bloquea " + absorbed + " con su escudo.");
+    }
+    const current = Math.max(0,Number(state.hp[heroId]) || 0);
+    const actual = Math.min(current,damage);
+    state.hp[heroId] = Math.max(0,current-damage);
+    if (actual > 0) pushBattleLog(character.name + " pierde " + actual + " PV.");
+    if (state.hp[heroId] <= 0) pushBattleLog(character.name + " queda fuera de combate.");
+    return actual;
+  }
+
+  function healHero(heroId,amount) {
+    const character = characters.find((entry) => entry.id === heroId);
+    if (!character) return 0;
+    const maxHp = getCharacterStats(character,state.levels[heroId] || 1).hp;
+    const current = Math.max(0,Number(state.hp[heroId]) || 0);
+    const healed = Math.min(maxHp-current,Math.max(0,Math.round(amount)));
+    state.hp[heroId] = current+healed;
+    if (healed > 0) pushBattleLog(character.name + " recupera " + healed + " PV.");
+    return healed;
+  }
+
+  function applyBurnAtEnemyTurn(enemy) {
+    if (enemy.burn <= 0 || enemy.hp <= 0) return;
+    const burnDamage = Math.max(2,enemy.burnDamage || 5);
+    enemy.hp = Math.max(0,enemy.hp-burnDamage);
+    enemy.burn -= 1;
+    pushBattleLog(enemy.name + " recibe " + burnDamage + " de quemadura.");
+    if (enemy.hp <= 0) pushBattleLog(enemy.name + " cae por la quemadura.");
+  }
+
+  function performEnemyTurn(enemy) {
+    if (enemy.hp <= 0) return;
+    if (enemy.stun > 0) {
+      enemy.stun -= 1;
+      pushBattleLog(enemy.name + " pierde su turno por el derribo.");
+      return;
+    }
+    const candidates = getAliveParty();
+    if (!candidates.length) return;
+    const targetId = candidates[Math.floor(Math.random()*candidates.length)];
+    const target = characters.find((character) => character.id === targetId);
+    const targetStats = getCharacterStats(target,state.levels[targetId] || 1);
+    const rawDamage = Math.max(4,enemy.attack-Math.floor(targetStats.defense*0.35));
+    applyHeroDamage(targetId,rawDamage);
+  }
+
+  function processBattleUntilPlayerTurn() {
+    const battle = state.battle;
+    if (!battle || battle.status !== "active") return;
+    let safety = 0;
+    while (battle.status === "active" && safety < 30) {
+      safety += 1;
+      if (battle.enemies.every((enemy) => enemy.hp <= 0)) {
+        setBattleVictory();
+        break;
+      }
+      if (getAliveParty().length === 0) {
+        setBattleDefeat();
+        break;
+      }
+      if (battle.turnIndex >= battle.order.length) {
+        battle.round += 1;
+        battle.order = getBattleOrder();
+        battle.turnIndex = 0;
+        pushBattleLog("Comienza la ronda " + battle.round + ".");
+        if (!battle.order.length) {
+          setBattleDefeat();
+          break;
+        }
+      }
+      const actor = battle.order[battle.turnIndex];
+      if (!actor) break;
+      if (actor.side === "ally") {
+        if ((Number(state.hp[actor.id]) || 0) <= 0) {
+          battle.turnIndex += 1;
+          continue;
+        }
+        battle.pendingSkillId = null;
+        battle.targetMode = null;
+        state.selectedCharacter = actor.id;
+        state.notice = "Turno de " + actor.name + ". Elige una habilidad.";
+        saveState();
+        return;
+      }
+      const enemy = battle.enemies.find((entry) => entry.id === actor.id);
+      if (enemy && enemy.hp > 0) {
+        applyBurnAtEnemyTurn(enemy);
+        if (enemy.hp > 0) performEnemyTurn(enemy);
+      }
+      battle.turnIndex += 1;
+    }
+    saveState();
+  }
+
+  function beginBattle(siteId) {
+    state.battleSiteId = siteId;
+    state.selectedRegion = regions.find((entry) => entry.sites.some((site) => site.id === siteId)).id;
+    state.selectedSite = siteId;
+    state.battle = createBattleState(siteId);
+    state.tab = "battle";
+    state.battle.order = getBattleOrder();
+    state.battle.turnIndex = 0;
+    processBattleUntilPlayerTurn();
+    saveState();
+    renderCampaign();
+  }
+
+  function chooseBattleSkill(skillId) {
+    const battle = state.battle;
+    const actor = getActiveBattleActor();
+    if (!battle || !actor || actor.side !== "ally" || battle.status !== "active") return;
+    const character = characters.find((entry) => entry.id === actor.id);
+    const skill = character.skills.find((entry) => entry.id === skillId);
+    if (!skill) return;
+    const level = state.levels[character.id] || 1;
+    if (level < skill.unlockLevel) return showNotice("Esta habilidad se desbloquea en el nivel " + skill.unlockLevel + ".");
+    const currentMana = Number(state.mp[character.id]) || 0;
+    if (currentMana < skill.manaCost) return showNotice("No tienes maná suficiente para usar " + skill.name + ".");
+    if (skill.target === "enemy" || skill.target === "ally") {
+      battle.pendingSkillId = skillId;
+      battle.targetMode = skill.target;
+      state.notice = skill.target === "enemy" ? "Selecciona el enemigo al que quieres atacar." : "Selecciona al compañero que quieres ayudar.";
+      renderCampaign();
+      saveState();
+      return;
+    }
+    executeBattleSkill(character,skill,null);
+  }
+
+  function executeBattleSkill(character,skill,targetId) {
+    const battle = state.battle;
+    if (!battle || battle.status !== "active") return;
+    const actor = getActiveBattleActor();
+    if (!actor || actor.side !== "ally" || actor.id !== character.id) return;
+    const stats = getCharacterStats(character,state.levels[character.id] || 1);
+    if ((Number(state.mp[character.id]) || 0) < skill.manaCost) return showNotice("No tienes maná suficiente.");
+    state.mp[character.id] -= skill.manaCost;
+    const enemy = battle.enemies.find((entry) => entry.id === targetId && entry.hp > 0);
+    const ally = characters.find((entry) => entry.id === targetId && state.party.includes(entry.id));
+    const damageMultiplier = battle.buffs[character.id] && battle.buffs[character.id].attack > 0 ? 1+battle.buffs[character.id].attack : 1;
+    const targetDamage = (ratio,magic) => Math.round((magic ? stats.magic : stats.attack)*ratio*damageMultiplier);
+    switch(skill.id) {
+      case "arcane-bolt":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        applyEnemyDamage(enemy,targetDamage(1.2,true)+3);
+        break;
+      case "burn-mark":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        applyEnemyDamage(enemy,targetDamage(.7,true)+2);
+        if (enemy.hp > 0) { enemy.burn=3; enemy.burnDamage=Math.max(3,Math.round(stats.magic*.3)); }
+        break;
+      case "nova":
+        battle.enemies.filter((entry) => entry.hp>0).forEach((entry) => applyEnemyDamage(entry,targetDamage(1.15,true)));
+        break;
+      case "stab":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        applyEnemyDamage(enemy,targetDamage(1.35,false)+2);
+        break;
+      case "multi-stab":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        for(let hit=0;hit<3 && enemy.hp>0;hit++) applyEnemyDamage(enemy,targetDamage(.55,false));
+        break;
+      case "brothers":
+        battle.enemies.filter((entry) => entry.hp>0).slice(0,3).forEach((entry) => {
+          for(let hit=0;hit<3 && entry.hp>0;hit++) applyEnemyDamage(entry,targetDamage(.75,false));
+        });
+        break;
+      case "antivirus":
+        if (!ally) return showNotice("Selecciona un compañero válido.");
+        healHero(ally.id,stats.magic*1.45+10);
+        break;
+      case "life-drain":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        const drained = targetDamage(1.1,true)+3;
+        applyEnemyDamage(enemy,drained);
+        healHero(character.id,Math.ceil(drained*.5));
+        break;
+      case "reboot":
+        getAliveParty().sort((a,b)=>{
+          const ca=characters.find((entry)=>entry.id===a),cb=characters.find((entry)=>entry.id===b);
+          return state.hp[a]/getCharacterStats(ca,state.levels[a]||1).hp-state.hp[b]/getCharacterStats(cb,state.levels[b]||1).hp;
+        }).slice(0,3).forEach((id)=>healHero(id,stats.magic*1.15+12));
+        break;
+      case "protective-shield":
+        if (!ally) return showNotice("Selecciona un compañero válido.");
+        const allyMax=getCharacterStats(ally,state.levels[ally.id]||1).hp;
+        battle.shields[ally.id]=Math.round(allyMax*.3);
+        pushBattleLog(ally.name+" recibe un escudo de "+battle.shields[ally.id]+" puntos.");
+        break;
+      case "knockdown":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        applyEnemyDamage(enemy,targetDamage(1.15,false));
+        if(enemy.hp>0){enemy.stun=1;pushBattleLog(enemy.name+" queda derribado.");}
+        break;
+      case "team-bastion":
+        state.party.forEach((id)=>{
+          const allyChar=characters.find((entry)=>entry.id===id);
+          const max=getCharacterStats(allyChar,state.levels[id]||1).hp;
+          battle.shields[id]=(battle.shields[id]||0)+Math.round(max*.2);
+        });
+        pushBattleLog("Ivan levanta un bastión que protege a toda la compañía.");
+        break;
+      case "balonazo":
+        if (!enemy) return showNotice("Selecciona un enemigo válido.");
+        applyEnemyDamage(enemy,targetDamage(1.25,false)+2);
+        break;
+      case "modo-mujer":
+        battle.buffs[character.id]={attack:.3,speed:.2,turns:2};
+        pushBattleLog("Alex activa Modo Mujer: su ataque y velocidad aumentan.");
+        break;
+      case "field-finish":
+        battle.enemies.filter((entry)=>entry.hp>0).forEach((entry)=>applyEnemyDamage(entry,targetDamage(1.05,false)));
+        break;
+      default:
+        return showNotice("Esta habilidad todavía no está implementada.");
+    }
+    pushBattleLog(character.name+" utiliza "+skill.name+".");
+    if (battle.buffs[character.id] && skill.id !== "modo-mujer") {
+      battle.buffs[character.id].turns -= 1;
+      if(battle.buffs[character.id].turns<=0) delete battle.buffs[character.id];
+    }
+    battle.pendingSkillId=null;
+    battle.targetMode=null;
+    if (battle.enemies.every((entry)=>entry.hp<=0)) {
+      setBattleVictory();
+    } else {
+      battle.turnIndex += 1;
+      processBattleUntilPlayerTurn();
+    }
+    saveState();
+    renderCampaign();
+  }
+
+  function chooseBattleTarget(targetId) {
+    const battle=state.battle;
+    if(!battle || !battle.pendingSkillId) return;
+    const actor=getActiveBattleActor();
+    if(!actor || actor.side!=="ally") return;
+    const character=characters.find((entry)=>entry.id===actor.id);
+    const skill=character.skills.find((entry)=>entry.id===battle.pendingSkillId);
+    if(!skill) return;
+    const valid = skill.target==="enemy"
+      ? battle.enemies.some((entry)=>entry.id===targetId && entry.hp>0)
+      : state.party.includes(targetId) && (Number(state.hp[targetId])||0)>0;
+    if(!valid) return showNotice("El objetivo seleccionado no es válido.");
+    executeBattleSkill(character,skill,targetId);
+  }
+
   const defaultState = () => ({
     gold:120,
     rations:2,
     inventory:{bandage:0,tonic:0,oil:0},
     hp:{guardian:68,duelist:54,arcanist:88,tracker:135,alchemist:105},
+    mp:{guardian:90,duelist:40,arcanist:100,tracker:50,alchemist:65},
     levels:{guardian:1,duelist:1,arcanist:1,tracker:1,alchemist:1},
     xp:{guardian:0,duelist:0,arcanist:0,tracker:0,alchemist:0},
-    characterDataVersion:3,
+    battle:null,
+    characterDataVersion:4,
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
     battleSiteId:"institute-programming",
@@ -220,10 +571,20 @@
         }
         xp[character.id] = Math.max(0,Number(xp[character.id]) || 0);
       });
+      const mp = {};
+      characters.forEach((character) => {
+        const level = levels[character.id] || 1;
+        const maxMp = getCharacterStats(character,level).mp;
+        const storedMp = saved.mp && saved.mp[character.id];
+        mp[character.id] = saved.characterDataVersion >= 4 && Number.isFinite(storedMp)
+          ? Math.max(0,Math.min(maxMp,storedMp))
+          : maxMp;
+      });
       const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
       const merged = Object.assign(defaults,saved,{
         inventory:Object.assign({},defaults.inventory,saved.inventory || {}),
-        hp,levels,xp,characterDataVersion:3,
+        hp,mp,levels,xp,characterDataVersion:4,
+        battle:saved.battle && typeof saved.battle === "object" ? saved.battle : null,
         visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
       merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
@@ -237,6 +598,7 @@
         merged.battleSiteId = "institute-programming";
         if (merged.tab === "battle") merged.tab = "route";
       }
+      if (merged.tab === "battle" && (!merged.battle || merged.battle.siteId !== merged.battleSiteId)) merged.tab = "route";
       const maximumRegion = getUnlockedRegionIndex(merged.visitedSites);
       let selectedIndex = regions.findIndex((region) => region.id === merged.selectedRegion);
       if (selectedIndex < 0 || selectedIndex > maximumRegion) selectedIndex = maximumRegion;
@@ -250,7 +612,7 @@
 
   function saveState() {
     if (!state) return;
-    state.characterDataVersion = 3;
+    state.characterDataVersion = 4;
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (error) {
       state.notice = "No se ha podido guardar en este navegador. La partida seguirá activa mientras no cierres la página.";
     }
@@ -489,81 +851,113 @@
   }
 
   function renderBattle() {
-    const siteId = state.battleSiteId || "institute-programming";
-    const region = regions.find((entry) => entry.sites.some((site) => site.id === siteId));
-    const site = region ? region.sites.find((entry) => entry.id === siteId) : null;
-    const siteIndex = region ? region.sites.findIndex((entry) => entry.id === siteId) : -1;
-    if (!site || site.boss || !isSiteUnlocked(region,siteIndex,state.visitedSites)) {
-      state.tab = "route";
+    const battle=state.battle;
+    const siteId=state.battleSiteId || "institute-programming";
+    const region=regions.find((entry)=>entry.sites.some((site)=>site.id===siteId));
+    const site=region ? region.sites.find((entry)=>entry.id===siteId) : null;
+    const siteIndex=region ? region.sites.findIndex((entry)=>entry.id===siteId) : -1;
+    if(!site || site.boss || !isSiteUnlocked(region,siteIndex,state.visitedSites) || !battle || battle.siteId!==siteId) {
+      state.tab="route";
       return renderRoute();
     }
 
-    const allyUnits = state.party.map((id,index) => {
-      const character = characters.find((entry) => entry.id === id);
-      if (!character) return "";
-      const level = state.levels[id] || 1;
-      const maximum = getCharacterStats(character,level).hp;
-      const current = Number.isFinite(state.hp[id]) ? Math.max(0,Math.min(maximum,state.hp[id])) : maximum;
-      const ratio = Math.round(current / maximum * 100);
-      return '<article class="battle-unit battle-ally battle-hero-' + character.id + '">' +
-        '<div class="battle-unit-art">' +
-          '<span class="battle-unit-index">0' + (index + 1) + '</span>' +
-          '<div class="battle-pixel-figure figure-' + character.id + '" aria-hidden="true">' +
-            '<i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">' + character.sign + '</b>' +
-          '</div>' +
-          '<span class="battle-unit-role">' + character.role + '</span>' +
-        '</div>' +
-        '<div class="battle-unit-info">' +
-          '<div class="battle-unit-name"><strong>' + character.name + '</strong><em>«' + character.title + '»</em></div>' +
-          '<div class="battle-unit-life"><span>VIDA</span><b>' + current + ' / ' + maximum + ' PV</b></div>' +
-          '<div class="battle-hp-track"><i style="width:' + ratio + '%"></i></div>' +
-        '</div>' +
-      '</article>';
+    const currentActor=getActiveBattleActor();
+    const activeHero=currentActor && currentActor.side==="ally" ? characters.find((entry)=>entry.id===currentActor.id) : null;
+    const pendingSkill=activeHero && battle.pendingSkillId ? activeHero.skills.find((entry)=>entry.id===battle.pendingSkillId) : null;
+    const isVictory=battle.status==="victory";
+    const isDefeat=battle.status==="defeat";
+
+    const orderMarkup=battle.order.map((entry,index)=>{
+      const isCurrent=index===battle.turnIndex && !isVictory && !isDefeat;
+      const hero=entry.side==="ally" ? characters.find((character)=>character.id===entry.id) : null;
+      const enemy=entry.side==="enemy" ? battle.enemies.find((item)=>item.id===entry.id) : null;
+      const alive=hero ? (Number(state.hp[hero.id])||0)>0 : Boolean(enemy && enemy.hp>0);
+      const label=hero ? hero.name : enemy ? enemy.name : entry.name;
+      const mark=hero ? hero.sign : enemy ? enemy.mark : "?";
+      return '<div class="battle-initiative-chip '+(isCurrent?"is-current ":"")+(entry.side==="enemy"?"is-enemy ":"")+(alive?"":"is-fallen")+'"><b>'+mark+'</b><small>'+label+'</small></div>';
     }).join("");
 
-    const enemies = [
-      {id:"error",name:"Proceso corrupto",role:"ERROR DE SISTEMA",hp:74,maxHp:74,mark:"404"},
-      {id:"virus",name:"Virus de aula",role:"AMENAZA",hp:62,maxHp:62,mark:"!"},
-      {id:"glitch",name:"Fragmento de código",role:"ANOMALÍA",hp:88,maxHp:88,mark:"//"}
-    ];
-    const enemyUnits = enemies.map((enemy,index) => {
-      const ratio = Math.round(enemy.hp / enemy.maxHp * 100);
-      return '<article class="battle-unit battle-enemy battle-enemy-' + enemy.id + '">' +
-        '<div class="battle-unit-art">' +
-          '<span class="battle-unit-index">E0' + (index + 1) + '</span>' +
-          '<div class="battle-enemy-figure enemy-' + enemy.id + '" aria-hidden="true"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>' + enemy.mark + '</b></div>' +
-          '<span class="battle-unit-role">' + enemy.role + '</span>' +
+    const allyUnits=state.party.map((id,index)=>{
+      const character=characters.find((entry)=>entry.id===id);
+      if(!character) return "";
+      const stats=getCharacterStats(character,state.levels[id]||1);
+      const maxHp=stats.hp,maxMp=stats.mp;
+      const currentHp=Math.max(0,Math.min(maxHp,Number(state.hp[id])||0));
+      const currentMp=Math.max(0,Math.min(maxMp,Number(state.mp[id])||0));
+      const hpRatio=Math.round(currentHp/maxHp*100);
+      const mpRatio=Math.round(currentMp/maxMp*100);
+      const isActive=Boolean(currentActor && currentActor.side==="ally" && currentActor.id===id && !isVictory && !isDefeat);
+      const isTarget=battle.targetMode==="ally" && currentHp>0;
+      const shield=battle.shields[id]||0;
+      const portrait=character.portrait ? '<img src="'+character.portrait+'" alt="" loading="lazy" onerror="this.remove()">' : "";
+      const targetAttrs=isTarget ? 'data-action="battle-target" data-target-id="'+id+'" data-target-side="ally" role="button" tabindex="0"' : "";
+      return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
+        '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
+          '<div class="battle-pixel-figure figure-'+id+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>' +
+          '<span class="battle-unit-role">'+character.role+'</span>'+portrait +
         '</div>' +
-        '<div class="battle-unit-info">' +
-          '<div class="battle-unit-name"><strong>' + enemy.name + '</strong></div>' +
-          '<div class="battle-unit-life"><span>VIDA</span><b>' + enemy.hp + ' / ' + enemy.maxHp + ' PV</b></div>' +
-          '<div class="battle-hp-track enemy-hp-track"><i style="width:' + ratio + '%"></i></div>' +
-        '</div>' +
-      '</article>';
+        '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+character.name+'</strong><em>«'+character.title+'»</em></div>' +
+          '<div class="battle-unit-life"><span>♥ PV</span><b>'+currentHp+'/'+maxHp+'</b></div><div class="battle-hp-track"><i style="width:'+hpRatio+'%"></i></div>' +
+          '<div class="battle-unit-mana"><span>✦ PM</span><b>'+currentMp+'/'+maxMp+'</b></div><div class="battle-mp-track"><i style="width:'+mpRatio+'%"></i></div>' +
+          (shield>0?'<small class="battle-shield-value">ESCUDO '+shield+'</small>':"")+
+        '</div></article>';
     }).join("");
 
-    return '<div class="campaign-page battle-page">' +
-      '<div class="battle-page-heading"><div><span class="section-eyebrow">' + region.name.toUpperCase() + ' · SALA ÚNICA</span><h2>' + site.name + '</h2></div>' +
-        '<div class="battle-heading-status"><span class="battle-live-dot"></span>CAMPO DE BATALLA <small>VISTA PREVIA</small></div></div>' +
-      '<section class="battle-stage" aria-label="Campo de batalla provisional">' +
-        '<div class="battle-room-wall">' +
-          '<div class="battle-window"><i></i><i></i><i></i><i></i></div>' +
-          '<div class="battle-blackboard"><span>PROGRAMACIÓN</span><b>if (fear) { run(); }</b><small>// SISTEMA EN ESTADO CRÍTICO</small></div>' +
-          '<div class="battle-wall-clock"><i></i></div>' +
-          '<div class="battle-server-rack"><i></i><i></i><i></i><i></i><b>SYS</b></div>' +
-          '<div class="battle-desk desk-one"><i></i><b></b></div><div class="battle-desk desk-two"><i></i><b></b></div>' +
-          '<div class="battle-room-fog"></div>' +
-        '</div>' +
-        '<div class="battle-stage-topline"><span><b>01</b> · AULA DE INFORMÁTICA</span><span>ESCENARIO PROVISIONAL</span></div>' +
-        '<div class="battle-combat-layout">' +
-          '<section class="battle-side battle-allies-side"><div class="battle-side-heading"><span>COMPAÑÍA</span><b>' + String(state.party.length).padStart(2,"0") + ' / 04</b></div><div class="battle-formation battle-ally-formation">' + allyUnits + '</div></section>' +
-          '<div class="battle-mid-mark"><span>VS</span><i></i></div>' +
-          '<section class="battle-side battle-enemies-side"><div class="battle-side-heading"><span>AMENAZAS</span><b>03</b></div><div class="battle-formation battle-enemy-formation">' + enemyUnits + '</div></section>' +
-        '</div>' +
-        '<div class="battle-ground-line"></div>' +
-        '<div class="battle-stage-foot"><span>FORMACIÓN DE LA COMPAÑÍA</span><span>ENCUENTRO VISUAL · SIN TURNOS</span><span>1 SALA</span></div>' +
-      '</section>' +
-      '<div class="battle-bottom-bar"><div><span class="battle-provisional-mark">◆</span><span>PERSONAJES Y ENEMIGOS PROVISIONALES</span></div><button class="game-action secondary" type="button" data-action="leave-battle">← VOLVER A RUTAS</button></div>' +
+    const enemyUnits=battle.enemies.map((enemy,index)=>{
+      const ratio=Math.round(enemy.hp/enemy.maxHp*100);
+      const activeEnemy=Boolean(currentActor && currentActor.side==="enemy" && currentActor.id===enemy.id);
+      const isTarget=battle.targetMode==="enemy" && enemy.hp>0;
+      const targetAttrs=isTarget?'data-action="battle-target" data-target-id="'+enemy.id+'" data-target-side="enemy" role="button" tabindex="0"':'';
+      return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+'" '+targetAttrs+'>' +
+        '<div class="battle-unit-art"><span class="battle-unit-index">E0'+(index+1)+'</span>' +
+          '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>' +
+          '<span class="battle-unit-role">'+enemy.role+'</span></div>' +
+        '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+enemy.name+'</strong></div>' +
+          '<div class="battle-unit-life"><span>♥ PV</span><b>'+enemy.hp+'/'+enemy.maxHp+'</b></div><div class="battle-hp-track enemy-hp-track"><i style="width:'+ratio+'%"></i></div>' +
+          (enemy.burn>0?'<small class="battle-status-tag">QUEMADURA '+enemy.burn+'</small>':"")+
+        '</div></article>';
+    }).join("");
+
+    const skillsMarkup=activeHero ? activeHero.skills.map((skill)=>{
+      const level=state.levels[activeHero.id]||1;
+      const unlocked=level>=skill.unlockLevel;
+      const enoughMana=(Number(state.mp[activeHero.id])||0)>=skill.manaCost;
+      const disabled=!unlocked || !enoughMana || battle.status!=="active";
+      const selected=battle.pendingSkillId===skill.id;
+      return '<button class="battle-skill-button '+(unlocked?"is-unlocked":"is-locked")+(selected?" is-selected":"")+'" type="button" data-action="battle-skill" data-skill-id="'+skill.id+'" '+(disabled?"disabled":"")+'>' +
+        '<span class="battle-skill-icon">'+skill.icon+'</span><span class="battle-skill-copy"><strong>'+skill.name+'</strong><small>'+skill.kind+' · NIVEL '+skill.unlockLevel+'</small><em>'+skill.detail+'</em></span>' +
+        '<span class="battle-skill-cost">'+skill.manaCost+' PM</span></button>';
+    }).join("") : '<div class="battle-waiting-message">'+(isVictory?"SALA DESPEJADA":isDefeat?"COMPAÑÍA DERROTADA":"Turno enemigo…")+'</div>';
+
+    const logMarkup=battle.log.slice(0,3).map((line)=>'<li>'+line+'</li>').join("");
+    const activeLabel=activeHero ? 'TURNO DE '+activeHero.name.toUpperCase() : isVictory ? "VICTORIA" : isDefeat ? "DERROTA" : "RESOLVIENDO TURNO";
+    const prompt=pendingSkill ? (pendingSkill.target==="enemy" ? "ELIGE UN ENEMIGO" : "ELIGE UN COMPAÑERO") : activeHero ? "ELIGE UNA HABILIDAD" : "EL TURNO AVANZA AUTOMÁTICAMENTE";
+
+    const commandPanel=isVictory
+      ? '<div class="battle-result-panel is-victory"><span>✦</span><div><strong>VICTORIA</strong><small>La sala está despejada. +45 XP para la compañía.</small></div><button type="button" class="game-action" data-action="leave-battle">CONTINUAR →</button></div>'
+      : isDefeat
+        ? '<div class="battle-result-panel is-defeat"><span>☠</span><div><strong>DERROTA</strong><small>La compañía necesita recuperarse o intentarlo otra vez.</small></div><button type="button" class="game-action" data-action="retry-battle">REINTENTAR</button><button type="button" class="game-action secondary" data-action="leave-battle">VOLVER A RUTAS</button></div>'
+        : '<div class="battle-command"><div class="battle-command-heading"><div><span class="section-eyebrow">'+activeLabel+'</span><h3>'+prompt+'</h3></div>' +
+            (pendingSkill?'<button class="battle-cancel-target" type="button" data-action="cancel-battle-target">CANCELAR</button>':"")+
+          '</div><div class="battle-skill-row">'+skillsMarkup+'</div></div>';
+
+    return '<div class="campaign-page battle-page">'+
+      '<div class="battle-topbar"><div><span class="section-eyebrow">'+region.name.toUpperCase()+' · '+site.name.toUpperCase()+'</span><h2>Campo de batalla</h2></div>' +
+        '<div class="battle-round-mark"><small>RONDA</small><strong>'+String(battle.round).padStart(2,"0")+'</strong></div>' +
+        '<div class="battle-turn-order"><span>ORDEN DE TURNO</span><div>'+orderMarkup+'</div></div></div>'+
+      '<section class="battle-stage" aria-label="Campo de batalla por turnos">'+
+        '<div class="battle-room-wall"><div class="battle-window"><i></i><i></i><i></i><i></i></div><div class="battle-blackboard"><span>PROGRAMACIÓN</span><b>if (fear) { run(); }</b><small>// SISTEMA EN ESTADO CRÍTICO</small></div><div class="battle-wall-clock"><i></i></div><div class="battle-server-rack"><i></i><i></i><i></i><i></i><b>SYS</b></div><div class="battle-desk desk-one"><i></i><b></b></div><div class="battle-desk desk-two"><i></i><b></b></div><div class="battle-room-fog"></div></div>'+
+        '<div class="battle-stage-topline"><span>COMPAÑÍA <b>‹</b> ENEMIGOS</span><span>UNA SOLA SALA · ENCUENTRO '+(battle.status==="active"?"ACTIVO":battle.status==="victory"?"COMPLETADO":"FALLIDO")+'</span></div>'+
+        '<div class="battle-lineup battle-allies-line">'+allyUnits+'</div>'+
+        '<div class="battle-lineup battle-enemies-line">'+enemyUnits+'</div>'+
+        '<div class="battle-ground-line"></div>'+
+        '<div class="battle-stage-foot"><span>ALIADOS · '+getAliveParty().length+'/04</span><span>ENEMIGOS · '+battle.enemies.filter((enemy)=>enemy.hp>0).length+'/03</span><span>MANÁ Y VIDA INDIVIDUALES</span></div>'+
+      '</section>'+
+      '<section class="battle-actions-area">'+
+        commandPanel+
+        '<aside class="battle-log-panel"><div><span>REGISTRO DE COMBATE</span><b>RONDA '+battle.round+'</b></div><ul>'+logMarkup+'</ul></aside>'+
+      '</section>'+
+      '<div class="battle-bottom-bar"><div><span class="battle-provisional-mark">◆</span><span>ESCENARIO Y ENEMIGOS PROVISIONALES · LOS TURNOS Y HABILIDADES YA FUNCIONAN</span></div><button class="game-action secondary" type="button" data-action="leave-battle">← VOLVER A RUTAS</button></div>'+
     '</div>';
   }
 
@@ -727,19 +1121,37 @@
         return showNotice("Esta sala todavía está bloqueada.");
       }
       if (state.party.length !== 4) return showNotice("Selecciona exactamente cuatro personajes en Compañía para entrar en la sala.");
-      state.battleSiteId = siteId;
-      state.selectedRegion = region.id;
-      state.selectedSite = siteId;
-      state.tab = "battle";
-      saveState();
-      renderCampaign();
+      beginBattle(siteId);
       return;
     }
     if (action === "leave-battle") {
       state.tab = "route";
-      if (state.battleSiteId) state.selectedSite = state.battleSiteId;
+      if (state.battle && state.battle.status === "victory") state.battle = null;
+      if (state.battleSiteId) state.selectedSite = state.selectedSite || state.battleSiteId;
       saveState();
       renderCampaign();
+      return;
+    }
+    if (action === "retry-battle") {
+      beginBattle(state.battleSiteId || "institute-programming");
+      return;
+    }
+    if (action === "battle-skill") {
+      chooseBattleSkill(target.dataset.skillId);
+      return;
+    }
+    if (action === "battle-target") {
+      chooseBattleTarget(target.dataset.targetId);
+      return;
+    }
+    if (action === "cancel-battle-target") {
+      if (state.battle) {
+        state.battle.pendingSkillId=null;
+        state.battle.targetMode=null;
+        state.notice="Elige una habilidad.";
+        renderCampaign();
+        saveState();
+      }
       return;
     }
     if (action === "complete-site" || action === "visit-site") return completeSite(target.dataset.site);
