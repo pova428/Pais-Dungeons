@@ -324,3 +324,15 @@ body.reduce-motion .embers { display: none; }
 
 .region-boss { display:block; width:100%; text-align:left; font-family:inherit; color:inherit; cursor:pointer; }
 .region-boss:hover { border-color:rgba(201,102,77,.78); background:linear-gradient(100deg,rgba(119,37,35,.4),rgba(20,11,14,.5)); }
+
+/* Las salas finales se distinguen del resto de paradas */
+.site-node.boss-node {
+  border-color: rgba(145,55,48,.42);
+  background: linear-gradient(90deg, rgba(91,28,29,.24), rgba(8,5,7,.32));
+}
+.site-node.boss-node::before { border-color: #d05c4b; background: #702a2a; box-shadow: 0 0 8px rgba(178,54,48,.5); }
+.site-node.boss-node .node-number { color: #c2604e; }
+.site-node.boss-node:hover, .site-node.boss-node.is-selected {
+  border-color: rgba(207,93,72,.82);
+  background: linear-gradient(90deg, rgba(126,39,37,.4), rgba(13,7,10,.45));
+}
