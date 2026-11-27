@@ -1,19 +1,15 @@
-# Fondo del Mercado
+# Recursos visuales del mercado
 
-El escenario del mercader se dibuja con elementos provisionales de pixel art. Puedes sustituir el fondo subiendo:
+En la Build 020, el puesto del mercader y el Gachapón se dibujan mediante elementos pixel-art de la interfaz. Se ha eliminado la ilustración de mercado decorativa de la parte superior y **no necesitas subir un fondo general**.
 
-`merchant-market.png`
+Esta carpeta queda reservada para futuras ilustraciones del puesto, mostrador, máquina o decoraciones del escenario.
 
-Ubicación exacta:
-`assets/shop/merchant-market.png`
+## Estilo recomendado
+- Pixel art sin antialiasing, con contornos definidos.
+- PNG transparente para objetos individuales.
+- Tamaño recomendado: 128 × 128 o 256 × 256 px.
+- Mantén una paleta oscura con madera cálida, piedra, cobre y luces violetas/doradas para la máquina.
 
-Recomendaciones:
-- PNG horizontal 16:9.
-- Resolución recomendada: 1920 × 1080.
-- Una plaza medieval con puestos, estanterías, tejados, suelo de piedra y una zona central para el fuego.
-- Reserva un área visual a un lado para el puesto del mercader y otra para el Gachapón.
-- Evita colocar texto importante en el fondo, porque la interfaz dibuja etiquetas encima.
+Los iconos de los objetos se suben a `assets/items/`. Consulta `assets/items/README.md` para conocer los nombres exactos.
 
-El juego aplica una capa oscura para mantener la estética de PAIS DUNGEON. Si el archivo aún no existe, se muestra el escenario provisional hecho con CSS.
-
-Para subirlo: **Add file → Upload files** → selecciona `merchant-market.png` → **Commit changes** en `main`.
+Para subir recursos: abre la carpeta → **Add file → Upload files** → arrastra los PNG → **Commit changes** en `main`.
