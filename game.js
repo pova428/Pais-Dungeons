@@ -21,45 +21,48 @@
   const continueButton = document.getElementById("continue-button");
 
   const characters = [
-    { id:"guardian", name:"Darian Voss", title:"El Muro", role:"GUARDIÁN", sign:"D", icon:"♜", detail:"Defensor de primera línea. Protege a la compañía cuando la oscuridad se acerca.", trait:"Firme como la piedra" },
-    { id:"duelist", name:"Kael Veyr", title:"La Hoja Gris", role:"DUELISTA", sign:"K", icon:"⚔", detail:"Combatiente ágil que busca los puntos débiles y remata a los enemigos.", trait:"Nunca ataca dos veces igual" },
-    { id:"arcanist", name:"Ilyra Noct", title:"La Velada", role:"ARCANISTA", sign:"I", icon:"✧", detail:"Estudia artes prohibidas. Sus conjuros alteran el campo de batalla.", trait:"Escucha voces en las ruinas" },
-    { id:"tracker", name:"Bram Cendra", title:"El Rastreador", role:"RASTREADOR", sign:"B", icon:"➶", detail:"Explorador y tirador. Encuentra rutas ocultas y amenaza desde lejos.", trait:"Siempre encuentra un camino" },
-    { id:"alchemist", name:"Soren Vale", title:"El Remendón", role:"ALQUIMISTA", sign:"S", icon:"⚗", detail:"Prepara remedios y mezclas peligrosas. Mantiene con vida a los demás.", trait:"La muerte puede esperar" }
+    { id:"guardian", name:"Pol", title:"El Flaco", role:"GUARDIÁN", sign:"P", icon:"♜", detail:"Defensor de primera línea. Protege a la compañía cuando la oscuridad se acerca.", trait:"Firme como la piedra" },
+    { id:"duelist", name:"Salim", title:"El Moro", role:"DUELISTA", sign:"S", icon:"⚔", detail:"Combatiente ágil que busca los puntos débiles y remata a los enemigos.", trait:"Nunca ataca dos veces igual" },
+    { id:"arcanist", name:"Igor", title:"El Alto", role:"ARCANISTA", sign:"I", icon:"✧", detail:"Estudia artes prohibidas. Sus conjuros alteran el campo de batalla.", trait:"Escucha voces en las ruinas" },
+    { id:"tracker", name:"Ivan", title:"El Gordo", role:"RASTREADOR", sign:"V", icon:"➶", detail:"Explorador y tirador. Encuentra rutas ocultas y amenaza desde lejos.", trait:"Siempre encuentra un camino" },
+    { id:"alchemist", name:"Alex", title:"El Mujeriego", role:"ALQUIMISTA", sign:"A", icon:"⚗", detail:"Prepara remedios y mezclas peligrosas. Mantiene con vida a los demás.", trait:"La muerte puede esperar" }
   ];
 
   const regions = [
     {
-      id:"forest", index:"I", name:"Bosque de los Ahogados", short:"EL BOSQUE", atmosphere:"Donde los árboles recuerdan a los muertos",
-      description:"Un bosque anegado por una niebla espesa. Las ramas cuelgan como sogas y las antiguas casas todavía conservan luz en sus ventanas.",
-      boss:"El Verdugo sin Rostro", bossRole:"CARCELERO DEL BOSQUE",
-      bossDescription:"Una figura gigantesca que patrulla los senderos con una campana oxidada. Nadie recuerda qué rostro tenía antes de perderlo.",
+      id:"institute", index:"I", name:"Instituto Camí de Mar", short:"CAMÍ DE MAR", atmosphere:"Las clases han terminado. La pesadilla acaba de empezar.",
+      description:"Los pasillos del instituto están vacíos, pero las aulas siguen encendidas. Algo se mueve detrás de las puertas de las clases.",
+      boss:"Redes", bossRole:"SALA DEL JEFE",
+      bossDescription:"El último aula del instituto. Los cables se retuercen por las paredes y el equipo de red sigue funcionando aunque el edificio esté desierto.",
       sites:[
-        {id:"forest-path",name:"Sendero de los Ahorcados",kind:"EXPLORACIÓN",description:"Un camino estrecho entre robles retorcidos. De las ramas cuelgan campanas y jirones de viejas vestiduras.",icon:"Ⅰ"},
-        {id:"forest-village",name:"Aldea Inundada",kind:"ASENTAMIENTO",description:"Las puertas están abiertas y el agua llega a las ventanas. Puede que todavía quede alguien escondido en los sótanos.",icon:"Ⅱ"},
-        {id:"forest-chapel",name:"Capilla de Raíces",kind:"SANTUARIO",description:"Las raíces han atravesado el altar. Bajo la piedra se oye una plegaria que nadie ha terminado.",icon:"Ⅲ"}
+        {id:"institute-programming",name:"Programacion",kind:"AULA",description:"Las pantallas siguen mostrando líneas de código que nadie recuerda haber escrito. Cada ordenador parece estar esperando una orden.",icon:"Ⅰ"},
+        {id:"institute-database",name:"Base de Datos",kind:"AULA",description:"En el aula hay archivadores abiertos y servidores que zumban detrás de una puerta cerrada. Los registros no dejan de cambiar.",icon:"Ⅱ"},
+        {id:"institute-yard",name:"Patio",kind:"EXTERIOR",description:"El patio está cubierto por una niebla espesa. Las puertas de acceso se han cerrado y se oyen pasos al otro lado de la pista.",icon:"Ⅲ"},
+        {id:"institute-networks",name:"Redes",kind:"JEFE FINAL",description:"La sala final del instituto. Una maraña de cables, armarios de comunicaciones y luces rojas protege el camino de salida.",icon:"Ⅳ",boss:true}
       ]
     },
     {
-      id:"mines", index:"II", name:"Minas de Sal Negra", short:"LAS MINAS", atmosphere:"Bajo la tierra, algo sigue trabajando",
-      description:"Galerías excavadas bajo una montaña enferma. Los raíles se mueven solos y el polvo negro se pega a la piel como ceniza húmeda.",
-      boss:"La Matriarca de Sal", bossRole:"MADRE DE LAS GALERÍAS",
-      bossDescription:"Una criatura nacida de los mineros desaparecidos. Su cuerpo cristalino guarda las voces de quienes quedaron atrapados.",
+      id:"baix-penedes", index:"II", name:"Baix Penedes", short:"BAIX PENEDES", atmosphere:"Carreteras conocidas que ya no llevan a casa.",
+      description:"Una comarca convertida en territorio hostil. Los lugares cotidianos han quedado aislados y la carretera parece no terminar nunca.",
+      boss:"Sushi", bossRole:"SALA DEL JEFE",
+      bossDescription:"La sala final de Baix Penedes. Tras la última puerta espera el encuentro que cierra esta zona y guarda el paso hacia Steam.",
       sites:[
-        {id:"mine-shaft",name:"Galería Hundida",kind:"EXPLORACIÓN",description:"Un pozo de extracción partido por la mitad. Los ascensores aún bajan, aunque nadie acciona sus cadenas.",icon:"Ⅰ"},
-        {id:"mine-forge",name:"Fundición de Cadenas",kind:"TALLER ABANDONADO",description:"Hornos apagados, herramientas dispersas y grilletes demasiado grandes para un ser humano.",icon:"Ⅱ"},
-        {id:"mine-chamber",name:"Cámara del Capataz",kind:"CÁMARA ÉLITE",description:"La sala de mando está sellada desde dentro. Tras la puerta se escucha el golpe lento de un pico.",icon:"Ⅲ"}
+        {id:"baix-bowling",name:"Bolera",kind:"LOCAL DE OCIO",description:"Las pistas siguen encendidas y los bolos caen sin que nadie lance la bola. Algo espera al fondo del local.",icon:"Ⅰ"},
+        {id:"baix-n340",name:"N-340",kind:"CARRETERA",description:"Una carretera bloqueada por vehículos abandonados. Las señales apuntan a destinos que ya no existen.",icon:"Ⅱ"},
+        {id:"baix-cinema",name:"Cine",kind:"EDIFICIO",description:"La sesión lleva horas empezada. En la pantalla se proyectan imágenes de la propia compañía caminando por el edificio.",icon:"Ⅲ"},
+        {id:"baix-sushi",name:"Sushi",kind:"JEFE FINAL",description:"La última sala de Baix Penedes. El local parece tranquilo desde fuera, pero la puerta no se abre desde dentro.",icon:"Ⅳ",boss:true}
       ]
     },
     {
-      id:"cathedral", index:"III", name:"Catedral Sumergida", short:"LA CATEDRAL", atmosphere:"La fe no se hunde en silencio",
-      description:"Una catedral cubierta por aguas negras. Las campanas suenan bajo la superficie y las vidrieras iluminan algo que se mueve en la cripta.",
-      boss:"El Obispo Abisal", bossRole:"ÚLTIMO OFICIANTE",
-      bossDescription:"El antiguo guardián de la catedral ha seguido celebrando su ceremonia durante décadas. Ahora la congregación es algo distinto.",
+      id:"steam", index:"III", name:"Steam", short:"STEAM", atmosphere:"Las partidas no terminan cuando abandonas el ordenador.",
+      description:"Un territorio formado por mundos de terror que se han mezclado entre sí. Cada puerta lleva a una experiencia distinta y ninguna permite salir fácilmente.",
+      boss:"Clubes", bossRole:"SALA DEL JEFE",
+      bossDescription:"El último lugar de Steam. La compañía tendrá que superar el desafío final para cerrar esta parte de la maldición.",
       sites:[
-        {id:"cathedral-atrium",name:"Atrio Inundado",kind:"EXPLORACIÓN",description:"El agua cubre las losas y los bancos flotan entre columnas partidas. Algo golpea desde el otro lado de la puerta.",icon:"Ⅰ"},
-        {id:"cathedral-cloister",name:"Claustro de Campanas",kind:"SANTUARIO PROFANADO",description:"Las campanas cuelgan casi a ras del agua. Cada una lleva grabado el nombre de una persona desaparecida.",icon:"Ⅱ"},
-        {id:"cathedral-crypt",name:"Cripta del Juramento",kind:"CÁMARA ÉLITE",description:"Cinco nichos rodean un sepulcro vacío. En la tapa aparecen escritos cinco nombres que todavía no conocéis.",icon:"Ⅲ"}
+        {id:"steam-content-warning",name:"Content warning",kind:"MUNDO DE TERROR",description:"Una expedición con cámara en mano. Hay que grabar lo que acecha en las sombras, aunque algo también esté grabando al grupo.",icon:"Ⅰ"},
+        {id:"steam-labyrinthine",name:"Labyrinthine",kind:"LABERINTO",description:"Un laberinto de pasillos cambiantes. Las marcas en las paredes no siempre conducen al mismo sitio.",icon:"Ⅱ"},
+        {id:"steam-backrooms",name:"Escape Backrooms",kind:"ZONA LIMINAL",description:"Habitaciones amarillentas, luces que zumban y corredores que se repiten. El camino de vuelta parece haberse borrado.",icon:"Ⅲ"},
+        {id:"steam-clubs",name:"Clubes",kind:"JEFE FINAL",description:"La última sala de Steam. Las luces, el ruido y las sombras anuncian el desafío que cierra la tercera ruta.",icon:"Ⅳ",boss:true}
       ]
     }
   ];
@@ -78,8 +81,8 @@
     hp:{guardian:100,duelist:100,arcanist:100,tracker:100,alchemist:100},
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
-    selectedRegion:"forest",
-    selectedSite:"forest-path",
+    selectedRegion:"institute",
+    selectedSite:"institute-programming",
     visitedSites:[],
     notice:"La compañía se reúne en el bastión. La ruta aguarda al otro lado de las murallas."
   });
@@ -106,10 +109,20 @@
     try {
       const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || "null");
       if (!saved || !Array.isArray(saved.party) || !saved.hp) return null;
-      return Object.assign(defaultState(), saved, {
+      const merged = Object.assign(defaultState(), saved, {
         inventory:Object.assign(defaultState().inventory, saved.inventory || {}),
         hp:Object.assign(defaultState().hp, saved.hp || {})
       });
+      const validRegion = regions.find((region) => region.id === merged.selectedRegion) || regions[0];
+      merged.selectedRegion = validRegion.id;
+      if (!validRegion.sites.some((site) => site.id === merged.selectedSite)) {
+        merged.selectedSite = validRegion.sites[0].id;
+      }
+      const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
+      merged.visitedSites = (merged.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId));
+      merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
+      if (merged.party.length === 0) merged.party = defaultState().party;
+      return merged;
     } catch (error) { return null; }
   }
 
@@ -238,43 +251,37 @@
   function renderRoute() {
     const selectedRegion = regions.find((region) => region.id === state.selectedRegion) || regions[0];
     const selectedSite = selectedRegion.sites.find((site) => site.id === state.selectedSite);
-    const bossSelected = state.selectedSite === selectedRegion.id + "-boss";
+    const bossSelected = Boolean(selectedSite && selectedSite.boss);
     const cards = regions.map((region) => {
       const selected = region.id === selectedRegion.id;
       const sites = region.sites.map((site) => {
         const visited = state.visitedSites.includes(site.id);
         const active = state.selectedSite === site.id;
-        return '<button class="site-node ' + (active ? "is-selected" : "") + '" type="button" data-action="select-site" data-region="' + region.id + '" data-site="' + site.id + '">' +
-          '<span class="node-number">' + site.icon + '</span><span><strong>' + site.name + '</strong><small>' + (visited ? "VISITADO" : site.kind) + '</small></span></button>';
+        const action = site.boss ? "select-boss" : "select-site";
+        const kind = site.boss ? "JEFE FINAL" : site.kind;
+        return '<button class="site-node ' + (active ? "is-selected " : "") + (site.boss ? "boss-node" : "") + '" type="button" data-action="' + action + '" data-region="' + region.id + '" data-site="' + site.id + '">' +
+          '<span class="node-number">' + site.icon + '</span><span><strong>' + site.name + '</strong><small>' + (visited ? "VISITADO" : kind) + '</small></span></button>';
       }).join("");
       return '<article class="region-column ' + (selected ? "is-selected" : "") + '">' +
         '<div class="region-topline"><span>REGIÓN ' + region.index + '</span><span>' + region.short + '</span></div>' +
         '<h3>' + region.name + '</h3><p class="region-description">' + region.atmosphere + '</p>' +
         '<button class="game-action secondary" type="button" data-action="select-region" data-region="' + region.id + '">VER TERRITORIO</button>' +
         '<div class="route-sites">' + sites + '</div>' +
-        '<button class="region-boss" type="button" data-action="select-boss" data-region="' + region.id + '"><small>JEFE FINAL · ' + region.bossRole + '</small><strong>' + region.boss + '</strong><p>Encuentro principal al final de este territorio ↗</p></button>' +
       '</article>';
     }).join("");
 
-    let detailTitle = selectedRegion.boss;
-    let detailType = "JEFE FINAL";
-    let detailText = selectedRegion.bossDescription;
-    let detailAction = '<button class="game-action" type="button" data-action="boss-preview">INSPECCIONAR JEFE →</button>';
-    if (bossSelected) {
-      detailTitle = selectedRegion.boss;
-      detailType = "JEFE FINAL · " + selectedRegion.bossRole;
-      detailText = selectedRegion.bossDescription;
-      detailAction = '<button class="game-action" type="button" data-action="boss-preview">INSPECCIONAR JEFE →</button>';
-    } else if (selectedSite) {
-      detailTitle = selectedSite.name;
-      detailType = selectedSite.kind;
-      detailText = selectedSite.description;
-      const visited = state.visitedSites.includes(selectedSite.id);
-      detailAction = visited
-        ? '<span class="section-eyebrow">LOCALIZACIÓN REGISTRADA</span>'
-        : '<button class="game-action" type="button" data-action="visit-site" data-site="' + selectedSite.id + '">REGISTRAR VISITA</button>';
-    }
-    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">TRES TERRITORIOS · TRES JEFES</span><h2>La ruta de la maldición</h2><p>Cada territorio esconde tres localizaciones. Al final de cada uno espera un jefe que guarda una parte de la historia.</p></div><span class="route-legend">⌖ SELECCIONA UN MARCADOR</span></div>' +
+    let detailTitle = selectedSite ? selectedSite.name : selectedRegion.boss;
+    let detailType = selectedSite ? selectedSite.kind : "JEFE FINAL";
+    let detailText = selectedSite ? selectedSite.description : selectedRegion.bossDescription;
+    let detailAction = selectedSite && !bossSelected && state.visitedSites.includes(selectedSite.id)
+      ? '<span class="section-eyebrow">LOCALIZACIÓN REGISTRADA</span>'
+      : bossSelected
+        ? '<button class="game-action" type="button" data-action="boss-preview">INSPECCIONAR JEFE →</button>'
+        : '<button class="game-action" type="button" data-action="visit-site" data-site="' + (selectedSite ? selectedSite.id : "") + '">REGISTRAR VISITA</button>';
+
+    if (bossSelected) detailType = "JEFE FINAL · " + selectedRegion.bossRole;
+
+    return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">TRES ZONAS · CUATRO PARADAS POR RUTA</span><h2>La ruta de la maldición</h2><p>Cada zona contiene tres localizaciones de avance y una sala final donde espera su jefe.</p></div><span class="route-legend">⌖ SELECCIONA UNA PARADA</span></div>' +
       '<div class="route-layout">' + cards + '</div>' +
       '<section class="site-detail"><div><span class="section-eyebrow">' + selectedRegion.name.toUpperCase() + ' · ' + detailType + '</span><h3>' + detailTitle + '</h3><p>' + detailText + '</p></div><div class="site-detail-actions">' + detailAction + '<button class="game-action secondary" type="button" data-action="prepare-expedition">PREPARAR EXPEDICIÓN</button></div></section>' +
       '<p class="campaign-notice">' + state.notice + '</p></div>';
