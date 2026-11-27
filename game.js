@@ -238,6 +238,7 @@
   function renderRoute() {
     const selectedRegion = regions.find((region) => region.id === state.selectedRegion) || regions[0];
     const selectedSite = selectedRegion.sites.find((site) => site.id === state.selectedSite);
+    const bossSelected = state.selectedSite === selectedRegion.id + "-boss";
     const cards = regions.map((region) => {
       const selected = region.id === selectedRegion.id;
       const sites = region.sites.map((site) => {
@@ -251,7 +252,7 @@
         '<h3>' + region.name + '</h3><p class="region-description">' + region.atmosphere + '</p>' +
         '<button class="game-action secondary" type="button" data-action="select-region" data-region="' + region.id + '">VER TERRITORIO</button>' +
         '<div class="route-sites">' + sites + '</div>' +
-        '<div class="region-boss"><small>JEFE FINAL · ' + region.bossRole + '</small><strong>' + region.boss + '</strong><p>Encuentro principal al final de este territorio</p></div>' +
+        '<button class="region-boss" type="button" data-action="select-boss" data-region="' + region.id + '"><small>JEFE FINAL · ' + region.bossRole + '</small><strong>' + region.boss + '</strong><p>Encuentro principal al final de este territorio ↗</p></button>' +
       '</article>';
     }).join("");
 
@@ -259,7 +260,12 @@
     let detailType = "JEFE FINAL";
     let detailText = selectedRegion.bossDescription;
     let detailAction = '<button class="game-action" type="button" data-action="boss-preview">INSPECCIONAR JEFE →</button>';
-    if (selectedSite) {
+    if (bossSelected) {
+      detailTitle = selectedRegion.boss;
+      detailType = "JEFE FINAL · " + selectedRegion.bossRole;
+      detailText = selectedRegion.bossDescription;
+      detailAction = '<button class="game-action" type="button" data-action="boss-preview">INSPECCIONAR JEFE →</button>';
+    } else if (selectedSite) {
       detailTitle = selectedSite.name;
       detailType = selectedSite.kind;
       detailText = selectedSite.description;
@@ -392,6 +398,13 @@
         state.party.push(id);
       }
       showNotice("Composición de la compañía actualizada.");
+      return;
+    }
+    if (action === "select-boss") {
+      state.selectedRegion = target.dataset.region;
+      state.selectedSite = state.selectedRegion + "-boss";
+      renderCampaign();
+      saveState();
       return;
     }
     if (action === "select-region") {
