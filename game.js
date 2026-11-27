@@ -1116,6 +1116,7 @@
     footer.hidden = true;
     campaign.hidden = false;
     resumeBattleFloatingNumbers();
+    saveState();
     renderCampaign();
     if (state.tab === "battle" && state.battle && state.battle.status === "active") {
       if (state.battle.actionAnimation) {
