@@ -1059,10 +1059,17 @@
         if (!savedBattle.shieldTurns || typeof savedBattle.shieldTurns !== "object") savedBattle.shieldTurns={};
         if (!savedBattle.buffs || typeof savedBattle.buffs !== "object") savedBattle.buffs={};
         if (!savedBattle.debuffs || typeof savedBattle.debuffs !== "object") savedBattle.debuffs={};
+        const savedAt=Date.now();
         if (!Array.isArray(savedBattle.floatingNumbers)) savedBattle.floatingNumbers=[];
-        savedBattle.floatingNumbers=savedBattle.floatingNumbers.filter((entry)=>Date.now()-(entry.createdAt||0)<1600);
+        savedBattle.floatingNumbers=savedBattle.floatingNumbers.filter((entry)=>savedAt-(Number(entry.createdAt)||0)<=BATTLE_FLOATING_NUMBER_DURATION);
         if (!Number.isFinite(savedBattle.nextFloatingNumberId)) savedBattle.nextFloatingNumberId=1;
         if (savedBattle.actionAnimation && typeof savedBattle.actionAnimation!=="object") savedBattle.actionAnimation=null;
+        if (savedBattle.actionAnimation) {
+          if (!Number.isFinite(savedBattle.actionAnimation.startedAt)) savedBattle.actionAnimation.startedAt=savedAt;
+          if (!Number.isFinite(savedBattle.actionAnimation.phaseStartedAt)) savedBattle.actionAnimation.phaseStartedAt=savedAt;
+          if (![1,2,3].includes(savedBattle.actionAnimation.frame)) savedBattle.actionAnimation.frame=1;
+          if (typeof savedBattle.actionAnimation.resolved!=="boolean") savedBattle.actionAnimation.resolved=savedBattle.actionAnimation.frame>1;
+        }
         if (!savedBattle.startingVitals) {
           savedBattle.startingVitals={};
           merged.party.forEach((id)=>{
