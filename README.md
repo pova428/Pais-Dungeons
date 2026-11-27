@@ -2,23 +2,35 @@
 
 RPG táctico por turnos de fantasía oscura protagonizado por cinco amigos.
 
-## Build 011 — Primer combate por turnos
+## Build 012 — Revisión y pulido del combate
 
-La primera sala de **Programacion**, en el Instituto Camí de Mar, ahora incorpora un combate provisional por turnos inspirado en la disposición clásica de los RPG tácticos de grupo.
+La primera sala de **Programacion**, en el Instituto Camí de Mar, dispone de un combate provisional por turnos.
 
-### Campo de batalla
-- Cuatro héroes en una fila a la izquierda y tres enemigos a la derecha.
+### Campo de batalla e interfaz
+- Cuatro héroes en fila a la izquierda y tres enemigos a la derecha.
 - Escenario provisional de aula informática.
-- Vida y maná individuales bajo cada héroe, con barras separadas.
-- Vida de enemigos y estados visibles.
-- Orden de iniciativa en la parte superior y ronda actual.
-- Personaje cuyo turno está activo resaltado.
-- Habilidades del personaje activo en el panel inferior.
-- Selección de objetivo para ataques, curaciones y escudos.
-- Registro de los últimos movimientos.
+- PV y PM actuales/máximos con barras separadas bajo cada héroe.
+- PV y estados de enemigos visibles.
+- Orden de iniciativa y ronda en la parte superior.
+- El actor actual queda resaltado; los turnos enemigos se identifican aparte.
+- Las habilidades se muestran en el panel inferior, con coste de PM y requisitos.
+- Los objetivos seleccionables se iluminan y también pueden seleccionarse con teclado.
+- Registro de acciones recientes y estados visibles de quemadura, derribo, escudo y mejora.
+
+### Reglas funcionales de esta prueba
+- La iniciativa se ordena por velocidad; la mejora de velocidad de Alex cuenta en la ronda siguiente.
+- Los enemigos actúan de uno en uno, con una pausa visual antes de ejecutar su ataque.
+- Los héroes recuperan 3 PM al empezar su turno, sin duplicar la recuperación al recargar.
+- Los ataques, la curación, los escudos, la quemadura, el derribo y la mejora de Alex tienen efectos.
+- Los escudos duran dos turnos del héroe protegido y desaparecen antes si se consumen.
+- Victoria al derrotar a todos los enemigos; derrota al caer toda la compañía.
+- La victoria completa Programacion, concede 45 XP y abre Base de Datos.
+- Tras una derrota, reintentar restaura los PV/PM con los que la compañía entró en la sala.
+- Una partida guardada puede continuar incluso si se recarga el navegador durante un turno enemigo o una selección de objetivo.
+- Descansar consume una ración y recupera un 25% de PV y PM máximos de cada héroe.
 
 ### Habilidades
-Las habilidades de nivel 1 ya se pueden utilizar. Las de nivel 4 y las definitivas de nivel 10 se muestran bloqueadas hasta alcanzar el nivel correspondiente. El maná se consume al usar habilidades; cada aliado recupera 3 PM al comenzar su turno.
+Las habilidades de nivel 1 están disponibles desde el principio. La segunda habilidad se desbloquea en nivel 4 y la definitiva en nivel 10. Cada una tiene coste de maná.
 
 - **Pol — Mago:** Chispa arcana, Marca ígnea, Nova elemental.
 - **Salim — Asesino:** Navajazo, Navajazos múltiples, Llamar a sus hermanos.
@@ -27,18 +39,9 @@ Las habilidades de nivel 1 ya se pueden utilizar. Las de nivel 4 y las definitiv
 - **Alex — Duelista:** Balonazo, Modo Mujer, Remate de campo.
 
 ### Enemigos provisionales
-Proceso corrupto, Virus de aula y Fragmento de código. Sus nombres, estadísticas, aspecto y ataques son marcadores iniciales que podremos sustituir.
+Proceso corrupto, Virus de aula y Fragmento de código. Sus estadísticas, aspecto y ataques son marcadores iniciales que podremos sustituir.
 
-### Mecánicas implementadas en esta primera prueba
-- Orden automático por velocidad.
-- Turnos automáticos de los enemigos.
-- Ataques, curación, escudos, quemadura y derribo.
-- Victoria al derrotar a todos los enemigos y derrota al caer toda la compañía.
-- Reintento tras derrota.
-- La victoria completa Programacion, concede 45 XP y abre Base de Datos.
-- El estado del combate se conserva al recargar el navegador.
-
-Esta es una primera implementación jugable para probar el ritmo y la interfaz. Los números, ataques enemigos y efectos son provisionales y habrá que balancearlos.
+Los números de daño, defensa, curación, PM y enemigos siguen siendo valores de prototipo y necesitan pruebas de balance.
 
 ## Personajes y progresión
 
@@ -49,6 +52,8 @@ Cinco héroes, cuatro plazas activas, estadísticas individuales, crecimiento de
 1. **Instituto Camí de Mar:** Programacion → Base de Datos → Patio → **Redes (jefe)**.
 2. **Baix Penedes:** Bolera → N-340 → Cine → **Sushi (jefe)**.
 3. **Steam:** Content warning → Labyrinthine → Escape Backrooms → **Clubes (jefe)**.
+
+Solo Programacion dispone actualmente de este combate provisional. Los jefes y el resto de localizaciones deben desarrollarse.
 
 ## Publicación
 
