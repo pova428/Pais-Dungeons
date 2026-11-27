@@ -4170,3 +4170,583 @@ body.reduce-motion .gacha-pixel-lamp { animation:none !important; }
 }
 body.reduce-motion .battle-idle-frame { animation:none !important; }
 body.reduce-motion .battle-idle-frame.idle-frame-1 { opacity:1; }
+
+
+/* Build 022 — Bastion rest chamber, central animated bonfire and party recovery */
+.rest-page { max-width:1540px; }
+.rest-page-heading { margin-bottom:18px; }
+.rest-page-heading h2 { color:#ead5b2;text-shadow:2px 3px #211418; }
+.rest-campfire-scene {
+  position:relative;
+  isolation:isolate;
+  min-height:390px;
+  margin:0 0 17px;
+  overflow:hidden;
+  border:2px solid #72513d;
+  background:
+    radial-gradient(ellipse at 50% 75%,rgba(191,90,43,.25),transparent 38%),
+    radial-gradient(ellipse at 50% 30%,rgba(70,74,92,.17),transparent 53%),
+    linear-gradient(180deg,#171c29 0%,#24212b 48%,#302027 72%,#181318 100%);
+  box-shadow:inset 0 0 0 4px rgba(8,7,10,.56),inset 0 0 0 6px rgba(178,135,93,.12),0 10px 28px rgba(0,0,0,.3);
+}
+.rest-campfire-scene::before {
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(7,8,13,.32),transparent 18%,transparent 82%,rgba(7,8,13,.3)),
+    linear-gradient(180deg,rgba(6,8,14,.1),transparent 43%,rgba(7,5,8,.27));
+}
+.rest-sky-moon {
+  position:absolute;
+  z-index:1;
+  top:42px;
+  right:16%;
+  width:28px;
+  height:28px;
+  background:#d5bd91;
+  box-shadow:0 0 0 5px rgba(213,189,145,.06),0 0 24px rgba(213,189,145,.19),8px 3px 0 -3px #24212b;
+  clip-path:polygon(21% 0,79% 0,100% 21%,100% 79%,79% 100%,21% 100%,0 79%,0 21%);
+}
+.rest-sky-stars i {
+  position:absolute;
+  z-index:1;
+  width:3px;
+  height:3px;
+  background:#d2bb91;
+  box-shadow:0 0 7px rgba(235,211,164,.6);
+  animation:rest-star-twinkle 2.8s steps(2,end) infinite alternate;
+}
+.rest-sky-stars i:nth-child(1) { left:13%;top:24%; }
+.rest-sky-stars i:nth-child(2) { left:29%;top:14%;animation-delay:.4s; }
+.rest-sky-stars i:nth-child(3) { left:48%;top:21%;animation-delay:.8s; }
+.rest-sky-stars i:nth-child(4) { right:34%;top:13%;animation-delay:1.2s; }
+.rest-sky-stars i:nth-child(5) { right:11%;top:29%;animation-delay:.6s; }
+.rest-sky-stars i:nth-child(6) { left:21%;top:42%;animation-delay:1.1s; }
+.rest-sky-stars i:nth-child(7) { right:25%;top:38%;animation-delay:1.5s; }
+.rest-distant-pines {
+  position:absolute;
+  z-index:2;
+  bottom:48px;
+  display:flex;
+  align-items:flex-end;
+  gap:3px;
+  height:180px;
+  opacity:.82;
+}
+.rest-distant-pines.pine-left { left:-12px; }
+.rest-distant-pines.pine-right { right:-12px;transform:scaleX(-1); }
+.rest-distant-pines i {
+  position:relative;
+  display:block;
+  width:44px;
+  height:145px;
+  background:#111b1b;
+  clip-path:polygon(50% 0,68% 29%,58% 29%,83% 53%,68% 53%,100% 80%,60% 80%,60% 100%,39% 100%,39% 80%,0 80%,30% 53%,17% 53%,41% 29%,32% 29%);
+  filter:drop-shadow(4px 0 #101516);
+}
+.rest-distant-pines i:nth-child(2) { height:178px;width:51px;background:#15201f; }
+.rest-distant-pines i:nth-child(3) { height:112px;width:38px;background:#1a2421; }
+.rest-camp-banner {
+  position:absolute;
+  z-index:4;
+  top:18px;
+  left:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  width:max-content;
+  max-width:70%;
+  padding:9px 18px 10px;
+  transform:translateX(-50%);
+  border:1px solid rgba(174,132,91,.33);
+  background:rgba(15,13,18,.7);
+  box-shadow:inset 0 0 0 3px rgba(9,8,11,.45),0 4px 13px rgba(0,0,0,.2);
+  text-align:center;
+}
+.rest-camp-banner span {
+  color:#e0bd87;
+  font:700 9px var(--pixel);
+  letter-spacing:.19em;
+  text-shadow:2px 2px #27191c;
+}
+.rest-camp-banner small {
+  color:rgba(200,173,139,.57);
+  font:7px var(--mono);
+  letter-spacing:.12em;
+}
+.rest-fire-stage {
+  position:absolute;
+  z-index:5;
+  left:50%;
+  bottom:45px;
+  width:300px;
+  height:270px;
+  transform:translateX(-50%);
+  image-rendering:pixelated;
+}
+.rest-fire-aura {
+  position:absolute;
+  left:50%;
+  bottom:6px;
+  width:310px;
+  height:150px;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(248,118,48,.28) 0,rgba(199,74,33,.12) 38%,transparent 73%);
+  animation:rest-aura-pulse 1.4s steps(3,end) infinite alternate;
+}
+.rest-smoke {
+  position:absolute;
+  z-index:1;
+  left:50%;
+  top:0;
+  width:92px;
+  height:146px;
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+.rest-smoke i {
+  position:absolute;
+  bottom:0;
+  left:50%;
+  width:15px;
+  height:15px;
+  opacity:0;
+  background:#a9a3a0;
+  clip-path:polygon(25% 0,75% 0,75% 25%,100% 25%,100% 75%,75% 75%,75% 100%,25% 100%,25% 75%,0 75%,0 25%,25% 25%);
+  filter:drop-shadow(0 0 5px rgba(179,178,171,.13));
+  animation:rest-smoke-rise 3.3s steps(7,end) infinite;
+}
+.rest-smoke i:nth-child(1) { animation-delay:0s; }
+.rest-smoke i:nth-child(2) { animation-delay:.66s;transform:translateX(-13px) scale(.8); }
+.rest-smoke i:nth-child(3) { animation-delay:1.32s;transform:translateX(12px) scale(.7); }
+.rest-smoke i:nth-child(4) { animation-delay:1.98s;transform:translateX(-7px) scale(.9); }
+.rest-smoke i:nth-child(5) { animation-delay:2.64s;transform:translateX(15px) scale(.65); }
+.rest-firepit {
+  position:absolute;
+  z-index:4;
+  left:50%;
+  bottom:13px;
+  width:204px;
+  height:62px;
+  transform:translateX(-50%);
+}
+.rest-firepit i {
+  position:absolute;
+  display:block;
+  width:25px;
+  height:20px;
+  border:3px solid #292127;
+  background:linear-gradient(135deg,#807263,#4d4644 68%,#302a2b);
+  box-shadow:inset 2px 2px rgba(221,203,170,.11),2px 3px 0 rgba(0,0,0,.35);
+}
+.rest-firepit i:nth-child(1) { left:13px;top:17px; }
+.rest-firepit i:nth-child(2) { left:39px;top:4px; }
+.rest-firepit i:nth-child(3) { left:67px;top:0; }
+.rest-firepit i:nth-child(4) { left:94px;top:0; }
+.rest-firepit i:nth-child(5) { left:121px;top:4px; }
+.rest-firepit i:nth-child(6) { right:12px;top:18px; }
+.rest-firepit i:nth-child(7) { left:31px;top:31px; }
+.rest-firepit i:nth-child(8) { left:75px;top:35px; }
+.rest-firepit i:nth-child(9) { right:29px;top:32px; }
+.rest-fire-logs {
+  position:absolute;
+  z-index:3;
+  left:50%;
+  bottom:39px;
+  width:146px;
+  height:41px;
+  transform:translateX(-50%);
+}
+.rest-fire-logs i {
+  position:absolute;
+  display:block;
+  height:14px;
+  border:3px solid #211718;
+  background:repeating-linear-gradient(90deg,#674333 0 8px,#9a6944 8px 14px,#4f3029 14px 20px);
+  box-shadow:2px 4px 0 rgba(0,0,0,.45),inset 0 2px rgba(231,185,123,.14);
+}
+.rest-fire-logs .log-a { left:5px;top:18px;width:135px;transform:rotate(-8deg); }
+.rest-fire-logs .log-b { left:7px;top:9px;width:130px;transform:rotate(11deg); }
+.rest-fire-logs .log-c { left:35px;top:24px;width:78px;transform:rotate(-2deg); }
+.rest-flames {
+  position:absolute;
+  z-index:5;
+  left:50%;
+  bottom:62px;
+  width:104px;
+  height:135px;
+  transform:translateX(-50%);
+  filter:drop-shadow(0 0 9px rgba(247,104,39,.55));
+}
+.rest-flames i {
+  position:absolute;
+  display:block;
+  bottom:0;
+  transform-origin:50% 100%;
+  clip-path:polygon(0 100%,7% 78%,15% 81%,23% 48%,34% 64%,43% 16%,51% 0,59% 31%,70% 54%,80% 34%,88% 75%,100% 100%);
+}
+.rest-flames .flame-outer {
+  left:5px;
+  width:94px;
+  height:126px;
+  background:linear-gradient(0deg,#9b2925 0%,#e6532c 45%,#f49b3e 83%);
+  animation:rest-flame-outer .72s steps(4,end) infinite alternate;
+}
+.rest-flames .flame-mid {
+  left:18px;
+  width:69px;
+  height:101px;
+  background:linear-gradient(0deg,#ef642e,#ffc14e 80%);
+  animation:rest-flame-mid .54s steps(4,end) infinite alternate;
+}
+.rest-flames .flame-core {
+  left:36px;
+  width:34px;
+  height:67px;
+  background:linear-gradient(0deg,#fff0a2,#ffe16f 72%,#f9a344);
+  animation:rest-flame-core .43s steps(3,end) infinite alternate;
+}
+.rest-flames .flame-side {
+  left:-1px;
+  width:34px;
+  height:62px;
+  background:linear-gradient(0deg,#c83f2a,#f59a42);
+  transform:scale(.8);
+  animation:rest-flame-side .6s steps(3,end) infinite alternate;
+}
+.rest-fire-sparks {
+  position:absolute;
+  z-index:6;
+  left:50%;
+  bottom:73px;
+  width:170px;
+  height:130px;
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+.rest-fire-sparks i {
+  position:absolute;
+  width:4px;
+  height:5px;
+  background:#ffc66b;
+  box-shadow:0 0 7px rgba(255,150,65,.7);
+  opacity:0;
+  animation:rest-spark-rise 1.65s steps(5,end) infinite;
+}
+.rest-fire-sparks i:nth-child(1) { left:28px;bottom:8px;animation-delay:0s; }
+.rest-fire-sparks i:nth-child(2) { left:52px;bottom:25px;animation-delay:.26s; }
+.rest-fire-sparks i:nth-child(3) { left:81px;bottom:4px;animation-delay:.52s; }
+.rest-fire-sparks i:nth-child(4) { right:37px;bottom:18px;animation-delay:.78s; }
+.rest-fire-sparks i:nth-child(5) { right:18px;bottom:43px;animation-delay:1.04s; }
+.rest-fire-sparks i:nth-child(6) { left:11px;bottom:53px;animation-delay:1.3s; }
+.rest-fire-sparks i:nth-child(7) { right:65px;bottom:62px;animation-delay:1.56s; }
+.rest-fire-glow {
+  position:absolute;
+  z-index:2;
+  left:50%;
+  bottom:2px;
+  width:180px;
+  height:32px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:rgba(242,108,48,.2);
+  filter:blur(13px);
+}
+.rest-scene-ground {
+  position:absolute;
+  z-index:3;
+  left:0;
+  right:0;
+  bottom:0;
+  height:75px;
+  border-top:4px solid rgba(117,78,57,.45);
+  background:
+    repeating-linear-gradient(90deg,transparent 0 48px,rgba(7,8,10,.26) 48px 52px),
+    repeating-linear-gradient(0deg,transparent 0 17px,rgba(7,8,10,.3) 17px 20px),
+    linear-gradient(180deg,#33252a,#1a151b);
+  clip-path:polygon(0 10%,100% 10%,100% 100%,0 100%);
+}
+.rest-scene-caption {
+  position:absolute;
+  z-index:6;
+  left:50%;
+  bottom:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  width:max-content;
+  max-width:75%;
+  transform:translateX(-50%);
+  text-align:center;
+  text-shadow:2px 2px #130d11;
+}
+.rest-scene-caption span { color:#e7c18c;font:700 8px var(--pixel);letter-spacing:.14em; }
+.rest-scene-caption small { color:rgba(199,171,135,.58);font:6px var(--mono);letter-spacing:.15em; }
+.rest-uses-display {
+  position:absolute;
+  z-index:8;
+  top:21px;
+  right:22px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:184px;
+  padding:10px 13px;
+  border:2px solid rgba(175,132,91,.54);
+  background:rgba(15,12,15,.88);
+  box-shadow:inset 0 0 0 3px rgba(7,6,8,.46),4px 4px 0 rgba(0,0,0,.28);
+}
+.rest-uses-icon {
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  border:1px solid rgba(202,152,94,.4);
+  background:rgba(119,63,39,.24);
+  color:#efb976;
+  font:700 18px var(--pixel);
+  text-shadow:0 0 9px rgba(239,156,76,.45);
+}
+.rest-uses-display > div { display:flex;flex-direction:column;gap:2px; }
+.rest-uses-display strong { color:#f0d09a;font:700 25px var(--pixel);line-height:1;text-shadow:2px 2px #251719; }
+.rest-uses-display strong.is-empty { color:#b56c62; }
+.rest-uses-display span:not(.rest-uses-icon) { color:#e0c59e;font:700 7px var(--pixel);letter-spacing:.09em; }
+.rest-uses-display small { color:rgba(203,176,141,.58);font:7px var(--mono); }
+.rest-command-layout {
+  display:grid;
+  grid-template-columns:minmax(285px,.78fr) minmax(0,1.55fr);
+  gap:16px;
+  align-items:stretch;
+}
+.rest-command-panel,.rest-party-panel {
+  min-width:0;
+  padding:18px;
+  border:1px solid rgba(167,123,84,.34);
+  background:linear-gradient(145deg,rgba(39,25,24,.94),rgba(14,10,13,.96));
+  box-shadow:inset 0 0 0 3px rgba(5,5,7,.23),0 7px 19px rgba(0,0,0,.2);
+}
+.rest-command-panel { border-top:3px solid #9c6545; }
+.rest-command-panel h3,.rest-party-heading h3 {
+  margin:5px 0 8px;
+  color:#ead5b2;
+  font:700 17px var(--pixel);
+  line-height:1.45;
+}
+.rest-command-panel > p,.rest-party-panel > p {
+  color:rgba(204,181,150,.63);
+  font:8px/1.8 var(--mono);
+}
+.rest-recovery-badges {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  margin:15px 0;
+}
+.rest-recovery-badges > span {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  padding:9px 5px;
+  border:1px solid rgba(175,132,91,.28);
+  background:rgba(8,7,9,.4);
+  text-align:center;
+}
+.rest-recovery-badges b { color:#e7bc85;font:700 14px var(--pixel); }
+.rest-recovery-badges small { color:rgba(202,174,137,.55);font:6px var(--mono);letter-spacing:.05em; }
+.rest-main-button {
+  width:100%;
+  min-height:64px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:10px 12px;
+  border:2px solid #d19b61;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,219,161,.06) 0 3px,transparent 3px 13px),
+    linear-gradient(180deg,#824832,#482622);
+  color:#ffe2b2;
+  box-shadow:inset 0 0 0 3px rgba(255,214,158,.09),4px 5px 0 #100b0d,0 0 17px rgba(209,105,54,.13);
+  text-align:left;
+  cursor:pointer;
+  transition:filter .15s steps(2,end),transform .15s steps(2,end);
+}
+.rest-main-button:not(:disabled):hover { filter:brightness(1.18);transform:translate(-2px,-2px);box-shadow:inset 0 0 0 3px rgba(255,214,158,.09),6px 7px 0 #100b0d,0 0 22px rgba(235,127,66,.24); }
+.rest-main-button:active:not(:disabled) { transform:translate(2px,3px);box-shadow:inset 0 0 0 3px rgba(255,214,158,.09),1px 2px 0 #100b0d; }
+.rest-main-button.is-disabled { border-color:#5e4b47;background:#21191b;color:#82716d;box-shadow:inset 0 0 0 3px rgba(0,0,0,.22);cursor:not-allowed; }
+.rest-button-icon {
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  width:38px;
+  height:38px;
+  border:1px solid rgba(239,188,127,.38);
+  background:rgba(27,14,13,.31);
+  color:#f3c27f;
+  font:700 19px var(--pixel);
+}
+.rest-main-button > span:nth-child(2) { flex:1;min-width:0; }
+.rest-main-button b,.rest-main-button small { display:block; }
+.rest-main-button b { font:700 10px var(--pixel);letter-spacing:.07em; }
+.rest-main-button small { margin-top:5px;color:rgba(248,218,181,.68);font:6px var(--mono);letter-spacing:.08em; }
+.rest-button-arrow { color:#f0c17f;font:700 18px var(--pixel); }
+.rest-market-link {
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border:1px solid rgba(183,135,87,.36);
+  background:rgba(23,15,16,.8);
+  color:#dfbb8b;
+  font:700 8px var(--pixel);
+  cursor:pointer;
+}
+.rest-market-link:hover { background:#33201d;border-color:#d19b61; }
+.rest-command-footnote { display:block;margin-top:10px;color:rgba(188,163,132,.48);font:7px/1.6 var(--mono); }
+.rest-party-panel { border-top:3px solid #647b6a; }
+.rest-party-heading { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px; }
+.rest-party-heading h3 { margin-bottom:0; }
+.rest-hurt-count {
+  flex:0 0 auto;
+  padding:6px 8px;
+  border:1px solid rgba(181,95,75,.38);
+  background:rgba(86,35,31,.23);
+  color:#e0a18a;
+  font:700 11px var(--pixel);
+  text-align:center;
+}
+.rest-hurt-count small { display:block;margin-top:3px;color:rgba(217,167,143,.57);font:6px var(--mono); }
+.rest-party-grid {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:7px;
+}
+.rest-member-card {
+  min-width:0;
+  padding:9px 7px;
+  border:1px solid rgba(161,124,91,.27);
+  background:rgba(9,8,10,.49);
+}
+.rest-member-card.is-wounded { border-color:rgba(178,104,78,.38); }
+.rest-member-top { display:flex;align-items:center;gap:5px;min-height:32px;margin-bottom:10px; }
+.rest-member-sigil {
+  flex:0 0 25px;
+  display:grid;
+  place-items:center;
+  width:25px;
+  height:25px;
+  border:1px solid rgba(179,136,93,.35);
+  background:rgba(85,57,42,.22);
+  color:#e0c08a;
+  font:700 10px var(--pixel);
+}
+.rest-member-name { flex:1;min-width:0; }
+.rest-member-name b,.rest-member-name small { display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.rest-member-name b { color:#e5d0ad;font:700 8px var(--pixel); }
+.rest-member-name small { margin-top:3px;color:rgba(195,169,135,.53);font:6px var(--mono); }
+.rest-member-state {
+  display:none;
+  flex:0 0 auto;
+  color:rgba(180,166,137,.5);
+  font:6px var(--mono);
+}
+.rest-member-state.is-active { display:block;color:#91b69a; }
+.rest-member-stat { display:flex;justify-content:space-between;gap:4px;margin-top:8px;color:rgba(200,179,149,.64);font:6px var(--mono); }
+.rest-member-stat b { color:#d9c9a9;font:700 7px var(--mono);white-space:nowrap; }
+.rest-member-track {
+  height:6px;
+  margin-top:4px;
+  overflow:hidden;
+  border:1px solid rgba(139,104,85,.33);
+  background:#151114;
+}
+.rest-member-track i { display:block;height:100%;transition:width .3s ease; }
+.rest-member-track.hp i { background:linear-gradient(90deg,#8e3937,#d86e56);box-shadow:0 0 7px rgba(216,110,86,.24); }
+.rest-member-track.mp i { background:linear-gradient(90deg,#3f6c83,#7dc0c5);box-shadow:0 0 7px rgba(125,192,197,.22); }
+.rest-party-panel > p { margin-top:11px;padding-top:9px;border-top:1px solid rgba(170,130,89,.15); }
+
+/* Pixel-fire animation: stepped flames, drifting smoke, rising sparks and hearth glow. */
+@keyframes rest-flame-outer {
+  from { transform:scaleX(.88) scaleY(.93) rotate(-3deg); }
+  to { transform:scaleX(1.06) scaleY(1.03) rotate(3deg); }
+}
+@keyframes rest-flame-mid {
+  from { transform:scaleX(1.04) scaleY(.88) rotate(3deg); }
+  to { transform:scaleX(.91) scaleY(1.08) rotate(-3deg); }
+}
+@keyframes rest-flame-core {
+  from { transform:scaleX(.88) scaleY(.9);opacity:.9; }
+  to { transform:scaleX(1.12) scaleY(1.08);opacity:1; }
+}
+@keyframes rest-flame-side {
+  from { transform:scale(.7) rotate(-6deg); }
+  to { transform:scale(.94) rotate(7deg); }
+}
+@keyframes rest-smoke-rise {
+  0% { opacity:0;transform:translate(-50%,10px) scale(.55); }
+  18% { opacity:.34; }
+  65% { opacity:.2;transform:translate(calc(-50% - 12px),-76px) scale(1.05); }
+  100% { opacity:0;transform:translate(calc(-50% + 11px),-137px) scale(1.24); }
+}
+@keyframes rest-spark-rise {
+  0% { opacity:0;transform:translate(0,0) scale(.6); }
+  20% { opacity:1; }
+  100% { opacity:0;transform:translate(8px,-65px) scale(.3); }
+}
+@keyframes rest-aura-pulse {
+  from { opacity:.65;transform:translateX(-50%) scale(.93); }
+  to { opacity:1;transform:translateX(-50%) scale(1.08); }
+}
+@keyframes rest-star-twinkle { from { opacity:.3; } to { opacity:1; } }
+
+@media(max-width:1120px) {
+  .rest-command-layout { grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); }
+  .rest-party-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .rest-member-state { display:block; }
+}
+@media(max-width:850px) {
+  .rest-command-layout { grid-template-columns:minmax(0,1fr); }
+  .rest-party-grid { grid-template-columns:repeat(5,minmax(0,1fr)); }
+  .rest-campfire-scene { min-height:370px; }
+}
+@media(max-width:650px) {
+  .rest-campfire-scene { min-height:360px; }
+  .rest-camp-banner { top:14px;max-width:54%;padding:7px 8px; }
+  .rest-camp-banner span { font-size:7px; }
+  .rest-camp-banner small { font-size:5px; }
+  .rest-sky-moon { top:81px;right:13%;width:20px;height:20px; }
+  .rest-uses-display { top:13px;right:10px;min-width:0;gap:7px;padding:7px 8px; }
+  .rest-uses-icon { width:27px;height:27px;font-size:14px; }
+  .rest-uses-display strong { font-size:20px; }
+  .rest-uses-display span:not(.rest-uses-icon) { font-size:6px; }
+  .rest-uses-display small { font-size:6px; }
+  .rest-fire-stage { bottom:43px;transform:translateX(-50%) scale(.88);transform-origin:bottom center; }
+  .rest-distant-pines { bottom:48px;transform:scale(.78);transform-origin:bottom left; }
+  .rest-distant-pines.pine-right { transform:scaleX(-1) scale(.78);transform-origin:bottom right; }
+  .rest-scene-caption { bottom:12px; }
+  .rest-scene-caption span { font-size:6px; }
+  .rest-scene-caption small { font-size:5px; }
+  .rest-party-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .rest-party-grid .rest-member-card:last-child { grid-column:1 / -1; }
+}
+@media(max-width:420px) {
+  .rest-uses-display { top:auto;right:9px;bottom:57px; }
+  .rest-uses-display strong { font-size:17px; }
+  .rest-camp-banner { left:12px;transform:none;align-items:flex-start;max-width:55%; }
+  .rest-fire-stage { transform:translateX(-50%) scale(.77); }
+  .rest-command-panel,.rest-party-panel { padding:13px; }
+  .rest-recovery-badges small { font-size:5px; }
+  .rest-member-state { font-size:5px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .rest-sky-stars i,.rest-flames i,.rest-smoke i,.rest-fire-sparks i,.rest-fire-aura { animation:none !important; }
+  .rest-smoke i { opacity:.12; }
+  .rest-flames .flame-core { opacity:1; }
+}
+body.reduce-motion .rest-sky-stars i,body.reduce-motion .rest-flames i,
+body.reduce-motion .rest-smoke i,body.reduce-motion .rest-fire-sparks i,
+body.reduce-motion .rest-fire-aura { animation:none !important; }
+body.reduce-motion .rest-smoke i { opacity:.12; }
