@@ -699,6 +699,7 @@
 
     if(animation.frame===1) {
       animation.frame=2;
+      animation.phaseStartedAt=Date.now();
       if(!animation.resolved) {
         if(animation.side==="ally") {
           const character=characters.find((entry)=>entry.id===animation.actorId);
@@ -715,15 +716,16 @@
       }
       saveState();
       renderCampaign();
-      scheduleBattleActionStep(BATTLE_ACTION_FRAME_DELAY);
+      scheduleBattleActionStep(getBattleActionRemainingDelay(animation));
       return;
     }
 
     if(animation.frame===2) {
       animation.frame=3;
+      animation.phaseStartedAt=Date.now();
       saveState();
       renderCampaign();
-      scheduleBattleActionStep(BATTLE_ACTION_RECOVERY_DELAY);
+      scheduleBattleActionStep(getBattleActionRemainingDelay(animation));
       return;
     }
 
@@ -801,9 +803,31 @@
   let lastFocusedElement = null;
   let battleTurnTimer = null;
   let battleActionTimer = null;
-  const battleFloatTimers = new Set();
-  const BATTLE_ACTION_FRAME_DELAY = 380;
-  const BATTLE_ACTION_RECOVERY_DELAY = 320;
+  const battleFloatTimers = new WeakMap();
+  const BATTLE_ACTION_FRAME_DELAY = 420;
+  const BATTLE_ACTION_RECOVERY_DELAY = 380;
+  const BATTLE_ENEMY_PREPARE_DELAY = 900;
+  const BATTLE_ENEMY_IMPACT_DELAY = 650;
+  const BATTLE_ENEMY_RECOVERY_DELAY = 650;
+  const BATTLE_FLOATING_NUMBER_DURATION = 1350;
+
+  function getBattleActionStepDuration(animation) {
+    if (!animation) return BATTLE_ACTION_FRAME_DELAY;
+    if (animation.side === "enemy") {
+      if (animation.frame === 1) return BATTLE_ENEMY_PREPARE_DELAY;
+      if (animation.frame === 2) return BATTLE_ENEMY_IMPACT_DELAY;
+      return BATTLE_ENEMY_RECOVERY_DELAY;
+    }
+    if (animation.frame === 1) return BATTLE_ACTION_FRAME_DELAY;
+    if (animation.frame === 2) return BATTLE_ACTION_FRAME_DELAY;
+    return BATTLE_ACTION_RECOVERY_DELAY;
+  }
+
+  function getBattleActionRemainingDelay(animation) {
+    const duration=getBattleActionStepDuration(animation);
+    const started=Number(animation && animation.phaseStartedAt) || Date.now();
+    return Math.max(0,duration-(Date.now()-started));
+  }
 
   function clearBattleTimer() {
     if (battleTurnTimer !== null) {
@@ -816,31 +840,52 @@
     }
   }
 
+  function scheduleBattleFloatingNumberExpiry(battle,number) {
+    let timers=battleFloatTimers.get(battle);
+    if(!timers) {
+      timers=new Map();
+      battleFloatTimers.set(battle,timers);
+    }
+    if(timers.has(number.id)) return;
+    const createdAt=Number(number.createdAt)||Date.now();
+    const remaining=BATTLE_FLOATING_NUMBER_DURATION-(Date.now()-createdAt);
+    if(remaining<=0) {
+      battle.floatingNumbers=(battle.floatingNumbers||[]).filter((entry)=>entry.id!==number.id);
+      return;
+    }
+    const timerId=window.setTimeout(()=>{
+      timers.delete(number.id);
+      if(!state || state.battle!==battle) return;
+      battle.floatingNumbers=(battle.floatingNumbers||[]).filter((entry)=>entry.id!==number.id);
+      saveState();
+      if(!campaign.hidden && state.tab==="battle") renderCampaign();
+    },remaining);
+    timers.set(number.id,timerId);
+  }
+
+  function resumeBattleFloatingNumbers() {
+    const battle=state && state.battle;
+    if(!battle || !Array.isArray(battle.floatingNumbers)) return;
+    battle.floatingNumbers.slice().forEach((number)=>scheduleBattleFloatingNumberExpiry(battle,number));
+  }
+
   function addBattleFloatingNumber(targetSide,targetId,amount,type) {
     const battle=state && state.battle;
-    if (!battle || !Number.isFinite(amount) || amount<=0) return;
-    if (!Array.isArray(battle.floatingNumbers)) battle.floatingNumbers=[];
+    if(!battle || !Number.isFinite(amount) || amount<=0) return;
+    if(!Array.isArray(battle.floatingNumbers)) battle.floatingNumbers=[];
     const id=battle.nextFloatingNumberId || 1;
     battle.nextFloatingNumberId=id+1;
     const entry={id,targetSide,targetId,amount:Math.round(amount),type,createdAt:Date.now()};
     battle.floatingNumbers.push(entry);
     battle.floatingNumbers=battle.floatingNumbers.slice(-18);
     const animation=battle.actionAnimation;
-    if (animation && animation.frame>=2) {
-      if (!Array.isArray(animation.targets)) animation.targets=[];
-      if (!animation.targets.some((target)=>target.side===targetSide && target.id===targetId)) {
+    if(animation && animation.frame>=2) {
+      if(!Array.isArray(animation.targets)) animation.targets=[];
+      if(!animation.targets.some((target)=>target.side===targetSide && target.id===targetId)) {
         animation.targets.push({side:targetSide,id:targetId});
       }
     }
-    let timerId=null;
-    timerId=window.setTimeout(()=>{
-      battleFloatTimers.delete(timerId);
-      if (!state || state.battle!==battle) return;
-      battle.floatingNumbers=(battle.floatingNumbers||[]).filter((number)=>number.id!==id);
-      saveState();
-      if (!campaign.hidden && state.tab==="battle") renderCampaign();
-    },1450);
-    battleFloatTimers.add(timerId);
+    scheduleBattleFloatingNumberExpiry(battle,entry);
   }
 
   function getBattleAnimationFx(actionId,side,actorId) {
@@ -893,7 +938,7 @@
     }
     battle.actionAnimation={
       side,actorId,actionId,targetId:targetId || null,targetType:targetType || null,
-      frame:1,resolved:false,targets,fx:getBattleAnimationFx(actionId,side,actorId),
+      frame:1,phaseStartedAt:Date.now(),resolved:false,targets,fx:getBattleAnimationFx(actionId,side,actorId),
       freshShieldIds:[]
     };
     battle.pendingSkillId=null;
@@ -901,14 +946,14 @@
     state.notice=(side==="ally" ? characters.find((entry)=>entry.id===actorId).name : (battle.enemies.find((entry)=>entry.id===actorId)||{}).name)+" prepara una acción.";
     saveState();
     renderCampaign();
-    scheduleBattleActionStep(BATTLE_ACTION_FRAME_DELAY);
+    scheduleBattleActionStep(getBattleActionRemainingDelay(battle.actionAnimation));
   }
 
   function resumeBattleAction() {
     const battle=state && state.battle;
     if (!battle || !battle.actionAnimation || battle.status!=="active") return false;
     if (battleActionTimer!==null) return true;
-    scheduleBattleActionStep(BATTLE_ACTION_FRAME_DELAY);
+    scheduleBattleActionStep(getBattleActionRemainingDelay(battle.actionAnimation));
     return true;
   }
   const SETTINGS_KEY = "the-five-settings";
@@ -1063,6 +1108,7 @@
     inscription.hidden = true;
     footer.hidden = true;
     campaign.hidden = false;
+    resumeBattleFloatingNumbers();
     renderCampaign();
     if (state.tab === "battle" && state.battle && state.battle.status === "active") {
       if (state.battle.actionAnimation) {
@@ -1342,11 +1388,18 @@
       const targetAttrs=isTarget ? 'data-action="battle-target" data-target-id="'+id+'" data-target-side="ally" role="button" tabindex="0" aria-label="Elegir a '+character.name+' como objetivo"' : "";
       const animation=battle.actionAnimation;
       const isAttacking=Boolean(animation && animation.side==="ally" && animation.actorId===id);
+      const isWindingUp=Boolean(isAttacking && animation.frame===1);
+      const isImpactFrame=Boolean(isAttacking && animation.frame===2);
       const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="ally" && target.id===id));
-      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="ally" && number.targetId===id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+((floatIndex%3)-1)*18+'px" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="ally" && number.targetId===id).map((number,floatIndex)=>{
+        const age=Math.max(0,Date.now()-(Number(number.createdAt)||Date.now()));
+        const animationDelay=Math.min(BATTLE_FLOATING_NUMBER_DURATION,age);
+        const offset=((floatIndex%3)-1)*18;
+        return '<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+offset+'px;animation-delay:-'+animationDelay+'ms" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>';
+      }).join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite hero-action-sprite" src="assets/battles/animations/heroes/'+id+'/'+animation.actionId+'/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
-      return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
+      return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
           '<div class="battle-pixel-figure figure-'+id+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+character.role+'</span>' +
@@ -1367,11 +1420,18 @@
       const targetAttrs=isTarget?'data-action="battle-target" data-target-id="'+enemy.id+'" data-target-side="enemy" role="button" tabindex="0" aria-label="Atacar a '+enemy.name+'"':'';
       const animation=battle.actionAnimation;
       const isAttacking=Boolean(animation && animation.side==="enemy" && animation.actorId===enemy.id);
+      const isWindingUp=Boolean(isAttacking && animation.frame===1);
+      const isImpactFrame=Boolean(isAttacking && animation.frame===2);
       const isHit=Boolean(animation && animation.frame===2 && (animation.targets||[]).some((target)=>target.side==="enemy" && target.id===enemy.id));
-      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="enemy" && number.targetId===enemy.id).map((number,floatIndex)=>'<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+((floatIndex%3)-1)*18+'px" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>').join("");
+      const floatingMarkup=(battle.floatingNumbers||[]).filter((number)=>number.targetSide==="enemy" && number.targetId===enemy.id).map((number,floatIndex)=>{
+        const age=Math.max(0,Date.now()-(Number(number.createdAt)||Date.now()));
+        const animationDelay=Math.min(BATTLE_FLOATING_NUMBER_DURATION,age);
+        const offset=((floatIndex%3)-1)*18;
+        return '<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+offset+'px;animation-delay:-'+animationDelay+'ms" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>';
+      }).join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite enemy-action-sprite" src="assets/battles/animations/enemies/'+enemy.id+'/attack/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
-      return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isHit?" is-hit":"")+'" '+targetAttrs+'>' +
+      return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">E0'+(index+1)+'</span>' +
           '<div class="battle-enemy-figure enemy-'+enemy.id+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+enemy.role+'</span></div>' +
