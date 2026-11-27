@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#100b13"/><stop offset=".48" stop-color="#38131b"/><stop offset=".78" stop-color="#8a2929"/><stop offset="1" stop-color="#261016"/></linearGradient>
+ <radialGradient id="haze"><stop stop-color="#d34b3d" stop-opacity=".52"/><stop offset="1" stop-color="#a9282c" stop-opacity="0"/></radialGradient>
+ <linearGradient id="hill" x2="0" y2="1"><stop stop-color="#27171c"/><stop offset="1" stop-color="#08090d"/></linearGradient>
+ <linearGradient id="stone" x2="0" y2="1"><stop stop-color="#373039"/><stop offset="1" stop-color="#15131b"/></linearGradient>
+ <pattern id="dither" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#e06a4a" opacity=".13"/><rect x="6" y="6" width="3" height="3" fill="#e06a4a" opacity=".08"/></pattern>
+ <filter id="soft"><feGaussianBlur stdDeviation="28"/></filter>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<ellipse cx="1090" cy="490" rx="560" ry="180" fill="url(#haze)" filter="url(#soft)"/>
+<!-- Moon stained by the red dusk -->
+<circle cx="1170" cy="245" r="118" fill="#a33337" opacity=".66"/><circle cx="1170" cy="245" r="102" fill="#bd4a40" opacity=".22"/>
+<g fill="#3f1b26" opacity=".43"><rect x="1114" y="178" width="24" height="13"/><rect x="1152" y="205" width="17" height="10"/><rect x="1195" y="164" width="29" height="15"/><rect x="1218" y="225" width="15" height="23"/><rect x="1136" y="269" width="32" height="14"/><rect x="1188" y="291" width="21" height="12"/><rect x="1089" y="229" width="12" height="25"/></g>
+<!-- Bands of distant clouds -->
+<g fill="#1c1019" opacity=".5"><path d="M0 270h180v-18h95v18h80v-10h110v10h170v22H0z"/><path d="M490 340h105v-15h72v15h104v-9h114v9h90v21H490z"/><path d="M1120 350h90v-18h90v18h70v-11h110v11h120v24h-480z"/><path d="M0 424h170v-12h74v12h160v23H0zM800 405h145v-13h75v13h200v22H800z"/></g>
+<g fill="#e15c45" opacity=".45"><rect x="130" y="388" width="2" height="2"/><rect x="208" y="323" width="3" height="3"/><rect x="410" y="277" width="2" height="2"/><rect x="683" y="370" width="3" height="3"/><rect x="931" y="302" width="2" height="2"/><rect x="1400" y="390" width="3" height="3"/><rect x="1510" y="288" width="2" height="2"/></g>
+<!-- Far mountains -->
+<path d="M0 570L120 502l75 24 90-83 89 66 88-27 112 81 95-70 87 38 114-80 106 91 115-34 88 56 112-85 109 60 90-22 110 67v316H0z" fill="#20121a"/>
+<path d="M0 617l152-65 90 35 98-95 65 62 91-26 90 64 88-32 115 46 90-73 76 46 97-37 100 59 85-29 102 52 104-44 117 59v261H0z" fill="#170f16"/>
+<path d="M660 720L790 636l110-48 100-16 90-47 120 38 115 79 120 28 155 105v125H600z" fill="url(#hill)"/>
+<path d="M760 664l125-63 102-20 91-48 110 41 92 64-10 31-106-48-81-18-100 48-125 28-98 51z" fill="#39232a" opacity=".55"/>
+<!-- The broken keep -->
+<g shape-rendering="crispEdges">
+ <rect x="1010" y="382" width="260" height="180" fill="#100f16"/><rect x="1030" y="355" width="210" height="207" fill="url(#stone)"/>
+ <rect x="1050" y="340" width="24" height="26" fill="#25202a"/><rect x="1086" y="340" width="22" height="26" fill="#25202a"/><rect x="1120" y="340" width="22" height="26" fill="#25202a"/><rect x="1154" y="340" width="22" height="26" fill="#25202a"/><rect x="1188" y="340" width="22" height="26" fill="#25202a"/>
+ <rect x="970" y="350" width="85" height="225" fill="#17151d"/><rect x="984" y="318" width="56" height="43" fill="#29232b"/><rect x="978" y="309" width="68" height="12" fill="#3b3036"/><rect x="991" y="275" width="42" height="37" fill="#211c25"/><path d="M991 276l21-35 21 35z" fill="#14131b"/><rect x="1008" y="220" width="7" height="28" fill="#1a151b"/><rect x="1000" y="232" width="23" height="4" fill="#1a151b"/>
+ <rect x="1080" y="286" width="142" height="292" fill="#17151e"/><rect x="1092" y="265" width="116" height="35" fill="#332c35"/>
+ <rect x="1100" y="249" width="15" height="20" fill="#332c35"/><rect x="1121" y="249" width="15" height="20" fill="#332c35"/><rect x="1142" y="249" width="15" height="20" fill="#332c35"/><rect x="1163" y="249" width="15" height="20" fill="#332c35"/><rect x="1184" y="249" width="15" height="20" fill="#332c35"/>
+ <path d="M1092 250l57-79 59 79z" fill="#17151e"/><path d="M1138 171l11-28 12 28z" fill="#100f16"/><rect x="1146" y="132" width="5" height="19" fill="#100f16"/><rect x="1140" y="140" width="17" height="3" fill="#100f16"/>
+ <rect x="1215" y="367" width="78" height="204" fill="#15131b"/><rect x="1225" y="331" width="59" height="43" fill="#29232b"/><rect x="1220" y="322" width="69" height="10" fill="#3a3038"/><path d="M1225 323l21-44 17 28 19-19 3 35z" fill="#19161e"/><rect x="1244" y="264" width="5" height="25" fill="#16131c"/>
+ <rect x="1046" y="379" width="20" height="15" fill="#332c35"/><rect x="1076" y="379" width="20" height="15" fill="#332c35"/><rect x="1200" y="379" width="20" height="15" fill="#332c35"/><rect x="1240" y="379" width="20" height="15" fill="#332c35"/>
+ <g fill="#bb5542" opacity=".72"><rect x="1006" y="383" width="8" height="24"/><rect x="1006" y="442" width="8" height="20"/><rect x="1112" y="328" width="8" height="25"/><rect x="1165" y="328" width="8" height="25"/><rect x="1123" y="397" width="9" height="27"/><rect x="1178" y="397" width="9" height="27"/><rect x="1249" y="385" width="8" height="21"/><rect x="1249" y="444" width="8" height="17"/></g>
+ <g fill="#08090e"><rect x="1080" y="450" width="19" height="36"/><rect x="1151" y="471" width="22" height="65"/><rect x="1204" y="455" width="17" height="34"/><rect x="1035" y="476" width="15" height="25"/></g>
+ <path d="M1030 562h260v22h-278z" fill="#0b0b10"/>
+</g>
+<!-- A road disappearing into the keep -->
+<path d="M1050 900l70-241 22-14 21 8-44 247z" fill="#1b1519"/><path d="M1115 900l40-230 15 4 3 226z" fill="#2a1c20" opacity=".6"/>
+<g fill="#6c403b" opacity=".4"><rect x="1125" y="698" width="13" height="5"/><rect x="1111" y="747" width="17" height="4"/><rect x="1094" y="806" width="20" height="4"/></g>
+<!-- The dead trees -->
+<g fill="#090a0f">
+ <path d="M0 900V636h24l-10-48 25 35 9-73 11 67 31-48-21 61h32l-4 270z"/>
+ <path d="M72 900l-8-199 27-48-7 54 34-37-27 56 46-17-49 40 2 151z"/>
+ <path d="M1450 900l15-270 22-48-8 67 34-51-25 72 58-31-55 48 5 213z"/>
+ <path d="M1535 900l-8-180 30-46-11 60 34-25-26 41 46 15-47-3-1 138z"/>
+</g>
+<!-- Gravestones -->
+<g fill="#17151a"><path d="M330 820v-52q0-15 14-15t14 15v52z"/><path d="M326 820h38v7h-38z"/><path d="M410 850v-44q0-12 12-12t12 12v44z"/><path d="M405 850h34v7h-34z"/><path d="M1380 790v-48q0-14 13-14t13 14v48z"/><path d="M1375 790h36v8h-36z"/></g>
+<!-- Five small, anonymous figures on the road -->
+<g shape-rendering="crispEdges" fill="#08090e">
+ <g transform="translate(870 690)"><rect x="8" y="0" width="13" height="16"/><rect x="5" y="15" width="20" height="31"/><rect x="2" y="24" width="7" height="22"/><rect x="23" y="25" width="7" height="21"/><rect x="7" y="44" width="7" height="21"/><rect x="18" y="44" width="7" height="21"/><path d="M5 17L0 53l5 3 9-34z"/></g>
+ <g transform="translate(922 681)"><rect x="9" y="0" width="13" height="16"/><path d="M6 15h22l-3 36H8z"/><rect x="2" y="25" width="7" height="22"/><rect x="25" y="25" width="7" height="22"/><rect x="9" y="49" width="7" height="20"/><rect x="20" y="49" width="7" height="20"/></g>
+ <g transform="translate(978 690)"><rect x="8" y="0" width="13" height="15"/><path d="M4 15h23l5 35H1z"/><rect x="1" y="25" width="6" height="22"/><rect x="27" y="25" width="6" height="22"/><rect x="7" y="49" width="8" height="20"/><rect x="19" y="49" width="8" height="20"/></g>
+ <g transform="translate(1033 684)"><rect x="8" y="0" width="13" height="16"/><rect x="4" y="15" width="22" height="33"/><rect x="0" y="22" width="7" height="22"/><rect x="24" y="22" width="7" height="22"/><rect x="7" y="47" width="8" height="22"/><rect x="19" y="47" width="8" height="22"/></g>
+ <g transform="translate(1089 696)"><rect x="8" y="0" width="12" height="14"/><path d="M4 14h21l4 34H0z"/><rect x="6" y="47" width="8" height="20"/><rect x="18" y="47" width="8" height="20"/></g>
+</g>
+<!-- A dying torch -->
+<g shape-rendering="crispEdges"><rect x="1151" y="770" width="5" height="33" fill="#1a1012"/><rect x="1147" y="765" width="13" height="5" fill="#5a342a"/><path d="M1148 761l7-20 8 14-4 13h-10z" fill="#dc6b43"/><path d="M1153 760l3-11 5 13-4 5z" fill="#f0bd69"/><rect x="1139" y="800" width="30" height="4" fill="#0b0a0e"/><rect x="1144" y="795" width="23" height="3" fill="#352027"/></g>
+<path d="M0 836l130 10 115-15 112 18 120-16 98 20 110-20 130 18 120-22 125 12 104-15 124 17 112-18 100 16v59H0z" fill="#08090d"/>
+<rect width="1600" height="900" fill="url(#dither)" opacity=".14"/>
+<g fill="#d15a42" opacity=".72"><rect x="1115" y="743" width="3" height="3"/><rect x="1174" y="752" width="2" height="2"/><rect x="1168" y="731" width="2" height="2"/><rect x="1126" y="767" width="2" height="2"/></g>
+</svg>
