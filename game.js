@@ -245,7 +245,7 @@
     return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">CINCO PERSONAS · UNA COMPAÑÍA</span><h2>Los cinco juramentos</h2><p>La expedición admite cuatro miembros. El quinto permanece en el bastión y puede entrar en el grupo cuando reorganices la compañía.</p></div></div>' +
       '<div class="company-layout"><section class="character-roster">' + rows + '</section>' +
       '<aside class="camp-panel party-summary"><span class="section-eyebrow">GRUPO DE EXPEDICIÓN</span><div class="party-number">' + state.party.length + '<small> / 4</small></div><div class="party-slots">' + slots + '</div><div class="panel-heading"><h3>Los elegidos</h3><span>' + (remaining === 0 ? "LISTOS" : "FALTAN " + remaining) + '</span></div>' +
-      '<p>Selecciona cuatro héroes para salir del bastión. Para cambiar a uno, primero retira a alguien del grupo y después incorpora al personaje que está en reserva.</p><p>Los nombres, las clases y los rasgos son provisionales. Más adelante los adaptaremos a ti y a tus amigos.</p><button class="game-action" type="button" data-tab="route">PREPARAR RUTA →</button></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
+      '<p>Selecciona cuatro héroes para salir del bastión. Para cambiar a uno, primero retira a alguien del grupo y después incorpora al personaje que está en reserva.</p><p>Las clases y los rasgos son provisionales. Los cinco nombres y apodos ya están fijados.</p><button class="game-action" type="button" data-tab="route">PREPARAR RUTA →</button></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
   }
 
   function renderRoute() {
