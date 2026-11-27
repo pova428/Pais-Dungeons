@@ -1,5 +1,20 @@
 # PAIS DUNGEON
 
+## Build 021 — Respiración idle de los cinco héroes
+
+El campo de batalla ya admite una animación de reposo independiente para cada personaje. Mientras un héroe está quieto, reproduce tres PNG en bucle: reposo, inspiración y espiración. Cada frame se mantiene aproximadamente un segundo, para un ciclo de tres segundos. Cuando ataca o recibe un golpe, la animación se oculta y vuelve al terminar la acción.
+
+Carpetas:
+- `assets/battles/animations/heroes/guardian/idle/` — Pol
+- `assets/battles/animations/heroes/duelist/idle/` — Salim
+- `assets/battles/animations/heroes/arcanist/idle/` — Igor
+- `assets/battles/animations/heroes/tracker/idle/` — Ivan
+- `assets/battles/animations/heroes/alchemist/idle/` — Alex
+
+En cada carpeta sube `frame-01.png`, `frame-02.png` y `frame-03.png`. PNG transparente de 512 × 640 px recomendado, con los pies en la misma línea y el personaje mirando hacia la derecha. Si falta algún PNG, se conserva la figura provisional. No hace falta GIF ni spritesheet.
+
+Consulta `assets/battles/animations/heroes/README.md` y los README de cada carpeta `idle` para las instrucciones de subida.
+
 ## Build 020 — Mercado pixel-art y animación del Gachapón
 
 Se ha añadido el nuevo mercado medieval, con un puesto de objetos y una máquina de cápsulas independiente.
