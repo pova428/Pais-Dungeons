@@ -87,6 +87,35 @@
     }
   ];
 
+  const EQUIPMENT_ITEMS = [
+    {id:"copper-ring",name:"Anillo de cobre",rarity:"Común",icon:"◉",type:"Anillo",price:35,description:"Un aro sencillo que protege contra golpes pequeños.",bonuses:{defense:1}},
+    {id:"worn-gloves",name:"Guantes gastados",rarity:"Común",icon:"♧",type:"Guantes",price:38,description:"Mejor agarre para armas y herramientas.",bonuses:{attack:1,agility:1}},
+    {id:"dusty-grimoire",name:"Grimorio polvoriento",rarity:"Común",icon:"▤",type:"Reliquia",price:40,description:"Unas pocas páginas aún conservan energía.",bonuses:{magic:1}},
+    {id:"hunter-boots",name:"Botas del rastreador",rarity:"Poco común",icon:"⌁",type:"Botas",price:75,description:"Su suela ligera permite reaccionar antes.",bonuses:{speed:2,agility:1}},
+    {id:"bone-pendant",name:"Colgante de hueso",rarity:"Poco común",icon:"♢",type:"Amuleto",price:82,description:"Un fragmento tallado que estabiliza la magia.",bonuses:{magic:2,defense:1}},
+    {id:"thorn-band",name:"Banda de espinas",rarity:"Poco común",icon:"✥",type:"Anillo",price:88,description:"Duele llevarla, pero endurece el brazo.",bonuses:{attack:2}},
+    {id:"bastion-buckle",name:"Hebilla del bastión",rarity:"Rara",icon:"⬟",type:"Armadura",price:145,description:"Una pieza de metal recuperada de una antigua guardia.",bonuses:{defense:3,attack:1}},
+    {id:"ember-tome",name:"Tomo de brasa",rarity:"Rara",icon:"♨",type:"Reliquia",price:155,description:"Sus páginas guardan calor arcano.",bonuses:{magic:3}},
+    {id:"eagle-charm",name:"Amuleto del águila",rarity:"Rara",icon:"⌖",type:"Amuleto",price:165,description:"Afina los reflejos y favorece los golpes precisos.",bonuses:{agility:2,critChance:.04}},
+    {id:"ash-crown",name:"Corona de ceniza",rarity:"Épica",icon:"♛",type:"Reliquia",price:260,description:"Una corona quemada que aún conserva poder.",bonuses:{magic:3,defense:2,speed:1}},
+    {id:"duelist-sash",name:"Faja del duelista",rarity:"Épica",icon:"╱",type:"Armadura",price:275,description:"Ligera y flexible, acompaña cada movimiento.",bonuses:{attack:3,agility:2}},
+    {id:"green-cross",name:"Cruz de savia",rarity:"Épica",icon:"✚",type:"Amuleto",price:290,description:"Aumenta la energía de las curaciones.",bonuses:{magic:2,healingBonus:.12}},
+    {id:"bloodfang",name:"Colmillo carmesí",rarity:"Legendaria",icon:"牙",type:"Arma",price:440,description:"Un filo antiguo que premia la agresividad.",bonuses:{attack:4,agility:2,critChance:.08}},
+    {id:"titan-core",name:"Núcleo del titán",rarity:"Legendaria",icon:"⬢",type:"Armadura",price:465,description:"Una piedra pesada que refuerza cualquier defensa.",bonuses:{defense:5,shieldBonus:.12}},
+    {id:"star-heart",name:"Corazón estelar",rarity:"Legendaria",icon:"✦",type:"Reliquia",price:490,description:"Concentra una gran cantidad de energía mágica.",bonuses:{magic:4,healingBonus:.08}},
+    {id:"navaja-de-ala",name:"Navaja de Ala",rarity:"Hyperrara",icon:"⚔",type:"Arma única",price:0,character:"duelist",description:"La navaja legendaria de Salim. Su filo parece moverse antes que la mano.",bonuses:{attack:5,speed:3,agility:3,critChance:.12}},
+    {id:"varita-aula-prohibida",name:"Varita del Aula Prohibida",rarity:"Hyperrara",icon:"✧",type:"Báculo único",price:0,character:"guardian",description:"La magia olvidada del instituto responde a Pol.",bonuses:{magic:5,speed:2,agility:2,critChance:.08}},
+    {id:"antivirus-raiz",name:"Antivirus Raíz",rarity:"Hyperrara",icon:"✚",type:"Reliquia única",price:0,character:"arcanist",description:"Un núcleo curativo que limpia cualquier corrupción.",bonuses:{magic:4,defense:3,healingBonus:.25}},
+    {id:"escudo-de-los-cinco",name:"Escudo de los Cinco",rarity:"Hyperrara",icon:"⬡",type:"Escudo único",price:0,character:"tracker",description:"El bastión de Ivan convertido en una defensa imposible de quebrar.",bonuses:{defense:7,speed:2,shieldBonus:.25}},
+    {id:"balon-del-ultimo-gol",name:"Balón del Último Gol",rarity:"Hyperrara",icon:"⚽",type:"Reliquia única",price:0,character:"alchemist",description:"El balón que convierte cada remate de Alex en una jugada decisiva.",bonuses:{attack:4,defense:2,speed:3,critChance:.08}}
+  ];
+  const RARITY_ORDER=["Común","Poco común","Rara","Épica","Legendaria","Hyperrara"];
+  const GACHA_RARITY_RATES=[
+    {rarity:"Común",chance:50},{rarity:"Poco común",chance:25},{rarity:"Rara",chance:15},
+    {rarity:"Épica",chance:7},{rarity:"Legendaria",chance:2.5},{rarity:"Hyperrara",chance:.5}
+  ];
+  const GACHA_COST=100,SHOP_REFRESH_COST=35,SHOP_STOCK_SIZE=4,MAX_EQUIPPED_ITEMS=5;
+
   const items = [
     {id:"ration",name:"Ración de marcha",desc:"Comida seca para recuperar fuerzas en el bastión.",price:15,icon:"✚",kind:"rations"},
     {id:"bandage",name:"Venda de lino",desc:"Un paquete de vendas limpias para futuras expediciones.",price:20,icon:"╱",kind:"bandage"},
@@ -100,6 +129,34 @@
     const safeLevel = Math.min(10,Math.max(1,Number(level) || 1));
     const gains = safeLevel - 1;
     return Object.fromEntries(Object.keys(character.base).map((key) => [key,character.base[key] + character.growth[key] * gains]));
+  }
+
+  function getOwnedEquipment(uid) {
+    return state && Array.isArray(state.equipmentInventory) ? state.equipmentInventory.find((entry)=>String(entry.uid)===String(uid)) || null : null;
+  }
+  function getEquipmentDefinition(uid) {
+    const owned=getOwnedEquipment(uid);
+    return owned ? EQUIPMENT_ITEMS.find((item)=>item.id===owned.itemId) || null : null;
+  }
+  function getCharacterEquipmentIds(characterId) {
+    return state && state.equippedItems && Array.isArray(state.equippedItems[characterId]) ? state.equippedItems[characterId] : [];
+  }
+  function getEffectiveCharacterStats(character,level) {
+    const stats=getCharacterStats(character,level);
+    stats.critChance=0;
+    stats.healingBonus=0;
+    stats.shieldBonus=0;
+    getCharacterEquipmentIds(character.id).forEach((uid)=>{
+      const item=getEquipmentDefinition(uid);
+      if(item && item.bonuses) Object.entries(item.bonuses).forEach(([key,value])=>{stats[key]=(Number(stats[key])||0)+(Number(value)||0);});
+    });
+    return stats;
+  }
+  function getEquipmentBonusText(item) {
+    const labels={attack:"ATQ",magic:"MAG",defense:"DEF",speed:"VEL",agility:"AGI",critChance:"CRÍTICO",healingBonus:"CURACIÓN",shieldBonus:"ESCUDO"};
+    return Object.entries(item && item.bonuses || {}).map(([key,value])=>
+      (key==="critChance"||key==="healingBonus"||key==="shieldBonus" ? "+"+Math.round(value*100)+"%" : "+"+value)+" "+(labels[key]||key.toUpperCase())
+    ).join(" · ");
   }
 
   function getUnlockForLevel(character,level) {
@@ -236,7 +293,7 @@
   function getBattleOrder() {
     const allies = getAliveParty().map((id) => {
       const character = characters.find((entry) => entry.id === id);
-      const baseSpeed=getCharacterStats(character,state.levels[id] || 1).speed;
+      const baseSpeed=getEffectiveCharacterStats(character,state.levels[id] || 1).speed;
       const speedBuff=state.battle.buffs[id] ? state.battle.buffs[id].speed || 0 : 0;
       return {side:"ally",id,name:character.name,speed:baseSpeed*(1+speedBuff)};
     });
@@ -269,6 +326,7 @@
     const reward=site && site.boss ? 120 : 45;
     if(!state.visitedSites.includes(battle.siteId)) {
       state.visitedSites.push(battle.siteId);
+      state.shopStock=[];
       awardPartyExperience(reward);
     }
     if(region && site && site.boss) {
@@ -320,7 +378,7 @@
     const character=characters.find((entry)=>entry.id===heroId);
     if(!character) return 0;
     const level=state.levels[heroId]||1;
-    const maxHp=getCharacterStats(character,level).hp;
+    const maxHp=getEffectiveCharacterStats(character,level).hp;
     let damage=Math.max(1,Math.round(amount));
     const curse=state.battle.debuffs[heroId];
     if(curse && curse.turns>0) {
@@ -354,7 +412,7 @@
   function healHero(heroId,amount) {
     const character=characters.find((entry)=>entry.id===heroId);
     if(!character) return 0;
-    const maxHp=getCharacterStats(character,state.levels[heroId]||1).hp;
+    const maxHp=getEffectiveCharacterStats(character,state.levels[heroId]||1).hp;
     const current=Math.max(0,Number(state.hp[heroId])||0);
     const healed=Math.min(maxHp-current,Math.max(0,Math.round(amount)));
     state.hp[heroId]=current+healed;
@@ -390,7 +448,7 @@
     const battle=state.battle;
     const scored=candidates.map((id)=>{
       const character=characters.find((entry)=>entry.id===id);
-      const stats=getCharacterStats(character,state.levels[id]||1);
+      const stats=getEffectiveCharacterStats(character,state.levels[id]||1);
       const maxHp=Math.max(1,stats.hp);
       const hpRatio=(Number(state.hp[id])||0)/maxHp;
       const shield=battle.shields[id]||0;
@@ -437,7 +495,7 @@
 
     const targetId=chooseEnemyTarget(enemy,candidates);
     const target=characters.find((character)=>character.id===targetId);
-    const targetStats=getCharacterStats(target,state.levels[targetId]||1);
+    const targetStats=getEffectiveCharacterStats(target,state.levels[targetId]||1);
 
     if(enemy.ai==="hexer" && !state.battle.debuffs[targetId]) {
       state.battle.debuffs[targetId]={turns:2,damageTaken:.18};
@@ -481,7 +539,7 @@
         }
         const character=characters.find((entry)=>entry.id===actor.id);
         if(battle.currentTurnStarted!==actor.id) {
-          const maxMana=getCharacterStats(character,state.levels[actor.id]||1).mp;
+          const maxMana=getEffectiveCharacterStats(character,state.levels[actor.id]||1).mp;
           const currentMana=Math.max(0,Number(state.mp[actor.id])||0);
           const recoveredMana=Math.min(3,maxMana-currentMana);
           if(recoveredMana>0) {
@@ -565,12 +623,19 @@
 
   function resolvePlayerSkillEffect(character,skill,targetId) {
     const battle=state.battle;
-    const stats=getCharacterStats(character,state.levels[character.id]||1);
+    const stats=getEffectiveCharacterStats(character,state.levels[character.id]||1);
     const enemy=battle.enemies.find((entry)=>entry.id===targetId && entry.hp>0);
     const ally=characters.find((entry)=>entry.id===targetId && state.party.includes(entry.id) && (Number(state.hp[entry.id])||0)>0);
     const freshShieldIds=new Set();
     const damageMultiplier=battle.buffs[character.id] && battle.buffs[character.id].attack>0 ? 1+battle.buffs[character.id].attack : 1;
-    const targetDamage=(ratio,magic)=>Math.round((magic?stats.magic:stats.attack)*ratio*damageMultiplier);
+    const targetDamage=(ratio,magic)=>{
+      const raw=Math.max(1,Math.round((magic?stats.magic:stats.attack)*ratio*damageMultiplier));
+      if(stats.critChance>0 && Math.random()<stats.critChance) {
+        pushBattleLog("¡Golpe crítico de "+character.name+"!");
+        return Math.round(raw*1.5);
+      }
+      return raw;
+    };
 
     switch(skill.id) {
       case "basic-attack":
@@ -600,25 +665,25 @@
         });
         break;
       case "antivirus":
-        if(ally) healHero(ally.id,stats.magic*.9+6);
+        if(ally) healHero(ally.id,(stats.magic*.9+6)*(1+(stats.healingBonus||0)));
         break;
       case "life-drain":
         if(enemy) {
           const drained=targetDamage(.8,true)+2;
           applyEnemyDamage(enemy,drained);
-          healHero(character.id,Math.ceil(drained*.35));
+          healHero(character.id,Math.ceil(drained*.35*(1+(stats.healingBonus||0))));
         }
         break;
       case "reboot":
         getAliveParty().sort((a,b)=>{
           const ca=characters.find((entry)=>entry.id===a),cb=characters.find((entry)=>entry.id===b);
-          return state.hp[a]/getCharacterStats(ca,state.levels[a]||1).hp-state.hp[b]/getCharacterStats(cb,state.levels[b]||1).hp;
-        }).slice(0,3).forEach((id)=>healHero(id,stats.magic*.75+8));
+          return state.hp[a]/getEffectiveCharacterStats(ca,state.levels[a]||1).hp-state.hp[b]/getEffectiveCharacterStats(cb,state.levels[b]||1).hp;
+        }).slice(0,3).forEach((id)=>healHero(id,(stats.magic*.75+8)*(1+(stats.healingBonus||0))));
         break;
       case "protective-shield":
         if(ally) {
-          const allyMax=getCharacterStats(ally,state.levels[ally.id]||1).hp;
-          battle.shields[ally.id]=Math.round(allyMax*.22);
+          const allyMax=getEffectiveCharacterStats(ally,state.levels[ally.id]||1).hp;
+          battle.shields[ally.id]=Math.round(allyMax*.22*(1+(stats.shieldBonus||0)));
           battle.shieldTurns[ally.id]=2;
           freshShieldIds.add(ally.id);
           addBattleFloatingNumber("ally",ally.id,battle.shields[ally.id],"shield");
@@ -634,8 +699,8 @@
       case "team-bastion":
         getAliveParty().forEach((id)=>{
           const allyChar=characters.find((entry)=>entry.id===id);
-          const max=getCharacterStats(allyChar,state.levels[id]||1).hp;
-          const amount=Math.round(max*.15);
+          const max=getEffectiveCharacterStats(allyChar,state.levels[id]||1).hp;
+          const amount=Math.round(max*.15*(1+(stats.shieldBonus||0)));
           battle.shields[id]=(battle.shields[id]||0)+amount;
           battle.shieldTurns[id]=Math.max(2,battle.shieldTurns[id]||0);
           freshShieldIds.add(id);
@@ -779,16 +844,97 @@
     executeBattleSkill(character,skill,targetId);
   }
 
+  function generateShopStock() {
+    const pool=EQUIPMENT_ITEMS.filter((item)=>item.rarity!=="Hyperrara");
+    const result=[];
+    while(result.length<SHOP_STOCK_SIZE && pool.length) result.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0].id);
+    return result;
+  }
+  function ensureShopStock() {
+    if(state && (!Array.isArray(state.shopStock)||state.shopStock.length===0)) state.shopStock=generateShopStock();
+  }
+  function rotateShopStock() {
+    if(state.gold<SHOP_REFRESH_COST) return showNotice("Necesitas "+SHOP_REFRESH_COST+" monedas para renovar los expositores.");
+    state.gold-=SHOP_REFRESH_COST;
+    state.shopStock=generateShopStock();
+    state.shopRotation=(Number(state.shopRotation)||0)+1;
+    state.notice="El mercader ha renovado sus expositores. ¡Hay nuevas piezas!";
+    renderCampaign();saveState();
+  }
+  function addEquipmentToCollection(itemId) {
+    if(!EQUIPMENT_ITEMS.some((item)=>item.id===itemId)) return null;
+    const uid="gear-"+(Number(state.nextEquipmentUid)||1);
+    state.nextEquipmentUid=(Number(state.nextEquipmentUid)||1)+1;
+    state.equipmentInventory.push({uid,itemId});
+    return uid;
+  }
+  function equipOwnedItem(characterId,uid) {
+    const character=characters.find((entry)=>entry.id===characterId);
+    const owned=getOwnedEquipment(uid);
+    const item=owned && EQUIPMENT_ITEMS.find((entry)=>entry.id===owned.itemId);
+    if(!character||!item) return showNotice("No se encuentra ese objeto en la colección.");
+    if(item.character && item.character!==characterId) return showNotice("Este objeto Hyperraro está ligado a "+characters.find((entry)=>entry.id===item.character).name+".");
+    if(Object.values(state.equippedItems).some((ids)=>ids.includes(uid))) return showNotice("Ese objeto ya está equipado. Primero debes retirarlo.");
+    const slots=getCharacterEquipmentIds(characterId);
+    if(slots.length>=MAX_EQUIPPED_ITEMS) return showNotice(character.name+" ya tiene ocupados los cinco espacios.");
+    state.equippedItems[characterId]=slots.concat(uid);
+    state.notice=item.name+" equipado en "+character.name+".";
+    renderCampaign();saveState();
+  }
+  function unequipItem(characterId,uid) {
+    if(!characters.some((entry)=>entry.id===characterId)) return;
+    state.equippedItems[characterId]=getCharacterEquipmentIds(characterId).filter((entry)=>String(entry)!==String(uid));
+    const item=getEquipmentDefinition(uid);
+    state.notice=(item?item.name:"Objeto")+" guardado en la colección.";
+    renderCampaign();saveState();
+  }
+  function rollGachapon() {
+    if(state.gold<GACHA_COST) return showNotice("Necesitas "+GACHA_COST+" monedas para usar el gachapón.");
+    state.gold-=GACHA_COST;
+    const roll=Math.random()*100;
+    let cursor=0,rarity="Común";
+    for(const entry of GACHA_RARITY_RATES){cursor+=entry.chance;if(roll<cursor){rarity=entry.rarity;break;}}
+    let pool=EQUIPMENT_ITEMS.filter((item)=>item.rarity===rarity);
+    if(rarity==="Hyperrara") pool=pool.filter((item)=>!state.equipmentInventory.some((owned)=>owned.itemId===item.id));
+    if(!pool.length) {
+      const refund=rarity==="Hyperrara"?250:45;
+      state.gold+=refund;
+      state.lastGachaResult={itemId:null,rarity,duplicate:true,refund};
+      state.notice="Ya has conseguido todas las piezas de esta rareza. Recibes "+refund+" monedas de compensación.";
+    } else {
+      const item=pool[Math.floor(Math.random()*pool.length)];
+      addEquipmentToCollection(item.id);
+      state.lastGachaResult={itemId:item.id,rarity:item.rarity,duplicate:false};
+      state.notice="¡Has conseguido "+item.name+" · "+item.rarity+"!";
+    }
+    renderCampaign();saveState();
+  }
+  function buyEquipment(itemId) {
+    const item=EQUIPMENT_ITEMS.find((entry)=>entry.id===itemId);
+    if(!item||item.rarity==="Hyperrara") return;
+    ensureShopStock();
+    if(!state.shopStock.includes(itemId)) return showNotice("Ese objeto ya no está en el expositor.");
+    if(state.gold<item.price) return showNotice("No tienes oro suficiente para comprar "+item.name+".");
+    state.gold-=item.price;
+    addEquipmentToCollection(itemId);
+    state.shopStock=state.shopStock.filter((id)=>id!==itemId);
+    state.notice="Has comprado "+item.name+". Ya está disponible en Compañía para equiparlo.";
+    renderCampaign();saveState();
+  }
+
   const defaultState = () => ({
     gold:120,
     rations:2,
     inventory:{bandage:0,tonic:0,oil:0},
+    equipmentInventory:[],
+    equippedItems:{guardian:[],duelist:[],arcanist:[],tracker:[],alchemist:[]},
+    nextEquipmentUid:1,shopStock:[],shopRotation:0,lastGachaResult:null,
     hp:{guardian:58,duelist:48,arcanist:78,tracker:116,alchemist:86},
     mp:{guardian:60,duelist:36,arcanist:80,tracker:48,alchemist:52},
     levels:{guardian:1,duelist:1,arcanist:1,tracker:1,alchemist:1},
     xp:{guardian:0,duelist:0,arcanist:0,tracker:0,alchemist:0},
     battle:null,
-    characterDataVersion:6,
+    characterDataVersion:7,
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
     battleSiteId:"institute-programming",
@@ -1032,10 +1178,27 @@
       const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
       const merged = Object.assign(defaults,saved,{
         inventory:Object.assign({},defaults.inventory,saved.inventory || {}),
-        hp,mp,levels,xp,characterDataVersion:6,
+        equipmentInventory:Array.isArray(saved.equipmentInventory) ? saved.equipmentInventory.filter((entry)=>entry && EQUIPMENT_ITEMS.some((item)=>item.id===entry.itemId) && entry.uid!==undefined) : [],
+        equippedItems:Object.assign({},defaults.equippedItems,saved.equippedItems || {}),
+        nextEquipmentUid:Math.max(1,Number(saved.nextEquipmentUid)||1),
+        shopStock:Array.isArray(saved.shopStock) ? saved.shopStock.filter((id)=>EQUIPMENT_ITEMS.some((item)=>item.id===id && item.rarity!=="Hyperrara")) : [],
+        shopRotation:Math.max(0,Number(saved.shopRotation)||0),lastGachaResult:saved.lastGachaResult || null,
+        hp,mp,levels,xp,characterDataVersion:7,
         battle:saved.battle && typeof saved.battle === "object" ? saved.battle : null,
         visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
+      const ownedUids=new Set(merged.equipmentInventory.map((entry)=>String(entry.uid)));
+      const equippedUids=new Set();
+      characters.forEach((character)=>{
+        const valid=(Array.isArray(merged.equippedItems[character.id])?merged.equippedItems[character.id]:[]).filter((uid)=>{
+          const owned=merged.equipmentInventory.find((entry)=>String(entry.uid)===String(uid));
+          const item=owned && EQUIPMENT_ITEMS.find((entry)=>entry.id===owned.itemId);
+          if(!owned||!item||equippedUids.has(String(uid))||(item.character&&item.character!==character.id)) return false;
+          equippedUids.add(String(uid));return true;
+        }).slice(0,MAX_EQUIPPED_ITEMS);
+        merged.equippedItems[character.id]=valid;
+      });
+      merged.equipmentInventory=merged.equipmentInventory.filter((entry)=>ownedUids.has(String(entry.uid)));
       merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
       if (merged.party.length === 0) merged.party = defaults.party;
       if (!characters.some((character) => character.id === merged.selectedCharacter)) merged.selectedCharacter = "duelist";
@@ -1092,7 +1255,7 @@
 
   function saveState() {
     if (!state) return;
-    state.characterDataVersion = 6;
+    state.characterDataVersion = 7;
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (error) {
       state.notice = "No se ha podido guardar en este navegador. La partida seguirá activa mientras no cierres la página.";
     }
@@ -1170,7 +1333,7 @@
     resources.rations.textContent = String(state.rations);
     const averageLife = Math.round(state.party.reduce((sum,id) => {
       const character = characters.find((entry) => entry.id === id);
-      const maxHp = getCharacterStats(character,state.levels[id] || 1).hp;
+      const maxHp = getEffectiveCharacterStats(character,state.levels[id] || 1).hp;
       return sum + (Math.max(0,Number(state.hp[id]) || 0)/maxHp)*100;
     },0)/Math.max(1,state.party.length));
     const lifeCount = document.getElementById("life-count");
@@ -1225,7 +1388,7 @@
     const selected = characters.find((character) => character.id === state.selectedCharacter) || characters[1];
     const selectedIndex = characters.findIndex((character) => character.id === selected.id);
     const level = state.levels[selected.id] || 1;
-    const stats = getCharacterStats(selected,level);
+    const stats = getEffectiveCharacterStats(selected,level);
     const maxHp = stats.hp;
     const hp = Math.min(maxHp,Math.max(0,Number(state.hp[selected.id]) || 0));
     const hpPercent = Math.round(hp/maxHp*100);
@@ -1240,7 +1403,7 @@
       const isSelected = character.id === selected.id;
       const isActive = state.party.includes(character.id);
       const charLevel = state.levels[character.id] || 1;
-      const charMaxHp = getCharacterStats(character,charLevel).hp;
+      const charMaxHp = getEffectiveCharacterStats(character,charLevel).hp;
       const charHp = Math.min(charMaxHp,Math.max(0,Number(state.hp[character.id]) || 0));
       const charHpPercent = Math.round(charHp/charMaxHp*100);
       const portrait = character.portrait ? '<img src="' + character.portrait + '" alt="" loading="lazy" onerror="this.remove()">' : "";
@@ -1262,7 +1425,7 @@
     const statLabels = [["hp","VIDA","♥"],["attack","ATAQUE","⚔"],["magic","MAGIA","✧"],["defense","DEFENSA","⬟"],["speed","VELOCIDAD","➤"],["agility","AGILIDAD","◇"]];
     const statMarkup = statLabels.map(([key,label,icon]) => '<div class="hero-stat"><span>' + icon + ' ' + label + '</span><strong>' + stats[key] + '</strong></div>').join("");
     const levelSteps = Array.from({length:10},(_,index) => {
-      const stepLevel=index+1, stepStats=getCharacterStats(selected,stepLevel);
+      const stepLevel=index+1, stepStats=getEffectiveCharacterStats(selected,stepLevel);
       return '<div class="level-step ' + (stepLevel===level ? "is-current" : stepLevel<level ? "is-passed" : "") + '">' +
         '<div class="level-step-top"><b>NIVEL ' + stepLevel + '</b><small>' + (stepLevel===1 ? "INICIO" : XP_THRESHOLDS[index] + " XP") + '</small></div>' +
         '<strong class="level-step-unlock">' + getUnlockForLevel(selected,stepLevel) + '</strong>' +
@@ -1500,7 +1663,7 @@
   }
 
   function renderRest() {
-    const hurt = characters.filter((character) => (Number(state.hp[character.id]) || 0) < getCharacterStats(character,state.levels[character.id] || 1).hp).length;
+    const hurt = characters.filter((character) => (Number(state.hp[character.id]) || 0) < getEffectiveCharacterStats(character,state.levels[character.id] || 1).hp).length;
     return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">EL FUEGO TODAVÍA ARDE</span><h2>Descanso en el bastión</h2><p>Lejos de las rutas malditas, la compañía puede cerrar heridas y recuperar fuerzas antes de volver a salir.</p></div></div>' +
       '<div class="rest-layout"><section class="camp-panel rest-chamber"><div class="rest-symbol">✚</div><span class="section-eyebrow">CÁMARA DEL ÚLTIMO FAROL</span><h3>Unas horas lejos de la oscuridad</h3><p>La compañía se reúne alrededor del fuego. El calor devuelve el aliento y las vendas se renuevan. El descanso consume una ración de marcha.</p><div class="rest-cost">COSTE: 1 RACIÓN · DISPONIBLES: ' + state.rations + '</div><button class="game-action" type="button" data-action="rest" ' + (state.rations < 1 ? "disabled" : "") + '>DESCANSAR Y RECUPERAR →</button></section>' +
       '<aside class="camp-panel rest-effect"><h3>Estado de la compañía</h3><div class="inventory-row"><span>Héroes heridos</span><strong>' + hurt + ' / 5</strong></div><div class="inventory-row"><span>Vida recuperada</span><strong>+25% PV máximo</strong></div><div class="inventory-row"><span>Maná recuperado</span><strong>+25% PM máximo</strong></div><div class="inventory-row"><span>Grupo activo</span><strong>' + state.party.length + ' / 4</strong></div><p>El descanso también atiende al miembro que permanece en reserva. Nadie queda atrás dentro de los muros.</p></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
@@ -1626,7 +1789,7 @@
       const maxHp=getCharacterStats(character,level).hp;
       const currentHp=Number.isFinite(state.hp[character.id]) ? state.hp[character.id] : maxHp;
       state.hp[character.id]=Math.min(maxHp,currentHp+Math.ceil(maxHp*0.25));
-      const maxMp=getCharacterStats(character,level).mp;
+      const maxMp=getEffectiveCharacterStats(character,level).mp;
       const currentMp=Number.isFinite(state.mp[character.id]) ? state.mp[character.id] : maxMp;
       state.mp[character.id]=Math.min(maxMp,currentMp+Math.ceil(maxMp*0.25));
     });
