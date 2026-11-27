@@ -1122,6 +1122,9 @@
     const pendingSkill=activeHero && battle.pendingSkillId ? activeHero.skills.find((entry)=>entry.id===battle.pendingSkillId) : null;
     const isVictory=battle.status==="victory";
     const isDefeat=battle.status==="defeat";
+    const sceneProps=region.id==="institute"
+      ? '<div class="battle-window"><i></i><i></i><i></i><i></i></div><div class="battle-blackboard"><span>'+site.name.toUpperCase()+'</span><b>if (fear) { run(); }</b><small>// SISTEMA EN ESTADO CRÍTICO</small></div><div class="battle-wall-clock"><i></i></div><div class="battle-server-rack"><i></i><i></i><i></i><i></i><b>SYS</b></div><div class="battle-desk desk-one"><i></i><b></b></div><div class="battle-desk desk-two"><i></i><b></b></div>'
+      : '<div class="battle-site-sign"><small>'+region.name.toUpperCase()+'</small><b>'+site.name.toUpperCase()+'</b><i>ÁREA DE ENCUENTRO</i></div><div class="battle-environment-prop prop-left"></div><div class="battle-environment-prop prop-right"></div><div class="battle-environment-glow"></div>';
 
     const orderMarkup=battle.order.map((entry,index)=>{
       const isCurrent=index===battle.turnIndex && !isVictory && !isDefeat;
@@ -1209,7 +1212,7 @@
         '<div class="battle-round-mark"><small>RONDA</small><strong>'+String(battle.round).padStart(2,"0")+'</strong></div>' +
         '<div class="battle-turn-order"><span>ORDEN DE TURNO</span><div>'+orderMarkup+'</div></div></div>'+
       '<section class="battle-stage" aria-label="Campo de batalla por turnos">'+
-        '<div class="battle-room-wall battle-room-'+site.id+'"><img class="battle-scene-image" src="assets/battles/backgrounds/'+site.id+'.jpg" alt="" onerror="this.remove()"><div class="battle-window"><i></i><i></i><i></i><i></i></div><div class="battle-blackboard"><span>PROGRAMACIÓN</span><b>if (fear) { run(); }</b><small>// SISTEMA EN ESTADO CRÍTICO</small></div><div class="battle-wall-clock"><i></i></div><div class="battle-server-rack"><i></i><i></i><i></i><i></i><b>SYS</b></div><div class="battle-desk desk-one"><i></i><b></b></div><div class="battle-desk desk-two"><i></i><b></b></div><div class="battle-room-fog"></div></div>'+
+        '<div class="battle-room-wall battle-room-'+site.id+'"><img class="battle-scene-image" src="assets/battles/backgrounds/'+site.id+'.jpg" alt="" onerror="this.remove()">'+sceneProps+'<div class="battle-room-fog"></div></div>'+
         '<div class="battle-stage-topline"><span>COMPAÑÍA <b>‹</b> ENEMIGOS</span><span>UNA SOLA SALA · ENCUENTRO '+(battle.status==="active"?"ACTIVO":battle.status==="victory"?"COMPLETADO":"FALLIDO")+'</span></div>'+
         '<div class="battle-lineup battle-allies-line">'+allyUnits+'</div>'+
         '<div class="battle-lineup battle-enemies-line">'+enemyUnits+'</div>'+
