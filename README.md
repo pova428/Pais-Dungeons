@@ -1,5 +1,21 @@
 # PAIS DUNGEON
 
+## Build 022 — Base de descanso y hoguera animada
+
+La pantalla de descanso se ha rediseñado como un campamento nocturno en torno a una hoguera central.
+
+- Fuego pixelado animado con varias capas de llama, brasas y resplandor.
+- Humo que asciende en bucle y pequeñas chispas que saltan de la hoguera.
+- Escenario nocturno con luna, estrellas, pinos y suelo de campamento.
+- Contador destacado de **descansos disponibles**.
+- Cada descanso consume exactamente **1 ración**. Por tanto, las raciones que tengas son el número de descansos que puedes realizar.
+- El botón principal queda desactivado si no quedan raciones y ofrece un acceso directo al mercado para comprar.
+- Se muestra el estado de vida y maná de los cinco personajes, incluidos los que estén en reserva.
+- Cada descanso recupera un 25% de la vida máxima y del maná máximo de los cinco héroes.
+- Diseño adaptable a móvil y respeto de la opción de reducir movimiento.
+
+No se ha añadido un límite diario ni un contador adicional: se mantiene la regla existente de una ración por descanso.
+
 ## Build 021 — Respiración idle de los cinco héroes
 
 El campo de batalla ya admite una animación de reposo independiente para cada personaje. Mientras un héroe está quieto, reproduce tres PNG en bucle: reposo, inspiración y espiración. Cada frame se mantiene aproximadamente un segundo, para un ciclo de tres segundos. Cuando ataca o recibe un golpe, la animación se oculta y vuelve al terminar la acción.
