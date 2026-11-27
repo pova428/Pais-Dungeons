@@ -1636,7 +1636,7 @@ body.reduce-motion .character-sprite-animation { animation:none !important; back
 }
 @media(max-width:1050px) {
   .battle-stage { min-height:610px; }
-  .battle-combat-layout { grid-template-columns:minmax(0,1.1fr) 36px minmax(210px,.9fr); inset-left:16px; inset-right:16px; }
+  .battle-combat-layout { grid-template-columns:minmax(0,1.1fr) 36px minmax(210px,.9fr); left:16px; right:16px; }
   .battle-unit-art { min-height:120px; }
   .battle-unit { padding:4px; }
   .battle-enemy { grid-template-columns:68px minmax(0,1fr); }
@@ -1692,3 +1692,7 @@ body.reduce-motion .character-sprite-animation { animation:none !important; back
   .battle-pixel-figure,.battle-enemy-figure { animation:none; }
 }
 body.reduce-motion .battle-pixel-figure,body.reduce-motion .battle-enemy-figure { animation:none !important; }
+
+
+/* Keep campaign navigation out of the single-room battle view */
+.campaign-tabs[hidden] { display:none !important; }
