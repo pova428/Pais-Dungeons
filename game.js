@@ -22,7 +22,19 @@
 
   const characters = [
     { id:"guardian", name:"Pol", title:"El Flaco", role:"GUARDIÁN", sign:"P", icon:"♜", detail:"Defensor de primera línea.", trait:"Firme como la piedra" },
-    { id:"duelist", name:"Salim", title:"El Moro", role:"DUELISTA", sign:"S", icon:"⚔", detail:"Combatiente ágil y preciso.", trait:"Nunca ataca dos veces igual" },
+    {
+      id:"duelist", name:"Salim", title:"El Moro", role:"DUELISTA", sign:"S", icon:"⚔",
+      detail:"Combatiente ágil y preciso.", trait:"Nunca ataca dos veces igual",
+      portrait:"assets/salim-portrait.webp",
+      sprites:"assets/salim-sprites.webp",
+      spriteFrame:{width:64,height:65,columns:4,rows:{idle:0,walk:1,attack:2,damage:3}},
+      skills:[
+        {name:"Ataque básico",detail:"Secuencia de cortes con dagas",status:"ANIMACIÓN PREPARADA",ready:true,icon:"⚔"},
+        {name:"Habilidad I",detail:"Efecto por diseñar",status:"POR DEFINIR",ready:false,icon:"✦"},
+        {name:"Habilidad II",detail:"Efecto por diseñar",status:"POR DEFINIR",ready:false,icon:"◇"},
+        {name:"Especial",detail:"Técnica definitiva por diseñar",status:"POR DEFINIR",ready:false,icon:"☠"}
+      ]
+    },
     { id:"arcanist", name:"Igor", title:"El Alto", role:"ARCANISTA", sign:"I", icon:"✧", detail:"Estudia artes prohibidas.", trait:"Escucha voces en las ruinas" },
     { id:"tracker", name:"Ivan", title:"El Gordo", role:"RASTREADOR", sign:"V", icon:"➶", detail:"Explorador y tirador.", trait:"Siempre encuentra un camino" },
     { id:"alchemist", name:"Alex", title:"El Mujeriego", role:"ALQUIMISTA", sign:"A", icon:"⚗", detail:"Prepara remedios y mezclas.", trait:"La muerte puede esperar" }
@@ -270,6 +282,32 @@
       const active = state.party.includes(character.id);
       const hp = state.hp[character.id] || 100;
       const disabled = !active && state.party.length >= 4;
+
+      if (character.id === "duelist") {
+        const skillTiles = character.skills.map((skill) =>
+          '<div class="salim-skill ' + (skill.ready ? "is-ready" : "is-locked") + '">' +
+            '<span class="salim-skill-icon">' + skill.icon + '</span>' +
+            '<div><strong>' + skill.name + '</strong><small>' + skill.detail + '</small><em>' + skill.status + '</em></div>' +
+          '</div>'
+        ).join("");
+        return '<article class="salim-feature-card camp-panel ' + (active ? "is-active" : "is-reserve") + '">' +
+          '<div class="salim-art-column">' +
+            '<img class="salim-portrait-art" src="' + character.portrait + '" alt="Retrato pixel art de Salim, El Moro" loading="lazy">' +
+            '<div class="salim-sprite-preview"><span>SPRITE · IDLE</span><div class="salim-mini-sprite" style="background-image:url(' + character.sprites + ')"></div></div>' +
+          '</div>' +
+          '<div class="salim-profile">' +
+            '<div class="salim-profile-head">' +
+              '<div><span class="section-eyebrow">PERSONAJE 02 · ' + character.role + '</span><h3>' + character.name + '</h3><div class="salim-alias">«' + character.title + '»</div></div>' +
+              '<button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + character.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN GRUPO" : "EN RESERVA") + '</button>' +
+            '</div>' +
+            '<div class="salim-vitality"><div><strong>VIDA</strong><b>' + hp + '%</b></div><div class="character-health"><span style="width:' + hp + '%"></span></div></div>' +
+            '<div class="salim-skill-heading"><span>HABILIDADES</span><small>PREVISIÓN DE PERSONAJE</small></div>' +
+            '<div class="salim-skill-grid">' + skillTiles + '</div>' +
+            '<div class="salim-asset-note">Animaciones preparadas: reposo ×4 · caminar ×4 · ataque ×4 · daño ×2</div>' +
+          '</div>' +
+        '</article>';
+      }
+
       return '<article class="character-row ' + (active ? "is-active" : "") + '">' +
         '<div class="character-portrait">' + character.sign + '</div>' +
         '<div class="character-meta"><strong>' + character.name + ' <em>«' + character.title + '»</em></strong><small>' + character.role + '</small><div class="character-health"><span style="width:' + hp + '%"></span></div></div>' +

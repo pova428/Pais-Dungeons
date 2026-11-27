@@ -423,3 +423,145 @@ body.reduce-motion .embers { display: none; }
   .character-meta strong em { font-size:12px; }
   .region-column h3 { min-height:0; }
 }
+
+
+/* Salim — portrait, animated field sprite and future skill slots */
+.salim-feature-card {
+  display:grid;
+  grid-template-columns:minmax(150px,190px) minmax(0,1fr);
+  gap:clamp(16px,2vw,28px);
+  padding:15px;
+  border-color:rgba(176,125,86,.62);
+  background:
+    linear-gradient(135deg,rgba(54,34,31,.96),rgba(17,12,15,.98) 58%),
+    #160f12;
+  box-shadow:inset 0 0 36px rgba(0,0,0,.28),0 5px 18px rgba(0,0,0,.18);
+}
+.salim-feature-card.is-active { border-left:4px solid #a94b40; }
+.salim-feature-card.is-reserve { border-left:4px solid #706052; }
+.salim-art-column { display:flex; flex-direction:column; align-items:center; gap:10px; min-width:0; }
+.salim-portrait-art {
+  display:block;
+  width:100%;
+  max-width:190px;
+  height:auto;
+  aspect-ratio:320 / 374;
+  object-fit:cover;
+  image-rendering:pixelated;
+  border:2px solid #695343;
+  background:#171318;
+  box-shadow:0 5px 14px rgba(0,0,0,.48);
+}
+.salim-sprite-preview {
+  width:100%;
+  min-height:112px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  border:1px solid rgba(164,120,83,.26);
+  background:rgba(7,6,8,.48);
+  overflow:hidden;
+}
+.salim-sprite-preview > span {
+  align-self:flex-start;
+  padding:5px 8px 0;
+  color:rgba(203,173,135,.58);
+  font:9px var(--pixel);
+  letter-spacing:.1em;
+}
+.salim-mini-sprite {
+  width:80px;
+  height:82px;
+  background-repeat:no-repeat;
+  background-size:320px 328px;
+  background-position:0 0;
+  image-rendering:pixelated;
+  animation:salim-idle .92s steps(1) infinite;
+  filter:drop-shadow(0 4px 3px rgba(0,0,0,.75));
+}
+.salim-feature-card:hover .salim-mini-sprite { animation-name:salim-walk; animation-duration:.7s; }
+@keyframes salim-idle {
+  0%,24.99% { background-position:0 0; }
+  25%,49.99% { background-position:-80px 0; }
+  50%,74.99% { background-position:-160px 0; }
+  75%,100% { background-position:-240px 0; }
+}
+@keyframes salim-walk {
+  0%,24.99% { background-position:0 -82px; }
+  25%,49.99% { background-position:-80px -82px; }
+  50%,74.99% { background-position:-160px -82px; }
+  75%,100% { background-position:-240px -82px; }
+}
+@keyframes salim-attack {
+  0%,24.99% { background-position:0 -164px; }
+  25%,49.99% { background-position:-80px -164px; }
+  50%,74.99% { background-position:-160px -164px; }
+  75%,100% { background-position:-240px -164px; }
+}
+@keyframes salim-hurt {
+  0%,49.99% { background-position:0 -246px; }
+  50%,100% { background-position:-80px -246px; }
+}
+.salim-mini-sprite.is-attacking { animation:salim-attack .62s steps(1) infinite; }
+.salim-mini-sprite.is-hurt { animation:salim-hurt .45s steps(1) infinite; }
+
+.salim-profile { min-width:0; display:flex; flex-direction:column; gap:12px; padding:4px 4px 2px 0; }
+.salim-profile-head { display:flex; align-items:center; justify-content:space-between; gap:15px; padding-bottom:10px; border-bottom:1px solid rgba(177,132,95,.28); }
+.salim-profile-head h3 {
+  margin:4px 0 0;
+  color:#ead9b9;
+  font:700 clamp(27px,3.5vw,40px) var(--pixel);
+  letter-spacing:.02em;
+  line-height:1;
+}
+.salim-alias { margin-top:5px; color:#c75c4d; font:600 clamp(17px,2vw,22px) var(--pixel); }
+.salim-profile-head .party-toggle { flex:0 0 auto; min-width:110px; }
+.salim-vitality { max-width:420px; }
+.salim-vitality > div:first-child { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
+.salim-vitality strong { color:#91d99c; font:700 12px var(--pixel); letter-spacing:.12em; }
+.salim-vitality b { color:#abedab; font:700 16px var(--pixel); }
+.salim-vitality .character-health { height:12px; border:2px solid #3b6c48; background:#101b13; }
+.salim-vitality .character-health span { background:linear-gradient(90deg,#278c47,#a0e69a); }
+.salim-skill-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:2px; padding-top:9px; border-top:1px solid rgba(177,132,95,.23); }
+.salim-skill-heading span { color:#d7c19b; font:700 15px var(--pixel); letter-spacing:.1em; }
+.salim-skill-heading small { color:rgba(192,161,124,.5); font:8px var(--mono); }
+.salim-skill-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.salim-skill {
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  align-items:center;
+  gap:9px;
+  min-height:61px;
+  padding:8px 9px;
+  border:1px solid rgba(163,125,93,.33);
+  background:rgba(5,5,7,.32);
+}
+.salim-skill.is-ready { border-color:rgba(179,128,82,.7); background:linear-gradient(100deg,rgba(109,69,39,.25),rgba(9,7,8,.32)); }
+.salim-skill.is-locked { opacity:.57; border-style:dashed; }
+.salim-skill-icon { display:grid; place-items:center; width:32px; height:32px; border:1px solid rgba(174,131,89,.45); color:#d7ae77; font:18px var(--serif); background:rgba(36,24,25,.75); }
+.salim-skill.is-locked .salim-skill-icon { color:#8f8173; }
+.salim-skill strong { display:block; color:#e1cfac; font:600 12px var(--pixel); }
+.salim-skill small { display:block; margin-top:2px; color:rgba(204,184,153,.6); font:8px var(--mono); line-height:1.35; }
+.salim-skill em { display:block; margin-top:4px; color:#b77b5a; font:normal 8px var(--pixel); letter-spacing:.06em; }
+.salim-skill.is-ready em { color:#96d39a; }
+.salim-asset-note { margin-top:auto; padding-top:8px; color:rgba(187,160,128,.47); font:8px var(--mono); letter-spacing:.02em; }
+@media(max-width:760px) {
+  .salim-feature-card { grid-template-columns:120px minmax(0,1fr); gap:12px; padding:10px; }
+  .salim-portrait-art { max-width:120px; }
+  .salim-sprite-preview { min-height:95px; }
+  .salim-profile { gap:8px; }
+  .salim-profile-head { align-items:flex-start; flex-direction:column; gap:8px; }
+  .salim-profile-head h3 { font-size:25px; }
+  .salim-profile-head .party-toggle { min-width:95px; }
+  .salim-skill-grid { grid-template-columns:1fr; gap:5px; }
+  .salim-skill { min-height:48px; }
+}
+@media(max-width:480px) {
+  .salim-feature-card { grid-template-columns:96px minmax(0,1fr); gap:9px; }
+  .salim-portrait-art { max-width:96px; }
+  .salim-mini-sprite { transform:scale(.85); transform-origin:center top; margin-bottom:-10px; }
+  .salim-skill-heading small { display:none; }
+}
+body.reduce-motion .salim-mini-sprite { animation:none !important; background-position:0 0 !important; }
