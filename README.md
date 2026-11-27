@@ -1,87 +1,42 @@
 # PAIS DUNGEON
 
-RPG táctico por turnos de fantasía oscura protagonizado por cinco amigos.
+## Build 016 — Ritmo de enemigos y corrección de números flotantes
 
-## Build 015 — Combate animado y números de daño
+- Los enemigos tardan más en preparar un ataque: 900 ms antes del impacto.
+- El impacto permanece visible 650 ms y la recuperación dura otros 650 ms.
+- Las animaciones del atacante mantienen su progreso al cambiar de fotograma.
+- El panel de turno anuncia cuándo el enemigo prepara el golpe y cuándo impacta.
+- Los números de daño, curación y escudo sincronizan su animación con el tiempo real transcurrido. Redibujar la interfaz ya no vuelve a reproducir el mismo número desde el principio.
+- Los números se eliminan al terminar su duración y sus temporizadores se recuperan después de recargar una partida.
 
-### Ritmo de combate
-Cada acción se reproduce en tres fases visibles:
-1. **Preparación:** el atacante carga el movimiento.
-2. **Impacto:** se aplica el daño, curación, escudo o efecto.
-3. **Recuperación:** el personaje vuelve a su posición antes del siguiente turno.
+## Tiempos del combate
 
-Cada fotograma dura aproximadamente 0,38 segundos y hay una breve fase de recuperación. Durante la secuencia, los botones de habilidad quedan bloqueados para evitar acciones dobles. Los turnos enemigos también utilizan el mismo sistema de tres fases.
+| Acción | Preparación | Impacto | Recuperación | Total |
+|---|---:|---:|---:|---:|
+| Héroe | 420 ms | 420 ms | 380 ms | 1,22 s |
+| Enemigo | 900 ms | 650 ms | 650 ms | 2,20 s |
 
-### Números flotantes
-- Daño a héroes y enemigos: número rojo con el PV realmente perdido.
-- Curación de héroes y enemigos: número verde con los PV recuperados.
-- Escudos: número azul con los puntos de protección.
-- En ataques múltiples aparecen varios números, separados para que no se tapen.
+Los turnos enemigos duran aproximadamente el doble que antes, para que se pueda ver venir el ataque, observar el impacto y entender el resultado.
 
-### Efectos visuales
-El juego añade efectos por encima de los fotogramas:
-- movimiento hacia el objetivo y retroceso del atacante;
-- sacudida y destello al recibir un golpe;
-- anillo de impacto y brillo;
-- efectos de magia, fuego, curación, drenaje, escudo, maldición y golpes fuertes;
-- barra de vida actualizada en el momento del impacto.
+## Números de combate
 
-No necesitas dibujar estos efectos en las imágenes: los crea el juego. Los PNG solo representan el movimiento del personaje o enemigo.
+- Daño: rojo, solo muestra los PV realmente perdidos.
+- Curación: verde, muestra los PV efectivamente recuperados.
+- Escudo: azul, muestra la protección aplicada o absorbida.
+- Los multiataques generan un número por cada impacto real, no por las actualizaciones visuales de la pantalla.
+- El tiempo de vida del número continúa correctamente tras redibujar o recargar la pantalla.
 
-### Dónde subir las animaciones
+## Animaciones
 
-Cada animación tiene tres archivos PNG con transparencia y nombres exactos.
+Cada acción usa tres fotogramas PNG: preparación, impacto y recuperación. Los efectos de brillo, sacudida, estela y anillo de impacto los añade el juego.
 
-**Héroes:**
-`assets/battles/animations/heroes/<personaje>/<habilidad>/frame-01.png`
+Los nombres y estructura de las carpetas están explicados en:
+- `assets/battles/animations/README.md`
+- `assets/battles/animations/heroes/README.md`
+- `assets/battles/animations/enemies/README.md`
 
-Personajes:
-- `guardian` — Pol
-- `duelist` — Salim
-- `arcanist` — Igor
-- `tracker` — Ivan
-- `alchemist` — Alex
-
-Cada personaje tiene `basic-attack` y tres carpetas de habilidades.
-
-**Enemigos:**
-`assets/battles/animations/enemies/<enemy-id>/attack/frame-01.png`
-
-Los 36 enemigos ya tienen su carpeta `attack`. Dentro de cada una sube `frame-01.png`, `frame-02.png` y `frame-03.png`.
-
-### Cómo dibujar los tres fotogramas
-
-| Archivo | Qué debe mostrar |
-|---|---|
-| `frame-01.png` | Preparación: cargar el brazo, agacharse, levantar el arma o concentrar energía |
-| `frame-02.png` | Impacto: ejecutar el golpe, lanzar el hechizo o emitir la curación |
-| `frame-03.png` | Recuperación: terminar el gesto y volver a una pose estable |
-
-Recomendaciones:
-- PNG RGBA, fondo transparente.
-- 512 × 512 px o 512 × 640 px.
-- Mantén el mismo tamaño, escala, punto de apoyo y línea de suelo en los tres fotogramas.
-- Héroes mirando hacia la derecha; enemigos mirando hacia la izquierda.
-- Deja un margen alrededor para que los efectos de brillo y golpe no queden cortados.
-- No pongas texto, números ni barras de vida dentro del dibujo.
-
-### Subir una animación a GitHub
-
-1. Abre la carpeta exacta de la habilidad o enemigo.
-2. Pulsa **Add file → Upload files**.
-3. Arrastra los tres PNG.
-4. Verifica que se llamen `frame-01.png`, `frame-02.png` y `frame-03.png`.
-5. Pulsa **Commit changes** en la rama `main`.
-
-Puedes subir solo una animación para probarla. Si faltan imágenes, se mantienen las figuras y efectos provisionales. Al subir los tres fotogramas con el nombre correcto, el juego los reproduce automáticamente en orden.
-
-## Rutas y encuentros
-
-Las 12 localizaciones mantienen sus encuentros provisionales:
-- Instituto Camí de Mar: Programacion, Base de Datos, Patio y Redes.
-- Baix Penedes: Bolera, N-340, Cine y Sushi.
-- Steam: Content warning, Labyrinthine, Escape Backrooms y Clubes.
+Sigue las guías de cada habilidad o enemigo para subir `frame-01.png`, `frame-02.png` y `frame-03.png`.
 
 ## Publicación
 
-GitHub Pages usa `main` y `/(root)`.
+GitHub Pages publica desde la rama `main`, carpeta `/(root)`.
