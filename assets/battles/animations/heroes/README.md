@@ -1,25 +1,41 @@
 # Animaciones de los héroes
 
-Cada habilidad tiene una carpeta con tres fotogramas. Los nombres son los identificadores internos de los personajes:
+Los identificadores internos de los personajes son:
 
-- `guardian` — Pol
-- `duelist` — Salim
-- `arcanist` — Igor
-- `tracker` — Ivan
-- `alchemist` — Alex
+- `guardian` — Pol «El Flaco»
+- `duelist` — Salim «El Moro»
+- `arcanist` — Igor «El Alto»
+- `tracker` — Ivan «El Gordo»
+- `alchemist` — Alex «El Mujeriego»
 
-Dentro de cada personaje encontrarás `basic-attack` y sus tres habilidades. Respeta los nombres de las carpetas y consulta cada README para saber qué animación corresponde.
+Cada héroe tiene carpetas separadas para su respiración en reposo y para sus habilidades de combate.
 
-Cada animación utiliza exactamente tres PNG con transparencia y el mismo tamaño de lienzo:
+## Respiración en reposo — `idle/`
 
-1. `frame-01.png` — preparación: el personaje carga, se mueve o inicia el gesto.
-2. `frame-02.png` — impacto: aparece el golpe, hechizo, curación o efecto principal.
-3. `frame-03.png` — recuperación: termina el movimiento y vuelve a la pose normal.
+Cada personaje tiene una carpeta `idle` donde se suben tres PNG independientes:
 
-**Recomendación:** lienzo de 512 × 512 px o 512 × 640 px, PNG RGBA, sin fondo, personaje completo y centrado. Mantén la misma escala y la misma línea de suelo en los tres fotogramas para evitar saltos.
+- `frame-01.png` — reposo.
+- `frame-02.png` — inspiración, pecho y hombros ligeramente elevados.
+- `frame-03.png` — espiración, regreso suave a la postura neutra.
 
-En el combate se muestran seguidos, uno detrás de otro, con una pausa de unos 0,38 segundos por fotograma. El juego añade por encima destellos, sacudida, brillo, anillos de impacto y números de daño/curación. No dibujes esos efectos dentro del PNG salvo que formen parte del diseño del personaje.
+Ruta completa: `assets/battles/animations/heroes/<personaje>/idle/`.
 
-Los héroes deben mirar hacia la derecha, porque atacan a los enemigos que tienen enfrente. Los enemigos deben mirar hacia la izquierda. En habilidades de apoyo o área, conserva el personaje en el centro y deja espacio alrededor para los efectos.
+Los archivos tienen los mismos nombres en las cinco carpetas, por lo que no se pisan entre sí. El combate los reproduce automáticamente en bucle cuando el héroe está quieto. Cada frame dura aproximadamente un segundo, para un ciclo de respiración de tres segundos. Cuando el héroe ataca o recibe un golpe, la animación idle se oculta y vuelve al terminar la acción.
 
-Sube los tres archivos a esta carpeta exacta con **Add file → Upload files** y haz Commit changes en `main`. No cambies los nombres ni la extensión.
+Formato: PNG RGBA transparente, recomendado 512 × 640 px. Mantén el personaje centrado, mirando a la derecha, con los pies en la misma línea y sin desplazamiento entre frames. Sube los tres archivos juntos. Si faltan o no cargan, se mantiene la figura provisional.
+
+Consulta el README dentro de cada carpeta `idle` para ver la guía específica del personaje.
+
+## Animaciones de habilidades
+
+Las habilidades también tienen una carpeta propia con tres fotogramas:
+
+- `frame-01.png` — preparación: el personaje carga o inicia el movimiento.
+- `frame-02.png` — impacto: golpe, hechizo, curación o efecto principal.
+- `frame-03.png` — recuperación: termina el movimiento y vuelve a la pose normal.
+
+Las carpetas de habilidades son `basic-attack` y las tres habilidades de cada héroe. Mantén la misma escala y línea de suelo entre los tres frames.
+
+Para ataques, los héroes deben mirar hacia la derecha, hacia los enemigos. No dibujes efectos, números ni barras de vida dentro de los PNG: el juego genera los destellos, sacudidas y números por separado.
+
+Para subir imágenes: abre la carpeta exacta → **Add file → Upload files** → arrastra los PNG → **Commit changes** en `main`.
