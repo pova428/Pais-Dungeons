@@ -21,61 +21,31 @@
   const continueButton = document.getElementById("continue-button");
 
   const characters = [
-    {
-      id:"guardian", name:"Pol", title:"El Flaco", role:"GUARDIÁN", sign:"P", icon:"♜",
-      detail:"Defensor de primera línea.", trait:"Firme como la piedra",
-      portrait:"assets/pol-portrait.png", sprites:"assets/pol-sprites.png",
-      skills:[
-        {name:"Golpe de escudo",detail:"Ataque de primera línea",status:"POR DEFINIR",ready:false,icon:"♜"},
-        {name:"Provocar",detail:"Atrae la atención enemiga",status:"POR DEFINIR",ready:false,icon:"⚑"},
-        {name:"Muro firme",detail:"Protección para la compañía",status:"POR DEFINIR",ready:false,icon:"⬟"},
-        {name:"Último bastión",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
-      ]
-    },
-    {
-      id:"duelist", name:"Salim", title:"El Moro", role:"DUELISTA", sign:"S", icon:"⚔",
-      detail:"Combatiente ágil y preciso.", trait:"Nunca ataca dos veces igual",
-      portrait:"assets/salim-portrait.webp", sprites:"assets/salim-sprites.webp",
-      skills:[
-        {name:"Ataque básico",detail:"Secuencia de cortes con dagas",status:"ANIMACIÓN PREPARADA",ready:true,icon:"⚔"},
-        {name:"Habilidad I",detail:"Efecto por diseñar",status:"POR DEFINIR",ready:false,icon:"✦"},
-        {name:"Habilidad II",detail:"Efecto por diseñar",status:"POR DEFINIR",ready:false,icon:"◇"},
-        {name:"Especial",detail:"Técnica definitiva por diseñar",status:"POR DEFINIR",ready:false,icon:"☠"}
-      ]
-    },
-    {
-      id:"arcanist", name:"Igor", title:"El Alto", role:"ARCANISTA", sign:"I", icon:"✧",
-      detail:"Estudia artes prohibidas.", trait:"Escucha voces en las ruinas",
-      portrait:"assets/igor-portrait.png", sprites:"assets/igor-sprites.png",
-      skills:[
-        {name:"Proyectil arcano",detail:"Ataque mágico a distancia",status:"POR DEFINIR",ready:false,icon:"✧"},
-        {name:"Maldición",detail:"Debilita a un enemigo",status:"POR DEFINIR",ready:false,icon:"☽"},
-        {name:"Sello oscuro",detail:"Control del campo",status:"POR DEFINIR",ready:false,icon:"◇"},
-        {name:"Ruptura",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
-      ]
-    },
-    {
-      id:"tracker", name:"Ivan", title:"El Gordo", role:"RASTREADOR", sign:"V", icon:"➶",
-      detail:"Explorador y tirador.", trait:"Siempre encuentra un camino",
-      portrait:"assets/ivan-portrait.png", sprites:"assets/ivan-sprites.png",
-      skills:[
-        {name:"Disparo preciso",detail:"Ataque desde la distancia",status:"POR DEFINIR",ready:false,icon:"➶"},
-        {name:"Trampa",detail:"Prepara una emboscada",status:"POR DEFINIR",ready:false,icon:"⌁"},
-        {name:"Marca",detail:"Señala a un objetivo",status:"POR DEFINIR",ready:false,icon:"◎"},
-        {name:"Lluvia de flechas",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
-      ]
-    },
-    {
-      id:"alchemist", name:"Alex", title:"El Mujeriego", role:"ALQUIMISTA", sign:"A", icon:"⚗",
-      detail:"Prepara remedios y mezclas.", trait:"La muerte puede esperar",
-      portrait:"assets/alex-portrait.png", sprites:"assets/alex-sprites.png",
-      skills:[
-        {name:"Remedio rápido",detail:"Recuperación de vitalidad",status:"POR DEFINIR",ready:false,icon:"✚"},
-        {name:"Frasco corrosivo",detail:"Daño por alquimia",status:"POR DEFINIR",ready:false,icon:"⚗"},
-        {name:"Mezcla explosiva",detail:"Ataque de área",status:"POR DEFINIR",ready:false,icon:"✹"},
-        {name:"Elixir final",detail:"Habilidad especial",status:"POR DEFINIR",ready:false,icon:"✦"}
-      ]
-    }
+    {id:"guardian",name:"Pol",title:"El Flaco",role:"MAGO",sign:"P",icon:"✧",detail:"Mago veloz y frágil, especialista en daño mágico.",strengths:"Mayor velocidad y agilidad. Magia muy potente y gran evasión.",weaknesses:"Poca vida, defensa baja y daño físico reducido.",portrait:"assets/pol-portrait.png",sprites:"assets/pol-sprites.png",base:{hp:68,attack:7,magic:16,defense:5,speed:20,agility:20},growth:{hp:6,attack:1,magic:2,defense:1,speed:1,agility:1},skills:[
+      {name:"Chispa arcana",detail:"Daño mágico a un enemigo: 120% de MAG.",unlockLevel:1,icon:"✧",kind:"BÁSICA"},
+      {name:"Marca ígnea",detail:"Quema a un enemigo: 70% de MAG y daño durante 3 turnos.",unlockLevel:4,icon:"♨",kind:"MAGIA"},
+      {name:"Nova elemental",detail:"Explosión mágica que golpea a todos los enemigos: 115% de MAG.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    ]},
+    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.webp",sprites:"assets/salim-sprites.webp",base:{hp:54,attack:17,magic:1,defense:4,speed:18,agility:19},growth:{hp:5,attack:2,magic:0,defense:1,speed:1,agility:1},skills:[
+      {name:"Navajazo",detail:"Corte rápido a un enemigo: 135% de ATQ.",unlockLevel:1,icon:"🗡",kind:"BÁSICA"},
+      {name:"Navajazos múltiples",detail:"Tres cortes consecutivos de 55% de ATQ cada uno.",unlockLevel:4,icon:"⚔",kind:"ATAQUE"},
+      {name:"Llamar a sus hermanos",detail:"Ataque conjunto con tres impactos de 75% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    ]},
+    {id:"arcanist",name:"Igor",title:"El Alto",role:"SANADOR",sign:"I",icon:"✚",detail:"Sanador equilibrado que mantiene al grupo en pie.",strengths:"Curación potente, buena vida y estadísticas equilibradas.",weaknesses:"Menor daño directo que los atacantes y velocidad moderada.",portrait:"assets/igor-portrait.png",sprites:"assets/igor-sprites.png",base:{hp:88,attack:8,magic:14,defense:9,speed:11,agility:11},growth:{hp:8,attack:1,magic:2,defense:1,speed:1,agility:1},skills:[
+      {name:"Antivirus",detail:"Cura a un aliado: 145% de MAG + 10 PV.",unlockLevel:1,icon:"✚",kind:"BÁSICA"},
+      {name:"Drenaje de vida",detail:"Roba vida a un enemigo y recupera el 50% del daño causado.",unlockLevel:4,icon:"☯",kind:"APOYO"},
+      {name:"Reinicio total",detail:"Cura hasta a tres aliados: 115% de MAG + 12 PV a cada uno.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    ]},
+    {id:"tracker",name:"Ivan",title:"El Gordo",role:"TANQUE",sign:"V",icon:"⬟",detail:"Tanque del equipo. Aguanta golpes y protege a los demás.",strengths:"Mayor vida y defensa. Escudos fuertes y gran capacidad de protección.",weaknesses:"El más lento y menos ágil. Magia y daño explosivo muy bajos.",portrait:"assets/ivan-portrait.png",sprites:"assets/ivan-sprites.png",base:{hp:135,attack:10,magic:1,defense:17,speed:5,agility:5},growth:{hp:13,attack:1,magic:0,defense:2,speed:0,agility:0},skills:[
+      {name:"Escudo protector",detail:"Aplica a un aliado un escudo del 30% de su vida máxima durante 2 turnos.",unlockLevel:1,icon:"⬡",kind:"BÁSICA"},
+      {name:"Derribo",detail:"Golpea a un enemigo: 115% de ATQ y lo derriba, retrasando su turno.",unlockLevel:4,icon:"⚒",kind:"CONTROL"},
+      {name:"Bastión de equipo",detail:"Protege a todo el grupo con un escudo del 20% de su vida máxima durante 2 turnos.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    ]},
+    {id:"alchemist",name:"Alex",title:"El Mujeriego",role:"DUELISTA",sign:"A",icon:"⚔",detail:"Duelista equilibrado, combina daño, resistencia y mejoras propias.",strengths:"Buen daño físico y vida. Puede potenciarse antes de atacar.",weaknesses:"No destaca en magia ni supera a Salim en daño o a Ivan en resistencia.",portrait:"assets/alex-portrait.png",sprites:"assets/alex-sprites.png",base:{hp:105,attack:13,magic:2,defense:10,speed:12,agility:12},growth:{hp:9,attack:2,magic:0,defense:1,speed:1,agility:1},skills:[
+      {name:"Balonazo",detail:"Lanza un balón contra un enemigo: 125% de ATQ.",unlockLevel:1,icon:"⚽",kind:"BÁSICA"},
+      {name:"Modo Mujer",detail:"Se potencia durante 2 turnos: +30% de ATQ y +20% de VEL.",unlockLevel:4,icon:"♛",kind:"MEJORA"},
+      {name:"Remate de campo",detail:"Remate explosivo que golpea a todos los enemigos: 105% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
+    ]}
   ];
 
   const regions = [
@@ -124,11 +94,56 @@
     {id:"oil",name:"Aceite de lámpara",desc:"Combustible para no caminar a oscuras.",price:12,icon:"♨",kind:"oil"}
   ];
 
+  const XP_THRESHOLDS = [0,100,240,420,650,930,1260,1640,2070,2550];
+
+  function getCharacterStats(character,level) {
+    const safeLevel = Math.min(10,Math.max(1,Number(level) || 1));
+    const gains = safeLevel - 1;
+    return Object.fromEntries(Object.keys(character.base).map((key) => [key,character.base[key] + character.growth[key] * gains]));
+  }
+
+  function getUnlockForLevel(character,level) {
+    const skill = character.skills.find((entry) => entry.unlockLevel === level);
+    if (skill) return "Habilidad: " + skill.name;
+    if (level === 3) return "Ranura de pasiva reservada";
+    return "Mejora de atributos";
+  }
+
+  function getLevelForXP(xp) {
+    let level = 1;
+    for (let i=1;i<XP_THRESHOLDS.length;i+=1) if (xp >= XP_THRESHOLDS[i]) level=i+1;
+    return Math.min(10,level);
+  }
+
+  function grantExperience(characterId,amount) {
+    const character = characters.find((entry) => entry.id === characterId);
+    if (!character) return;
+    const oldLevel = state.levels[characterId] || 1;
+    const oldMaxHp = getCharacterStats(character,oldLevel).hp;
+    state.xp[characterId] = (state.xp[characterId] || 0) + amount;
+    const newLevel = getLevelForXP(state.xp[characterId]);
+    if (newLevel > oldLevel) {
+      state.levels[characterId] = newLevel;
+      const newMaxHp = getCharacterStats(character,newLevel).hp;
+      const currentHp = Number.isFinite(state.hp[characterId]) ? state.hp[characterId] : oldMaxHp;
+      state.hp[characterId] = Math.min(newMaxHp,currentHp + newMaxHp - oldMaxHp);
+    }
+  }
+
+  function awardPartyExperience(amount) {
+    characters.forEach((character) => {
+      grantExperience(character.id,state.party.includes(character.id) ? amount : Math.floor(amount/2));
+    });
+  }
+
   const defaultState = () => ({
     gold:120,
     rations:2,
     inventory:{bandage:0,tonic:0,oil:0},
-    hp:{guardian:100,duelist:100,arcanist:100,tracker:100,alchemist:100},
+    hp:{guardian:68,duelist:54,arcanist:88,tracker:135,alchemist:105},
+    levels:{guardian:1,duelist:1,arcanist:1,tracker:1,alchemist:1},
+    xp:{guardian:0,duelist:0,arcanist:0,tracker:0,alchemist:0},
+    characterDataVersion:3,
     party:["guardian","duelist","arcanist","tracker"],
     tab:"bastion",
     selectedCharacter:"duelist",
@@ -141,7 +156,7 @@
   let state = null;
   let lastFocusedElement = null;
   const SETTINGS_KEY = "the-five-settings";
-  const SAVE_KEY = "the-five-campaign-v2";
+  const SAVE_KEY = "pais-dungeon-campaign-v3";
   const settings = {highContrast:false,reduceMotion:false};
 
   try {
@@ -185,16 +200,33 @@
 
   function getSavedState() {
     try {
-      const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || "null");
-      if (!saved || !Array.isArray(saved.party) || !saved.hp) return null;
+      const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || localStorage.getItem("the-five-campaign-v2") || "null");
+      if (!saved || !Array.isArray(saved.party)) return null;
+      const defaults = defaultState();
+      const levels = Object.assign({},defaults.levels,saved.levels || {});
+      const xp = Object.assign({},defaults.xp,saved.xp || {});
+      const hp = {};
+      characters.forEach((character) => {
+        const level = Math.min(10,Math.max(1,Number(levels[character.id]) || 1));
+        levels[character.id] = level;
+        const maxHp = getCharacterStats(character,level).hp;
+        const storedHp = saved.hp && saved.hp[character.id];
+        if (saved.characterDataVersion >= 3 && Number.isFinite(storedHp)) {
+          hp[character.id] = Math.min(maxHp,Math.max(0,storedHp));
+        } else {
+          const oldPercent = Number.isFinite(storedHp) ? Math.min(100,Math.max(0,storedHp)) : 100;
+          hp[character.id] = Math.round(maxHp*oldPercent/100);
+        }
+        xp[character.id] = Math.max(0,Number(xp[character.id]) || 0);
+      });
       const validSiteIds = regions.flatMap((region) => region.sites.map((site) => site.id));
-      const merged = Object.assign(defaultState(), saved, {
-        inventory:Object.assign(defaultState().inventory, saved.inventory || {}),
-        hp:Object.assign(defaultState().hp, saved.hp || {}),
+      const merged = Object.assign(defaults,saved,{
+        inventory:Object.assign({},defaults.inventory,saved.inventory || {}),
+        hp,levels,xp,characterDataVersion:3,
         visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
       merged.party = merged.party.filter((id) => characters.some((character) => character.id === id)).slice(0,4);
-      if (merged.party.length === 0) merged.party = defaultState().party;
+      if (merged.party.length === 0) merged.party = defaults.party;
       if (!characters.some((character) => character.id === merged.selectedCharacter)) merged.selectedCharacter = "duelist";
       const maximumRegion = getUnlockedRegionIndex(merged.visitedSites);
       let selectedIndex = regions.findIndex((region) => region.id === merged.selectedRegion);
@@ -202,15 +234,14 @@
       merged.selectedRegion = regions[selectedIndex].id;
       const selected = regions[selectedIndex];
       const siteIndex = selected.sites.findIndex((site) => site.id === merged.selectedSite);
-      if (siteIndex < 0 || !isSiteUnlocked(selected,siteIndex,merged.visitedSites)) {
-        merged.selectedSite = getFirstAvailableSite(selected,merged.visitedSites);
-      }
+      if (siteIndex < 0 || !isSiteUnlocked(selected,siteIndex,merged.visitedSites)) merged.selectedSite = getFirstAvailableSite(selected,merged.visitedSites);
       return merged;
     } catch (error) { return null; }
   }
 
   function saveState() {
     if (!state) return;
+    state.characterDataVersion = 3;
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (error) {
       state.notice = "No se ha podido guardar en este navegador. La partida seguirá activa mientras no cierres la página.";
     }
@@ -271,7 +302,11 @@
     if (!state) return;
     resources.gold.textContent = String(state.gold);
     resources.rations.textContent = String(state.rations);
-    const averageLife = Math.round(state.party.reduce((sum,id) => sum + (state.hp[id] || 100),0) / Math.max(1,state.party.length));
+    const averageLife = Math.round(state.party.reduce((sum,id) => {
+      const character = characters.find((entry) => entry.id === id);
+      const maxHp = getCharacterStats(character,state.levels[id] || 1).hp;
+      return sum + (Math.max(0,Number(state.hp[id]) || 0)/maxHp)*100;
+    },0)/Math.max(1,state.party.length));
     const lifeCount = document.getElementById("life-count");
     const healthResource = document.getElementById("health-resource");
     if (lifeCount) lifeCount.textContent = averageLife + "%";
@@ -280,11 +315,7 @@
       state.tab === "company" ? "REGISTRO DE LA COMPAÑÍA" :
       state.tab === "route" ? "MAPA DE LAS TIERRAS MALDITAS" :
       state.tab === "rest" ? "CÁMARA DEL ÚLTIMO FAROL" : "MERCADER DEL BASTIÓN";
-
-    document.querySelectorAll(".campaign-tab").forEach((button) => {
-      button.classList.toggle("is-active", button.dataset.tab === state.tab);
-    });
-
+    document.querySelectorAll(".campaign-tab").forEach((button) => button.classList.toggle("is-active",button.dataset.tab === state.tab));
     if (state.tab === "bastion") campaignMain.innerHTML = renderBastion();
     if (state.tab === "company") campaignMain.innerHTML = renderCompany();
     if (state.tab === "route") campaignMain.innerHTML = renderRoute();
@@ -320,64 +351,71 @@
   function renderCompany() {
     const selected = characters.find((character) => character.id === state.selectedCharacter) || characters[1];
     const selectedIndex = characters.findIndex((character) => character.id === selected.id);
-    const hp = state.hp[selected.id] || 100;
+    const level = state.levels[selected.id] || 1;
+    const stats = getCharacterStats(selected,level);
+    const maxHp = stats.hp;
+    const hp = Math.min(maxHp,Math.max(0,Number(state.hp[selected.id]) || 0));
+    const hpPercent = Math.round(hp/maxHp*100);
+    const xp = state.xp[selected.id] || 0;
+    const nextLevelXP = level < 10 ? XP_THRESHOLDS[level] : null;
+    const currentLevelXP = XP_THRESHOLDS[level-1];
+    const xpProgress = nextLevelXP === null ? 100 : Math.min(100,Math.round((xp-currentLevelXP)/(nextLevelXP-currentLevelXP)*100));
+    const xpRemaining = nextLevelXP === null ? 0 : Math.max(0,nextLevelXP-xp);
     const active = state.party.includes(selected.id);
     const disabled = !active && state.party.length >= 4;
-
     const characterMenu = characters.map((character) => {
       const isSelected = character.id === selected.id;
       const isActive = state.party.includes(character.id);
-      const portrait = character.portrait
-        ? '<img src="' + character.portrait + '" alt="" loading="lazy" onerror="this.remove()">'
-        : "";
+      const portrait = character.portrait ? '<img src="' + character.portrait + '" alt="" loading="lazy" onerror="this.remove()">' : "";
       return '<button class="character-nav-entry ' + (isSelected ? "is-selected" : "") + '" type="button" data-character-select="' + character.id + '" aria-pressed="' + isSelected + '">' +
         '<span class="character-nav-avatar"><b>' + character.sign + '</b>' + portrait + '</span>' +
         '<span class="character-nav-copy"><strong>' + character.name + '</strong><small>«' + character.title + '»</small></span>' +
-        '<span class="character-nav-state ' + (isActive ? "is-active" : "") + '">' + (isActive ? "●" : "○") + '</span>' +
-      '</button>';
+        '<span class="character-nav-state ' + (isActive ? "is-active" : "") + '">' + (isActive ? "●" : "○") + '</span></button>';
     }).join("");
-
-    const portraitImage = selected.portrait
-      ? '<img class="character-portrait-art" src="' + selected.portrait + '" alt="Retrato pixel art de ' + selected.name + ' ' + selected.title + '" loading="eager" onerror="this.remove()">'
-      : "";
-    const spriteMarkup = selected.sprites
-      ? '<img class="sprite-load-probe" src="' + selected.sprites + '" alt="" onload="this.parentElement.classList.add(&quot;has-sprite&quot;);this.remove()" onerror="this.parentElement.classList.add(&quot;no-sprite&quot;);this.remove()"><div class="character-sprite-animation" style="background-image:url(' + selected.sprites + ')"></div>'
-      : "";
-    const spriteNote = selected.id === "duelist"
-      ? "REPOSO ×4 · CAMINAR ×4 · ATAQUE ×4 · DAÑO ×2"
-      : "ANIMACIONES POR AÑADIR";
-    const skills = (selected.skills || []).map((skill) =>
-      '<div class="character-skill ' + (skill.ready ? "is-ready" : "is-locked") + '">' +
-        '<span class="character-skill-icon">' + skill.icon + '</span>' +
-        '<div><strong>' + skill.name + '</strong><small>' + skill.detail + '</small><em>' + skill.status + '</em></div>' +
-      '</div>'
-    ).join("");
-
-    const slots = [0,1,2,3].map((n) => '<span class="party-slot ' + (n < state.party.length ? "filled" : "") + '"></span>').join("");
-
+    const portraitImage = selected.portrait ? '<img class="character-portrait-art" src="' + selected.portrait + '" alt="Retrato pixel art de ' + selected.name + ' ' + selected.title + '" loading="eager" onerror="this.remove()">' : "";
+    const spriteMarkup = selected.sprites ? '<img class="sprite-load-probe" src="' + selected.sprites + '" alt="" onload="this.parentElement.classList.add(&quot;has-sprite&quot;);this.remove()" onerror="this.parentElement.classList.add(&quot;no-sprite&quot;);this.remove()"><div class="character-sprite-animation" style="background-image:url(' + selected.sprites + ')"></div>' : "";
+    const spriteNote = selected.id === "duelist" ? "REPOSO ×4 · CAMINAR ×4 · ATAQUE ×4 · DAÑO ×2" : "ANIMACIONES POR AÑADIR";
+    const skills = selected.skills.map((skill) => {
+      const unlocked = level >= skill.unlockLevel;
+      return '<div class="character-skill ' + (unlocked ? "is-ready" : "is-locked") + '">' +
+        '<span class="character-skill-icon">' + skill.icon + '</span><div><strong>' + skill.name + '</strong><small>' + skill.detail + '</small><em>' +
+        (unlocked ? "DESBLOQUEADA · NIVEL " + skill.unlockLevel : "SE DESBLOQUEA EN NIVEL " + skill.unlockLevel) +
+        '</em></div></div>';
+    }).join("");
+    const statLabels = [["hp","VIDA","♥"],["attack","ATAQUE","⚔"],["magic","MAGIA","✧"],["defense","DEFENSA","⬟"],["speed","VELOCIDAD","➤"],["agility","AGILIDAD","◇"]];
+    const statMarkup = statLabels.map(([key,label,icon]) => '<div class="hero-stat"><span>' + icon + ' ' + label + '</span><strong>' + stats[key] + '</strong></div>').join("");
+    const levelSteps = Array.from({length:10},(_,index) => {
+      const stepLevel=index+1, stepStats=getCharacterStats(selected,stepLevel);
+      return '<div class="level-step ' + (stepLevel===level ? "is-current" : stepLevel<level ? "is-passed" : "") + '">' +
+        '<div class="level-step-top"><b>NIVEL ' + stepLevel + '</b><small>' + (stepLevel===1 ? "INICIO" : XP_THRESHOLDS[index] + " XP") + '</small></div>' +
+        '<strong class="level-step-unlock">' + getUnlockForLevel(selected,stepLevel) + '</strong>' +
+        '<span>PV ' + stepStats.hp + ' · ATQ ' + stepStats.attack + ' · MAG ' + stepStats.magic + '</span>' +
+        '<span>DEF ' + stepStats.defense + ' · VEL ' + stepStats.speed + ' · AGI ' + stepStats.agility + '</span></div>';
+    }).join("");
+    const slots = [0,1,2,3].map((n) => '<span class="party-slot ' + (n<state.party.length ? "filled" : "") + '"></span>').join("");
     return '<div class="campaign-page character-manager-page">' +
       '<div class="page-heading"><div><span class="section-eyebrow">GESTIÓN DE LA COMPAÑÍA</span><h2>Personajes</h2></div><span class="character-count">05 HÉROES</span></div>' +
       '<div class="character-manager">' +
         '<aside class="character-sidebar camp-panel"><div class="character-sidebar-heading"><span>COMPAÑÍA</span><b>05</b></div><div class="character-nav-list">' + characterMenu + '</div>' +
           '<div class="character-party-mini"><span>GRUPO ACTIVO</span><strong>' + state.party.length + ' / 4</strong><div class="party-slots">' + slots + '</div></div></aside>' +
         '<section class="character-sheet camp-panel ' + (active ? "is-active" : "is-reserve") + '">' +
-          '<div class="character-art-column">' +
-            '<div class="character-portrait-frame"><div class="character-portrait-placeholder"><b>' + selected.sign + '</b><small>RETRATO PENDIENTE</small></div>' + portraitImage + '</div>' +
-            '<div class="character-sprite-window"><span>ANIMACIÓN DE CAMPO</span>' + spriteMarkup + '<div class="character-sprite-empty">SPRITE PENDIENTE</div></div>' +
-          '</div>' +
+          '<div class="character-art-column"><div class="character-portrait-frame"><div class="character-portrait-placeholder"><b>' + selected.sign + '</b><small>RETRATO PENDIENTE</small></div>' + portraitImage + '</div>' +
+            '<div class="character-sprite-window"><span>ANIMACIÓN DE CAMPO</span>' + spriteMarkup + '<div class="character-sprite-empty">SPRITE PENDIENTE</div></div></div>' +
           '<div class="character-profile">' +
-            '<div class="character-profile-head"><div><span class="section-eyebrow">PERSONAJE ' + String(selectedIndex + 1).padStart(2,"0") + ' · ' + selected.role + '</span><h3>' + selected.name + '</h3><div class="character-alias">«' + selected.title + '»</div><div class="character-quick-stats"><span>NIVEL 1</span><span>' + selected.role + '</span></div></div>' +
-              '<button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + selected.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN GRUPO" : "AÑADIR AL GRUPO") + '</button>' +
-            '</div>' +
-            '<div class="character-vitality"><div><strong>VIDA</strong><b>' + hp + '%</b></div><div class="character-health"><span style="width:' + hp + '%"></span></div></div>' +
-            '<div class="character-skill-heading"><span>HABILIDADES</span><small>4 HUECOS · DISEÑO EN PROGRESO</small></div>' +
+            '<div class="character-profile-head"><div><span class="section-eyebrow">PERSONAJE ' + String(selectedIndex+1).padStart(2,"0") + ' · ' + selected.role + '</span><h3>' + selected.name + '</h3><div class="character-alias">«' + selected.title + '»</div>' +
+              '<div class="character-quick-stats"><span>NIVEL ' + level + ' / 10</span><span>' + selected.role + '</span></div></div>' +
+              '<button class="party-toggle ' + (active ? "is-selected" : "") + '" type="button" data-action="toggle-party" data-id="' + selected.id + '" ' + (disabled ? "disabled" : "") + '>' + (active ? "EN GRUPO" : "AÑADIR AL GRUPO") + '</button></div>' +
+            '<div class="character-vitality"><div class="character-vitality-labels"><strong>VIDA ACTUAL</strong><b>' + hp + ' / ' + maxHp + ' PV</b></div><div class="character-health"><span style="width:' + hpPercent + '%"></span></div></div>' +
+            '<div class="character-xp"><div><span>EXPERIENCIA</span><b>' + xp + (nextLevelXP===null ? " XP · NIVEL MÁXIMO" : " / " + nextLevelXP + " XP") + '</b></div><div class="character-xp-bar"><span style="width:' + xpProgress + '%"></span></div>' + (nextLevelXP===null ? "" : '<small>FALTAN ' + xpRemaining + ' XP PARA NIVEL ' + (level+1) + '</small>') + '</div>' +
+            '<div class="hero-stat-grid">' + statMarkup + '</div>' +
+            '<div class="hero-traits"><div><span>FORTALEZA</span><p>' + selected.strengths + '</p></div><div><span>DEBILIDAD</span><p>' + selected.weaknesses + '</p></div></div>' +
+            '<div class="character-skill-heading"><span>HABILIDADES</span><small>DESBLOQUEO EN NIVELES 1 · 4 · 10</small></div>' +
             '<div class="character-skill-grid">' + skills + '</div>' +
+            '<div class="character-passive-slot"><span class="character-passive-icon">✧</span><div><strong>PASIVA · ESPACIO RESERVADO</strong><small>Se diseñará más adelante. Hito previsto: nivel 3.</small></div><em>PENDIENTE</em></div>' +
+            '<details class="character-progression"><summary>PROGRESIÓN COMPLETA · NIVELES 1–10</summary><div class="progression-grid">' + levelSteps + '</div></details>' +
             '<div class="character-asset-note">' + spriteNote + '</div>' +
-          '</div>' +
-        '</section>' +
-      '</div>' +
-      '<div class="character-manager-footer"><span>Selecciona un héroe en el menú lateral.</span><button class="game-action secondary" type="button" data-tab="route">IR A RUTAS →</button></div>' +
-    '</div>';
+          '</div></section></div>' +
+      '<div class="character-manager-footer"><span>Selecciona un héroe en el menú lateral.</span><button class="game-action secondary" type="button" data-tab="route">IR A RUTAS →</button></div></div>';
   }
 
   function renderRoute() {
@@ -428,10 +466,10 @@
   }
 
   function renderRest() {
-    const hurt = characters.filter((character) => (state.hp[character.id] || 100) < 100).length;
+    const hurt = characters.filter((character) => (Number(state.hp[character.id]) || 0) < getCharacterStats(character,state.levels[character.id] || 1).hp).length;
     return '<div class="campaign-page"><div class="page-heading"><div><span class="section-eyebrow">EL FUEGO TODAVÍA ARDE</span><h2>Descanso en el bastión</h2><p>Lejos de las rutas malditas, la compañía puede cerrar heridas y recuperar fuerzas antes de volver a salir.</p></div></div>' +
       '<div class="rest-layout"><section class="camp-panel rest-chamber"><div class="rest-symbol">✚</div><span class="section-eyebrow">CÁMARA DEL ÚLTIMO FAROL</span><h3>Unas horas lejos de la oscuridad</h3><p>La compañía se reúne alrededor del fuego. El calor devuelve el aliento y las vendas se renuevan. El descanso consume una ración de marcha.</p><div class="rest-cost">COSTE: 1 RACIÓN · DISPONIBLES: ' + state.rations + '</div><button class="game-action" type="button" data-action="rest" ' + (state.rations < 1 ? "disabled" : "") + '>DESCANSAR Y RECUPERAR →</button></section>' +
-      '<aside class="camp-panel rest-effect"><h3>Estado de la compañía</h3><div class="inventory-row"><span>Héroes heridos</span><strong>' + hurt + ' / 5</strong></div><div class="inventory-row"><span>Vitalidad recuperada</span><strong>+25 por héroe</strong></div><div class="inventory-row"><span>Grupo activo</span><strong>' + state.party.length + ' / 4</strong></div><p>El descanso también atiende al miembro que permanece en reserva. Nadie queda atrás dentro de los muros.</p></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
+      '<aside class="camp-panel rest-effect"><h3>Estado de la compañía</h3><div class="inventory-row"><span>Héroes heridos</span><strong>' + hurt + ' / 5</strong></div><div class="inventory-row"><span>Vida recuperada</span><strong>+25% PV máximo</strong></div><div class="inventory-row"><span>Grupo activo</span><strong>' + state.party.length + ' / 4</strong></div><p>El descanso también atiende al miembro que permanece en reserva. Nadie queda atrás dentro de los muros.</p></aside></div><p class="campaign-notice">' + state.notice + '</p></div>';
   }
 
   function renderShop() {
@@ -509,6 +547,7 @@
     if (!isSiteUnlocked(region, siteIndex, state.visitedSites)) return showNotice("Esta parada sigue bloqueada. Supera la anterior para continuar.");
     if (region.sites[siteIndex].boss) return openDialog("boss");
     if (!state.visitedSites.includes(siteId)) state.visitedSites.push(siteId);
+    awardPartyExperience(45);
     const nextSite = region.sites[siteIndex + 1];
     state.selectedRegion = region.id;
     if (nextSite) {
@@ -529,6 +568,7 @@
     const bossIndex = region.sites.findIndex((site) => site.boss);
     if (!isSiteUnlocked(region,bossIndex,state.visitedSites)) return showNotice("El jefe permanece protegido. Supera primero todas las localizaciones.");
     if (!state.visitedSites.includes(boss.id)) state.visitedSites.push(boss.id);
+    awardPartyExperience(120);
     if (regions[regionIndex + 1]) {
       const nextRegion = regions[regionIndex + 1];
       state.selectedRegion = nextRegion.id;
@@ -548,9 +588,12 @@
     if (state.rations < 1) return showNotice("No quedan raciones. Visita al mercader antes de descansar.");
     state.rations -= 1;
     characters.forEach((character) => {
-      state.hp[character.id] = Math.min(100, (state.hp[character.id] || 100) + 25);
+      const level=state.levels[character.id] || 1;
+      const maxHp=getCharacterStats(character,level).hp;
+      const currentHp=Number.isFinite(state.hp[character.id]) ? state.hp[character.id] : maxHp;
+      state.hp[character.id]=Math.min(maxHp,currentHp+Math.ceil(maxHp*0.25));
     });
-    showNotice("La compañía ha descansado. Todos recuperan hasta 25 puntos de vitalidad.");
+    showNotice("La compañía ha descansado. Todos recuperan un 25% de su vida máxima.");
   }
 
   function buyItem(itemId) {
