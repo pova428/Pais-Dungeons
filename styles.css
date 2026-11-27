@@ -4119,6 +4119,7 @@ body.reduce-motion .gacha-pixel-lamp { animation:none !important; }
   position:absolute;
   inset:0;
   margin:0;
+  transform:none;
 }
 .battle-character-visual.has-idle-sprite .battle-pixel-figure {
   opacity:0;
