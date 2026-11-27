@@ -2687,7 +2687,7 @@ body.reduce-motion .battle-enemy-figure { animation:none !important; }
   text-align:center;
   white-space:nowrap;
   pointer-events:none;
-  transform:translateX(calc(-50% + (var(--float-index,0) * 17px)));
+  transform:translateX(calc(-50% + var(--float-offset,0px)));
   animation:battle-number-float 1.35s cubic-bezier(.18,.72,.3,1) both;
 }
 .battle-floating-number.is-damage {
@@ -2759,9 +2759,9 @@ body.reduce-motion .battle-enemy-figure { animation:none !important; }
 
 @keyframes battle-number-float {
   0% { opacity:0; transform:translate(-50%,12px) scale(.72); }
-  12% { opacity:1; transform:translate(calc(-50% + (var(--float-index,0) * 17px)),0) scale(1.16); }
+  12% { opacity:1; transform:translate(calc(-50% + var(--float-offset,0px)),0) scale(1.16); }
   28% { opacity:1; }
-  100% { opacity:0; transform:translate(calc(-50% + (var(--float-index,0) * 17px)), -65px) scale(.92); }
+  100% { opacity:0; transform:translate(calc(-50% + var(--float-offset,0px)), -65px) scale(.92); }
 }
 @keyframes battle-impact-ring {
   0% { opacity:0; transform:translate(-50%,-50%) scale(.22) rotate(-25deg); }
