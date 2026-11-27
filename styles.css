@@ -2549,3 +2549,96 @@ body.reduce-motion .battle-enemy-figure { animation:none !important; }
   .battle-scene-image { opacity:.3; }
   .battle-enemy-art-image { left:-12%;width:124%;top:-12%;height:116%; }
 }
+
+
+/* Build 014 — provisional scenes for Baix Penedes and Steam */
+.battle-skill-row { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.battle-site-sign {
+  position:absolute;
+  z-index:3;
+  top:15%;
+  left:5%;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  min-width:175px;
+  max-width:40%;
+  padding:10px 14px;
+  border:2px solid rgba(180,137,91,.55);
+  background:linear-gradient(135deg,rgba(22,15,18,.92),rgba(12,9,12,.64));
+  box-shadow:5px 6px 0 rgba(0,0,0,.22),inset 0 0 0 3px rgba(0,0,0,.22);
+}
+.battle-site-sign small {
+  color:#c88e68;
+  font:700 7px var(--pixel);
+  letter-spacing:.15em;
+}
+.battle-site-sign b {
+  color:#ead7b7;
+  font:700 clamp(12px,1.5vw,20px) var(--pixel);
+  line-height:1.25;
+  text-shadow:2px 2px #130d10;
+}
+.battle-site-sign i {
+  color:rgba(210,185,148,.62);
+  font:normal 7px var(--pixel);
+  letter-spacing:.1em;
+}
+.battle-environment-prop {
+  position:absolute;
+  z-index:2;
+  bottom:22%;
+  width:22%;
+  height:31%;
+  border:3px solid rgba(111,80,67,.46);
+  background:linear-gradient(180deg,rgba(72,46,43,.72),rgba(23,16,21,.94));
+  box-shadow:8px 8px 0 rgba(0,0,0,.32);
+  clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
+}
+.battle-environment-prop::before,.battle-environment-prop::after {
+  content:"";
+  position:absolute;
+  display:block;
+}
+.battle-environment-prop::before {
+  left:12%;right:12%;top:17%;height:6px;
+  background:rgba(207,149,91,.5);
+  box-shadow:0 24px rgba(207,149,91,.2),0 48px rgba(207,149,91,.16);
+}
+.battle-environment-prop::after {
+  left:42%;top:0;width:12%;height:100%;
+  background:rgba(0,0,0,.22);
+}
+.battle-environment-prop.prop-left { left:6%; }
+.battle-environment-prop.prop-right { right:6%; transform:scale(.82); transform-origin:bottom right; }
+.battle-environment-glow {
+  position:absolute;
+  z-index:1;
+  top:0;left:34%;width:32%;height:62%;
+  background:radial-gradient(ellipse,rgba(194,100,71,.22),transparent 68%);
+  pointer-events:none;
+}
+.battle-room-baix-bowling .battle-site-sign { border-color:rgba(189,140,92,.62); }
+.battle-room-baix-bowling .battle-environment-prop { border-radius:2px; background:linear-gradient(180deg,#4a303b,#1b121b); }
+.battle-room-baix-n340 .battle-environment-prop { width:27%;height:45%;bottom:18%;transform:skewY(-8deg); }
+.battle-room-baix-n340 .battle-environment-glow { background:linear-gradient(110deg,transparent 30%,rgba(203,139,78,.2) 48%,transparent 65%); }
+.battle-room-baix-cinema .battle-environment-prop { width:31%;height:39%;bottom:22%;background:linear-gradient(180deg,#35263f,#100d16); }
+.battle-room-baix-cinema .battle-environment-prop::before { background:#a34d46;box-shadow:0 24px #60333d,0 48px #301e2f; }
+.battle-room-baix-sushi .battle-environment-prop { border-color:rgba(163,93,70,.56);background:linear-gradient(180deg,#54332e,#201117); }
+.battle-room-steam-content-warning .battle-environment-prop { width:18%;height:44%;bottom:18%;border-color:rgba(120,154,147,.4);background:linear-gradient(180deg,#30413d,#111719); }
+.battle-room-steam-content-warning .battle-environment-glow { background:radial-gradient(ellipse,rgba(106,189,160,.2),transparent 70%); }
+.battle-room-steam-labyrinthine .battle-environment-prop { width:25%;height:54%;bottom:14%;background:linear-gradient(180deg,#39402b,#171b16);clip-path:polygon(0 0,75% 0,75% 65%,100% 65%,100% 100%,0 100%); }
+.battle-room-steam-backrooms .battle-environment-prop { width:26%;height:48%;bottom:18%;background:linear-gradient(180deg,#6d5c37,#352b1d);border-color:rgba(189,160,91,.42); }
+.battle-room-steam-backrooms .battle-environment-glow { background:radial-gradient(ellipse,rgba(218,182,92,.24),transparent 70%); }
+.battle-room-steam-clubs .battle-environment-prop { width:21%;height:38%;bottom:20%;background:linear-gradient(180deg,#422c51,#130d1e);border-color:rgba(159,115,195,.48); }
+.battle-room-steam-clubs .battle-environment-glow { background:radial-gradient(ellipse,rgba(160,94,199,.25),transparent 70%); }
+
+@media(max-width:1150px) {
+  .battle-skill-row { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:600px) {
+  .battle-skill-row { grid-template-columns:1fr; }
+  .battle-site-sign { top:17%;left:3%;min-width:140px;padding:8px 10px; }
+  .battle-site-sign b { font-size:12px; }
+  .battle-environment-prop { height:24%;bottom:23%; }
+}
