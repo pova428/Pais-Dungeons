@@ -1,5 +1,12 @@
 # PAIS DUNGEON
 
+## Build 038 — fondo personalizable en Descanso
+
+- Se elimina el paisaje fijo y las capas de fondo construidas por CSS en la pantalla Descanso.
+- Se añade un selector para cargar una imagen propia, mostrarla como fondo y quitarla cuando se quiera.
+- La imagen se guarda localmente en el navegador mediante IndexedDB y se vuelve a cargar al regresar a Descanso.
+- El panel de descanso y las mecánicas de raciones y recuperación permanecen sin cambios.
+
 ## Build 037 — descanso sin llama ni efectos animados
 
 - Se retira la llama incrustada en el fondo panorámico y se recuperan las ilustraciones del campamento que conservan el anillo de piedras y los troncos, pero no dibujan fuego.
