@@ -1064,12 +1064,12 @@
   let battleActionTimer = null;
   let gachaAnimationTimer = null;
   const battleFloatTimers = new WeakMap();
-  const BATTLE_ACTION_FRAME_DELAY = 420;
-  const BATTLE_ACTION_RECOVERY_DELAY = 380;
-  const BATTLE_ENEMY_PREPARE_DELAY = 900;
-  const BATTLE_ENEMY_IMPACT_DELAY = 650;
-  const BATTLE_ENEMY_RECOVERY_DELAY = 650;
-  const BATTLE_FLOATING_NUMBER_DURATION = 1350;
+  const BATTLE_ACTION_FRAME_DELAY = 520;
+  const BATTLE_ACTION_RECOVERY_DELAY = 440;
+  const BATTLE_ENEMY_PREPARE_DELAY = 620;
+  const BATTLE_ENEMY_IMPACT_DELAY = 520;
+  const BATTLE_ENEMY_RECOVERY_DELAY = 440;
+  const BATTLE_FLOATING_NUMBER_DURATION = 1500;
 
   function getBattleActionStepDuration(animation) {
     if (!animation) return BATTLE_ACTION_FRAME_DELAY;

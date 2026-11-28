@@ -1,5 +1,13 @@
 # PAIS DUNGEON
 
+## Build 031 — ritmo unificado de las animaciones de combate
+
+- Los tres frames de los ataques de los héroes pasan a durar 520 ms por fase, con 440 ms de recuperación.
+- Los enemigos usan un ritmo muy parecido: 620 ms de preparación, 520 ms de impacto y 440 ms de recuperación.
+- Se sincronizan los movimientos, los destellos de impacto, las magias, las curaciones y los escudos con esos tiempos.
+- Se iguala la transición visual de los sprites en móvil y escritorio para que las animaciones mantengan el mismo ritmo.
+- Los números de daño y curación permanecen visibles 1,5 segundos.
+
 ## Build 030 — ajuste de curación de Chupadita
 
 La curación de Igor se calcula sobre el daño que realmente ha recibido el enemigo, no sobre el daño potencial. Así Chupadita no cura de más cuando el rival tiene pocos puntos de vida.
