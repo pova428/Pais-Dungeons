@@ -2,7 +2,7 @@
 
 ## Punto de entrada
 
-`index.html` carga `game.js` como módulo ES. No hay paso de compilación: los navegadores cargan directamente los módulos de `src/`.
+`index.html` carga `game.js` como módulo ES. No hay paso de compilación: los navegadores cargan directamente los módulos de `src/`. Para desarrollo local, sirve la carpeta desde HTTP; abrir `index.html` como archivo (`file://`) bloquea los imports de módulos en muchos navegadores.
 
 ## Código fuente
 
