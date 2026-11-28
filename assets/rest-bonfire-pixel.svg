@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 330" shape-rendering="crispEdges">
+  <g>
+    <path d="M50 276h26v-8h44v-7h42v7h132v-7h48v7h42v8h26v15H50z" fill="#17141b"/>
+    <path d="M80 277h300v10H80z" fill="#38231e"/>
+    <path d="M124 258h45v8h124v-8h43v15H124z" fill="#783d29" opacity=".48"/>
+    <path d="M161 249h26v-8h20v8h46v-8h23v8h21v8H161z" fill="#a4472d"/>
+    <rect x="185" y="244" width="11" height="7" fill="#e08b48"/>
+    <rect x="215" y="235" width="16" height="9" fill="#e3a052"/>
+    <rect x="248" y="243" width="13" height="7" fill="#c96a35"/>
+    <rect x="276" y="251" width="10" height="6" fill="#f0ab58"/>
+  </g>
+  <!-- Two charred logs crossing at the heart of the fire -->
+  <g stroke="#171016" stroke-width="8" stroke-linejoin="miter">
+    <path d="M82 222h22v-8h28v-7h34v7h30v8h28v9h-28v8h-34v-7h-32v-8h-48z" fill="#39241f"/>
+    <path d="M102 222h20v-8h32v8h23v8h-28v8h-32v-8h-15z" fill="#75402a"/>
+    <path d="M360 196h-24v-8h-31v8h-30v8h-23v9h25v8h31v-7h32v-8h20z" fill="#36211f"/>
+    <path d="M348 197h-21v-8h-30v8h-20v8h26v8h31v-8h14z" fill="#75412a"/>
+    <path d="M151 228h42v-8h34v8h21v9h-22v8h-33v-8h-42z" fill="#4a2920" transform="rotate(-9 199 232)"/>
+    <path d="M211 230h31v-8h33v8h27v9h-29v8h-35v-8h-27z" fill="#613323" transform="rotate(10 256 233)"/>
+  </g>
+  <g stroke="#1b1218" stroke-width="5">
+    <rect x="75" y="208" width="35" height="31" fill="#42271f"/>
+    <rect x="81" y="213" width="24" height="21" fill="#99603a"/>
+    <rect x="87" y="218" width="12" height="11" fill="#533025"/>
+    <rect x="345" y="182" width="38" height="32" fill="#3a241f"/>
+    <rect x="351" y="187" width="25" height="22" fill="#94603b"/>
+    <rect x="358" y="192" width="12" height="12" fill="#4e2d25"/>
+  </g>
+  <g fill="#a86b3d">
+    <rect x="121" y="216" width="15" height="4"/><rect x="139" y="225" width="9" height="4"/>
+    <rect x="302" y="202" width="13" height="4"/><rect x="324" y="195" width="8" height="4"/>
+    <rect x="186" y="231" width="11" height="4"/><rect x="259" y="232" width="12" height="4"/>
+  </g>
+  <g stroke="#17151a" stroke-width="7" stroke-linejoin="miter">
+    <path d="M72 248h14v-11h25v6h16v17h-9v12H91v-7H72z" fill="#39333a"/>
+    <path d="M113 265h18v-11h30v8h13v17h-10v10h-38v-7h-13z" fill="#4a3d3d"/>
+    <path d="M157 277h20v-10h33v7h16v18h-14v8h-37v-7h-18z" fill="#5a4942"/>
+    <path d="M205 286h19v-11h35v8h17v18h-15v8h-41v-8h-15z" fill="#534342"/>
+    <path d="M257 278h18v-10h33v8h16v17h-13v8h-39v-7h-15z" fill="#625047"/>
+    <path d="M302 263h17v-10h29v7h15v18h-13v9h-35v-8h-13z" fill="#4d4140"/>
+    <path d="M343 241h16v-11h25v7h14v18h-12v9h-30v-7h-13z" fill="#373139"/>
+  </g>
+  <g fill="#897366">
+    <rect x="80" y="245" width="18" height="4"/><rect x="120" y="260" width="22" height="4"/>
+    <rect x="166" y="273" width="25" height="4"/><rect x="215" y="282" width="25" height="4"/>
+    <rect x="266" y="273" width="24" height="4"/><rect x="311" y="260" width="23" height="4"/>
+    <rect x="351" y="237" width="17" height="4"/>
+  </g>
+  <g fill="#26232b">
+    <rect x="92" y="257" width="9" height="5"/><rect x="139" y="277" width="10" height="5"/>
+    <rect x="187" y="289" width="10" height="5"/><rect x="237" y="295" width="10" height="5"/>
+    <rect x="286" y="285" width="10" height="5"/><rect x="330" y="271" width="9" height="5"/>
+    <rect x="365" y="250" width="8" height="5"/>
+  </g>
+  <g fill="#9f472d">
+    <rect x="180" y="267" width="5" height="4"/><rect x="271" y="267" width="4" height="4"/>
+    <rect x="213" y="275" width="5" height="4"/><rect x="246" y="278" width="4" height="4"/>
+  </g>
+</svg>
