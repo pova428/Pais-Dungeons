@@ -1,5 +1,12 @@
 # PAIS DUNGEON
 
+## Build 032 — hoguera pixel-art de fantasía oscura
+
+- La hoguera geométrica se sustituye por una ilustración pixel-art propia de troncos cruzados, carbón encendido y un anillo de piedras con sombreado por bloques.
+- Las llamas usan una paleta más oscura de brasa, terracota y ámbar, con animación por pasos; se mantienen el humo y las chispas.
+- Se reduce el resplandor naranja y se oscurece la iluminación ambiental del campamento para reforzar el ambiente nocturno.
+- La nueva composición se adapta a escritorio, tablet y móvil. Los botones, contadores y la recuperación del descanso siguen siendo elementos reales de la interfaz.
+
 ## Build 031 — ritmo unificado de las animaciones de combate
 
 - Los tres frames de los ataques de los héroes pasan a durar 520 ms por fase, con 440 ms de recuperación.

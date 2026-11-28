@@ -1866,10 +1866,8 @@
           '<div class="rest-fire-aura"></div>'+
           '<div class="rest-smoke"><i></i><i></i><i></i><i></i><i></i></div>'+
           '<div class="rest-fire-sparks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
-          '<div class="rest-firepit"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
-          '<div class="rest-fire-logs"><i class="log-a"></i><i class="log-b"></i><i class="log-c"></i></div>'+
-          '<div class="rest-flames"><i class="flame-outer"></i><i class="flame-mid"></i><i class="flame-core"></i><i class="flame-side"></i></div>'+
-          '<div class="rest-fire-glow"></div>'+
+          '<div class="rest-flames" aria-hidden="true"><i class="flame-outer"></i><i class="flame-mid"></i><i class="flame-core"></i><i class="flame-side flame-side-left"></i><i class="flame-side flame-side-right"></i></div>'+
+          '<img class="rest-fire-pixel-base" src="assets/rest-bonfire-pixel.svg" alt="" draggable="false">'+
         '</div>'+
         '<aside class="rest-camp-controls">'+
           '<span class="rest-controls-eyebrow">✦ EL ÚLTIMO FAROL ✦</span>'+
