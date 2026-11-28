@@ -11,6 +11,7 @@ Consulta el **[mapa de proyecto y hoja de ruta](ROADMAP.md)** para ver:
 - Qué mejoras gráficas, animaciones y objetos están pendientes.
 - Qué trabajo queda para los mapas, el lore y la historia.
 - Las fases previstas para ampliar el contenido y pulir el juego.
+- Consulta el [mapa de arquitectura](docs/architecture.md) para localizar sistemas y datos del código.
 
 **Estado actual:** la base jugable incluye campaña, compañía de cinco héroes, combate, habilidades, mercado, inventario, equipamiento, rutas y descanso. El siguiente gran objetivo es elevar la calidad visual y narrativa, ampliar los mapas y el contenido y revisar la experiencia completa.
 
@@ -210,4 +211,5 @@ En GitHub: abre la carpeta → **Add file → Upload files** → arrastra la ima
 
 ## Rutas y combate
 Se mantienen las tres rutas y los encuentros provisionales. El equipo modifica las estadísticas en combate, incluidos golpes críticos, curación y escudos.
+
 
