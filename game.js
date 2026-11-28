@@ -1548,10 +1548,11 @@
         '<span class="character-nav-state ' + (isActive ? "is-active" : "") + '">' + (isActive ? "●" : "○") + '</span></button>';
     }).join("");
     const portraitImage = selected.portrait ? '<img class="character-portrait-art" src="' + selected.portrait + '" alt="Retrato pixel art de ' + selected.name + ' ' + selected.title + '" loading="eager" onerror="this.remove()">' : "";
-    const spriteMarkup = selected.id==="duelist"
-      ? '<div class="duelist-png-preview" aria-label="Animación pixel art de Salim">'+[1,2,3].map((frame)=>'<img class="duelist-preview-frame preview-frame-'+frame+'" src="assets/battles/animations/heroes/duelist/idle/frame-0'+frame+'.png" alt="" draggable="false" onload="this.parentElement.parentElement.classList.add(&quot;has-png-sprite&quot;)" onerror="this.remove()">').join("")+'</div>'
+    const hasPngHeroAnimations=selected.id==="duelist"||selected.id==="guardian";
+    const spriteMarkup = hasPngHeroAnimations
+      ? '<div class="hero-png-preview'+(selected.id==="guardian"?" is-guardian-png":"")+'" aria-label="Animación pixel art de '+selected.name+'">'+[1,2,3].map((frame)=>'<img class="hero-preview-frame preview-frame-'+frame+'" src="assets/battles/animations/heroes/'+selected.id+'/idle/frame-0'+frame+'.png" alt="" draggable="false" onload="this.parentElement.parentElement.classList.add(&quot;has-png-sprite&quot;)" onerror="this.remove()">').join("")+'</div>'
       : selected.sprites ? '<img class="sprite-load-probe" src="' + selected.sprites + '" alt="" onload="this.parentElement.classList.add(&quot;has-sprite&quot;);this.remove()" onerror="this.parentElement.classList.add(&quot;no-sprite&quot;);this.remove()"><div class="character-sprite-animation" style="background-image:url(' + selected.sprites + ')"></div>' : "";
-    const spriteNote = selected.id === "duelist" ? "REPOSO PNG ×3 · ATAQUES PNG ×3" : "ANIMACIONES POR AÑADIR";
+    const spriteNote = hasPngHeroAnimations ? "REPOSO PNG ×3 · ATAQUES PNG ×3" : "ANIMACIONES POR AÑADIR";
     const skills = selected.skills.map((skill) => {
       const unlocked = level >= skill.unlockLevel;
       return '<div class="character-skill ' + (unlocked ? "is-ready" : "is-locked") + '">' +
@@ -1595,7 +1596,7 @@
           '<div class="character-party-mini"><span>GRUPO ACTIVO</span><strong>' + state.party.length + ' / 4</strong><div class="party-slots">' + slots + '</div></div></aside>' +
         '<section class="character-sheet camp-panel ' + (active ? "is-active" : "is-reserve") + '">' +
           '<div class="character-art-column"><div class="character-portrait-frame"><div class="character-portrait-placeholder"><b>' + selected.sign + '</b><small>RETRATO PENDIENTE</small></div>' + portraitImage + '</div>' +
-            '<div class="character-sprite-window"><span>ANIMACIÓN DE CAMPO</span>' + spriteMarkup + '<div class="character-sprite-empty">SPRITE PENDIENTE</div></div></div>' +
+            '<div class="character-sprite-window'+(selected.id==="guardian"?" is-guardian-png":"")+'"><span>ANIMACIÓN DE CAMPO</span>' + spriteMarkup + '<div class="character-sprite-empty">SPRITE PENDIENTE</div></div></div>' +
           '<div class="character-profile">' +
             '<div class="character-profile-head"><div><span class="section-eyebrow">PERSONAJE ' + String(selectedIndex+1).padStart(2,"0") + ' · ' + selected.role + '</span><h3>' + selected.name + '</h3><div class="character-alias">«' + selected.title + '»</div>' +
               '<div class="character-quick-stats"><span>NIVEL ' + level + ' / 10</span><span>' + selected.role + '</span></div></div>' +
@@ -1714,6 +1715,7 @@
       const debuff=battle.debuffs[id]||null;
       const targetAttrs=isTarget ? 'data-action="battle-target" data-target-id="'+id+'" data-target-side="ally" role="button" tabindex="0" aria-label="Elegir a '+character.name+' como objetivo"' : "";
       const animation=battle.actionAnimation;
+      const isPngHero=id==="duelist"||id==="guardian";
       const isAttacking=Boolean(animation && animation.side==="ally" && animation.actorId===id);
       const isWindingUp=Boolean(isAttacking && animation.frame===1);
       const isImpactFrame=Boolean(isAttacking && animation.frame===2);
@@ -1737,7 +1739,7 @@
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
-          '<div class="battle-character-visual'+(id==="duelist"?" is-duelist-sprite":"")+'">'+(id==="duelist"?"":'<div class="battle-pixel-figure figure-'+id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(1120,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>')+idleMarkup+spriteMarkup+'</div>'+supportFxMarkup+impactMarkup+floatingMarkup+
+          '<div class="battle-character-visual'+(isPngHero?" is-png-hero-sprite"+(id==="guardian"?" is-guardian-png":""):"")+'">'+(isPngHero?"":'<div class="battle-pixel-figure figure-'+id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(1120,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>')+idleMarkup+spriteMarkup+'</div>'+supportFxMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+character.role+'</span>' +
         '</div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+character.name+'</strong><em>«'+character.title+'»</em></div>' +

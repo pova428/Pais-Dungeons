@@ -1,5 +1,12 @@
 # PAIS DUNGEON
 
+## Build 035 — animaciones de Pol normalizadas con Salim
+
+- Se conectan las cinco secuencias PNG de Pol (`guardian`): `idle`, `basic-attack`, `arcane-bolt`, `burn-mark` y `nova`, con tres frames de 512 × 512 px por secuencia.
+- Pol y Salim usan el mismo contenedor de combate, la misma línea de suelo y los mismos tiempos: 3 segundos para el ciclo idle y 520/520/440 ms para preparación, impacto y recuperación.
+- Se amplía la presentación de Pol para compensar el mayor margen transparente de sus ilustraciones sin cambiar los archivos originales ni recortar los efectos.
+- La ficha de personaje muestra también el reposo PNG de Pol, igual que la de Salim.
+
 ## Build 034 — escenario de descanso con más profundidad y detalle
 
 - Se rehace únicamente el fondo del campamento en escritorio y móvil: ahora incluye un valle montañoso, castillo iluminado, puente, cascadas, río, bosque por capas y árboles que enmarcan la zona segura.

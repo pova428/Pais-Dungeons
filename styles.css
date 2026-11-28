@@ -4531,14 +4531,14 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
 }
 
 /* Build 027 — Salim uses only the real PNGs; larger shared idle/action canvas */
-.battle-character-visual.is-duelist-sprite {
+.battle-character-visual.is-png-hero-sprite {
   width:min(132px,100%);
   height:166px;
   flex:0 1 132px;
   overflow:visible;
 }
-.battle-character-visual.is-duelist-sprite .battle-idle-frame,
-.battle-character-visual.is-duelist-sprite > .battle-action-sprite {
+.battle-character-visual.is-png-hero-sprite .battle-idle-frame,
+.battle-character-visual.is-png-hero-sprite > .battle-action-sprite {
   position:absolute;
   inset:auto;
   top:auto;
@@ -4554,41 +4554,41 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
   transform-origin:center bottom;
   image-rendering:pixelated;
 }
-.battle-character-visual.is-duelist-sprite.has-action-sprite .battle-idle-frames {
+.battle-character-visual.is-png-hero-sprite.has-action-sprite .battle-idle-frames {
   opacity:0;
   visibility:hidden;
 }
-.battle-character-visual.is-duelist-sprite .battle-idle-frames {
+.battle-character-visual.is-png-hero-sprite .battle-idle-frames {
   position:absolute;
   inset:0;
   overflow:visible;
 }
-.battle-hero-duelist .battle-unit-art {
+.battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art {
   min-height:178px;
 }
 @media(max-width:900px) {
-  .battle-character-visual.is-duelist-sprite {
+  .battle-character-visual.is-png-hero-sprite {
     width:min(120px,100%);
     height:154px;
     flex-basis:120px;
   }
-  .battle-hero-duelist .battle-unit-art { min-height:166px; }
+  .battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art { min-height:166px; }
 }
 @media(max-width:600px) {
-  .battle-character-visual.is-duelist-sprite {
+  .battle-character-visual.is-png-hero-sprite {
     width:min(110px,100%);
     height:142px;
     flex-basis:110px;
   }
-  .battle-hero-duelist .battle-unit-art { min-height:154px; }
+  .battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art { min-height:154px; }
 }
 @media(max-width:420px) {
-  .battle-character-visual.is-duelist-sprite {
+  .battle-character-visual.is-png-hero-sprite {
     width:min(104px,100%);
     height:134px;
     flex-basis:104px;
   }
-  .battle-hero-duelist .battle-unit-art { min-height:148px; }
+  .battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art { min-height:148px; }
 }
 
 /* Build 028 — remove the old Salim spritesheet everywhere and use the three new PNG frames */
@@ -4599,7 +4599,7 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
   75%,100% { background-position:-216px 0; }
 }
 .character-sprite-window.has-png-sprite .character-sprite-empty { display:none; }
-.duelist-png-preview {
+.hero-png-preview {
   position:relative;
   width:100%;
   height:110px;
@@ -4607,7 +4607,7 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
   overflow:visible;
   image-rendering:pixelated;
 }
-.duelist-preview-frame {
+.hero-preview-frame {
   position:absolute;
   inset:0;
   width:100%;
@@ -4617,9 +4617,9 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
   image-rendering:pixelated;
   opacity:0;
 }
-.duelist-preview-frame.preview-frame-1 { animation:duelist-preview-one 3s steps(1,end) infinite; }
-.duelist-preview-frame.preview-frame-2 { animation:duelist-preview-two 3s steps(1,end) infinite; }
-.duelist-preview-frame.preview-frame-3 { animation:duelist-preview-three 3s steps(1,end) infinite; }
+.hero-preview-frame.preview-frame-1 { animation:duelist-preview-one 3s steps(1,end) infinite; }
+.hero-preview-frame.preview-frame-2 { animation:duelist-preview-two 3s steps(1,end) infinite; }
+.hero-preview-frame.preview-frame-3 { animation:duelist-preview-three 3s steps(1,end) infinite; }
 @keyframes duelist-preview-one { 0%,32.99% {opacity:1} 33%,100% {opacity:0} }
 @keyframes duelist-preview-two { 0%,32.99% {opacity:0} 33%,65.99% {opacity:1} 66%,100% {opacity:0} }
 @keyframes duelist-preview-three { 0%,65.99% {opacity:0} 66%,100% {opacity:1} }
@@ -4648,19 +4648,19 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
   .route-salim-png { width:56px;height:60px;flex-basis:56px; }
 }
 @media(prefers-reduced-motion:reduce) {
-  .duelist-preview-frame,.route-salim-frame { animation:none !important; }
-  .duelist-preview-frame.preview-frame-1,.route-frame-1 { opacity:1; }
+  .hero-preview-frame,.route-salim-frame { animation:none !important; }
+  .hero-preview-frame.preview-frame-1,.route-frame-1 { opacity:1; }
 }
 
 /* Larger Salim PNGs, with one scale shared by idle and every combat action */
-.battle-character-visual.is-duelist-sprite {
+.battle-character-visual.is-png-hero-sprite {
   width:min(148px,100%);
   height:190px;
   flex:0 1 148px;
   overflow:visible;
 }
-.battle-character-visual.is-duelist-sprite .battle-idle-frame,
-.battle-character-visual.is-duelist-sprite > .battle-action-sprite {
+.battle-character-visual.is-png-hero-sprite .battle-idle-frame,
+.battle-character-visual.is-png-hero-sprite > .battle-action-sprite {
   left:-21%;
   bottom:0;
   width:142%;
@@ -4671,18 +4671,18 @@ body.reduce-motion .rest-smoke i { opacity:.12; }
   object-position:center bottom;
   image-rendering:pixelated;
 }
-.battle-hero-duelist .battle-unit-art { min-height:198px; }
+.battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art { min-height:198px; }
 @media(max-width:900px) {
-  .battle-character-visual.is-duelist-sprite { width:min(132px,100%);height:172px;flex-basis:132px; }
-  .battle-hero-duelist .battle-unit-art { min-height:184px; }
+  .battle-character-visual.is-png-hero-sprite { width:min(132px,100%);height:172px;flex-basis:132px; }
+  .battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art { min-height:184px; }
 }
 @media(max-width:600px) {
-  .battle-character-visual.is-duelist-sprite { width:min(120px,100%);height:158px;flex-basis:120px; }
-  .battle-hero-duelist .battle-unit-art { min-height:168px; }
+  .battle-character-visual.is-png-hero-sprite { width:min(120px,100%);height:158px;flex-basis:120px; }
+  .battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art { min-height:168px; }
 }
 @media(max-width:420px) {
-  .battle-character-visual.is-duelist-sprite { width:min(112px,100%);height:148px;flex-basis:112px; }
-  .battle-hero-duelist .battle-unit-art { min-height:158px; }
+  .battle-character-visual.is-png-hero-sprite { width:min(112px,100%);height:148px;flex-basis:112px; }
+  .battle-hero-duelist .battle-unit-art,.battle-hero-guardian .battle-unit-art { min-height:158px; }
 }
 
 /* Build 029 — pixel-art VFX for the redesigned hero skills */
@@ -4956,3 +4956,21 @@ body.reduce-motion .rest-flames .rest-fire-sprite {
   animation:none !important;
   background-position:0 0;
 }
+
+/* Build 035 — Pol and Salim use the same battle frame and timing */
+.battle-character-visual.is-guardian-png .battle-idle-frame,
+.battle-character-visual.is-guardian-png > .battle-action-sprite {
+  left:-39%;
+  bottom:0;
+  width:178%;
+  height:178%;
+  max-width:none;
+  max-height:none;
+  object-fit:contain;
+  object-position:center bottom;
+}
+.hero-png-preview.is-guardian-png .hero-preview-frame {
+  transform:scale(1.2);
+  transform-origin:center bottom;
+}
+.character-sprite-window.is-guardian-png { min-height:145px; }
