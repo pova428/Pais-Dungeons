@@ -1,5 +1,12 @@
 # PAIS DUNGEON
 
+## Build 034 — escenario de descanso con más profundidad y detalle
+
+- Se rehace únicamente el fondo del campamento en escritorio y móvil: ahora incluye un valle montañoso, castillo iluminado, puente, cascadas, río, bosque por capas y árboles que enmarcan la zona segura.
+- Se enriquecen las tiendas, banderas, faroles, mesas, cofres, barriles, pociones, escudos, espada, alfombra, rocas, vegetación y reflejos del suelo.
+- Se conserva el espacio central de la hoguera, con leña y anillo de piedras para que la animación de fuego de cuatro fotogramas siga siendo la misma.
+- No se cambian los controles, contadores, recuperación de descanso ni mecánica de la hoguera.
+
 ## Build 033 — hoguera animada integrada en el campamento
 
 - Se sustituye la llama construida con polígonos CSS por una secuencia pixel-art de cuatro fotogramas con transparencia.

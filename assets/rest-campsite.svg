@@ -1,116 +1,301 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" shape-rendering="crispEdges">
 <defs>
-  <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#101b31"/><stop offset=".58" stop-color="#1d2b38"/><stop offset="1" stop-color="#342a2a"/></linearGradient>
-  <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#354033"/><stop offset=".44" stop-color="#514034"/><stop offset="1" stop-color="#211c21"/></linearGradient>
-  <linearGradient id="tent" x2="1" y2="1"><stop stop-color="#8a7957"/><stop offset=".52" stop-color="#596048"/><stop offset="1" stop-color="#303a34"/></linearGradient>
-  <linearGradient id="tentLight" x2="0" y2="1"><stop stop-color="#e7b46d" stop-opacity=".7"/><stop offset="1" stop-color="#a65a39" stop-opacity="0"/></linearGradient>
-  <radialGradient id="fireGlow"><stop stop-color="#f5a04a" stop-opacity=".3"/><stop offset="1" stop-color="#f5a04a" stop-opacity="0"/></radialGradient>
+  <linearGradient id="night" x2="0" y2="1"><stop stop-color="#080f20"/><stop offset=".48" stop-color="#101d32"/><stop offset="1" stop-color="#24303a"/></linearGradient>
+  <linearGradient id="farHill" x2="0" y2="1"><stop stop-color="#24354a"/><stop offset="1" stop-color="#111d2b"/></linearGradient>
+  <linearGradient id="nearHill" x2="0" y2="1"><stop stop-color="#172b31"/><stop offset="1" stop-color="#0b171c"/></linearGradient>
+  <linearGradient id="earth" x2="0" y2="1"><stop stop-color="#3d3b35"/><stop offset=".4" stop-color="#514034"/><stop offset="1" stop-color="#1d2025"/></linearGradient>
+  <linearGradient id="canvas" x2="1" y2="1"><stop stop-color="#88765f"/><stop offset=".42" stop-color="#58483d"/><stop offset="1" stop-color="#292a30"/></linearGradient>
+  <linearGradient id="canvasSide" x2="1" y2="0"><stop stop-color="#3d3030"/><stop offset=".55" stop-color="#70523d"/><stop offset="1" stop-color="#302a2e"/></linearGradient>
+  <linearGradient id="wood" x2="0" y2="1"><stop stop-color="#8b5938"/><stop offset=".45" stop-color="#573725"/><stop offset="1" stop-color="#291e1d"/></linearGradient>
+  <linearGradient id="water" x2="0" y2="1"><stop stop-color="#82b9c6"/><stop offset=".36" stop-color="#31677e"/><stop offset="1" stop-color="#102a3e"/></linearGradient>
+  <linearGradient id="falls" x2="1" y2="0"><stop stop-color="#9acbd3" stop-opacity=".3"/><stop offset=".3" stop-color="#b7e6e6"/><stop offset=".65" stop-color="#4d91a9"/><stop offset="1" stop-color="#183c55"/></linearGradient>
+  <radialGradient id="moonHalo"><stop stop-color="#9bbfe6" stop-opacity=".24"/><stop offset=".55" stop-color="#7298c4" stop-opacity=".08"/><stop offset="1" stop-color="#7196c1" stop-opacity="0"/></radialGradient>
+  <radialGradient id="campHalo"><stop stop-color="#b86b37" stop-opacity=".38"/><stop offset=".55" stop-color="#9b4e2e" stop-opacity=".16"/><stop offset="1" stop-color="#9b4e2e" stop-opacity="0"/></radialGradient>
+  <radialGradient id="lampHalo"><stop stop-color="#ffc36d" stop-opacity=".7"/><stop offset="1" stop-color="#ef9b42" stop-opacity="0"/></radialGradient>
+  <pattern id="stars" width="173" height="111" patternUnits="userSpaceOnUse">
+    <rect x="18" y="21" width="3" height="3" fill="#d4d7c9"/><rect x="87" y="54" width="2" height="2" fill="#8ea3bd"/><rect x="142" y="13" width="3" height="3" fill="#d9d2b7"/><rect x="128" y="89" width="2" height="2" fill="#8197ad"/><rect x="43" y="83" width="2" height="2" fill="#d1cbb6"/>
+  </pattern>
+  <pattern id="cobble" width="56" height="34" patternUnits="userSpaceOnUse">
+    <path d="M2 5h20v8H2zM29 2h23v9H29zM12 22h25v9H12zM43 19h11v9H43z" fill="#6d5240" opacity=".34"/>
+    <path d="M0 16h9M25 14h7M42 32h11" stroke="#a57b56" stroke-width="2" opacity=".3"/>
+  </pattern>
+  <clipPath id="campGround"><path d="M0 420H1600V760H0Z"/></clipPath>
 </defs>
-<rect width="1600" height="760" fill="url(#sky)"/>
-<rect x="0" y="0" width="1600" height="760" fill="#101827" opacity=".16"/>
-<g fill="#d8d8bd">
-  <rect x="158" y="91" width="5" height="5"/><rect x="225" y="150" width="4" height="4"/><rect x="394" y="68" width="5" height="5"/>
-  <rect x="522" y="127" width="4" height="4"/><rect x="676" y="54" width="5" height="5"/><rect x="858" y="100" width="4" height="4"/>
-  <rect x="1022" y="71" width="5" height="5"/><rect x="1150" y="135" width="4" height="4"/><rect x="1475" y="160" width="4" height="4"/>
-  <rect x="1518" y="91" width="5" height="5"/><rect x="930" y="180" width="3" height="3"/>
+<!-- Moonlit sky and distant cloud banks -->
+<rect width="1600" height="760" fill="url(#night)"/>
+<rect width="1600" height="300" fill="url(#stars)" opacity=".8"/>
+<circle cx="795" cy="112" r="158" fill="url(#moonHalo)"/>
+<g shape-rendering="crispEdges">
+  <path d="M744 65h37v-7h36v7h21v10h13v39h-8v24h-12v12h-68v-8h-18v-16h-9V85h8z" fill="#c2d0d3"/>
+  <path d="M760 73h23v-6h28v6h20v12h9v32h-9v14h-13v9h-50v-9h-14v-17h-8V91h8z" fill="#e0e1d1"/>
+  <path d="M777 77h9v11h-9zM824 89h11v7h-11zM792 113h10v9h-10zM844 120h8v8h-8zM756 103h8v8h-8z" fill="#9daeb9"/>
+  <path d="M770 143h21v-8h28v8h23v8h-72z" fill="#91a2b1"/>
 </g>
-<g opacity=".8">
-  <rect x="1297" y="69" width="54" height="54" fill="#d1d3bd"/><rect x="1305" y="61" width="38" height="8" fill="#d1d3bd"/>
-  <rect x="1289" y="77" width="8" height="38" fill="#d1d3bd"/><rect x="1351" y="77" width="8" height="38" fill="#d1d3bd"/>
-  <rect x="1305" y="123" width="38" height="8" fill="#d1d3bd"/>
-  <rect x="1320" y="78" width="16" height="13" fill="#9cacc0" opacity=".6"/>
+<g fill="#b6c6d1" opacity=".48">
+  <path d="M0 180l34-8 17 6 20-11 30 4 25-14 39 7 30-13 33 9 29-18 39 6 18 20 30 4 26-12 31 8 28-12 36 7 18 17 42-4 24-11 23 8 31-11 22 7 25-13 33 8 22-11 32 7 22-8 34 9 28-7 31 12 36-5 32 16H0Z"/>
+  <path d="M880 166l31-12 30 9 22-16 41 7 22-10 29 12 19-10 38 9 20-8 37 15 31-5 27 15 26-2 30 12 40-8 29 12 34-8 36 17H880Z"/>
 </g>
-<path d="M0 340L120 250 222 300 330 214 438 300 535 231 650 320 785 211 902 303 1004 225 1127 307 1235 205 1345 292 1468 220 1600 300V530H0Z" fill="#182432"/>
-<path d="M0 390L145 294 265 358 388 270 502 370 641 282 755 368 888 276 1017 370 1135 290 1257 365 1378 275 1490 355 1600 303V545H0Z" fill="#1e2d32"/>
-<g fill="#10201f">
-  <path d="M32 427L80 260 128 427Z"/><path d="M94 442L150 235 206 442Z"/><path d="M250 418L292 270 334 418Z"/>
-  <path d="M415 430L465 250 515 430Z"/><path d="M565 420L615 230 665 420Z"/><path d="M930 423L980 240 1030 423Z"/>
-  <path d="M1060 430L1110 248 1160 430Z"/><path d="M1410 423L1460 224 1510 423Z"/><path d="M1490 445L1545 250 1600 445Z"/>
+<g fill="#34475c" opacity=".78">
+  <path d="M0 282l70-48 50 20 65-72 76 48 71-68 56 42 55-67 67 45 72-77 72 51 61-42 71 45 54-56 84 56 75-46 67 44 76-61 72 52 57-27 60 31v245H0Z"/>
+  <path d="M0 322l98-69 66 37 72-58 84 62 65-64 79 58 78-66 70 49 67-56 80 58 60-37 62 41 82-55 63 45 72-56 72 43 80-52 72 50v212H0Z" fill="#26394c"/>
 </g>
-<g fill="#263a34">
-  <path d="M18 390L58 280 98 390Z"/><path d="M112 399L160 290 208 399Z"/><path d="M360 398L402 300 444 398Z"/>
-  <path d="M510 402L554 280 598 402Z"/><path d="M876 390L918 289 960 390Z"/><path d="M1164 396L1208 288 1252 396Z"/>
-  <path d="M1360 388L1405 270 1450 388Z"/>
+<!-- Snow peaks -->
+<path d="M0 356l115-86 68 27 100-105 95 93 112-117 103 91 84-73 90 88 116-117 108 103 72-67 112 76 95-49 130 95v151H0Z" fill="#1a2b3d"/>
+<g fill="#8697a8" opacity=".84">
+  <path d="M182 296l101-104 43 50-28-9-17 12-20-4-19 20-20-5-18 18z"/>
+  <path d="M475 301l114-135 56 57-34-12-20 14-22-4-18 19-22-6-19 20z"/>
+  <path d="M974 288l113-122 48 57-31-10-20 13-19-3-18 19-19-5-21 20z"/>
+  <path d="M1230 315l70-79 41 39-24-7-15 10-14-4-14 14-14-5z"/>
 </g>
-<g fill="#432b27">
-  <rect x="39" y="0" width="31" height="480"/><rect x="80" y="0" width="23" height="408"/>
-  <rect x="1532" y="0" width="34" height="475"/><rect x="1490" y="0" width="22" height="393"/>
+<g fill="#c4cbd0" opacity=".72">
+  <path d="M283 192l-32 33 24-4 14 12 13-18 18 8-12-22z"/>
+  <path d="M587 165l-44 53 32-10 18 13 17-23 22 10-17-31z"/>
+  <path d="M1088 166l-38 43 28-8 16 12 15-21 20 8-15-25z"/>
 </g>
-<g fill="#68402c">
-  <rect x="28" y="0" width="12" height="220"/><rect x="70" y="0" width="10" height="150"/>
-  <rect x="1566" y="0" width="12" height="180"/><rect x="1512" y="0" width="9" height="150"/>
+<!-- Castle on the ridge -->
+<g stroke="#101824" stroke-width="7" stroke-linejoin="miter">
+  <path d="M1118 264h198v-55h-24v-52h-33v52h-27v-78h-40v78h-27v-46h-34v46h-13z" fill="#172337"/>
+  <path d="M1135 208h31v-62l18-24 18 24v62h27v-87l22-29 22 29v87h35v-51l17-21 18 21v51h15v66h-223z" fill="#243146"/>
 </g>
-<path d="M0 400L1600 400V760H0Z" fill="url(#ground)"/>
-<ellipse cx="790" cy="550" rx="560" ry="215" fill="url(#fireGlow)"/>
-<path d="M0 490L180 452 300 490 450 448 570 495 720 450 890 490 1050 448 1190 495 1370 450 1600 490V760H0Z" fill="#3c352b" opacity=".68"/>
-<g fill="#27372e">
-  <rect x="0" y="430" width="1600" height="8"/><rect x="0" y="455" width="1600" height="5"/>
-  <path d="M0 515h70v8H0zm160 22h56v7h-56zm330-48h40v6h-40zm790 21h60v7h-60zm180-28h80v7h-80z"/>
-  <path d="M40 575h35v8H40zm220 36h48v7h-48zm420-38h30v6h-30zm620 26h40v7h-40zm180-35h50v7h-50z"/>
+<g fill="#e9a45b">
+  <rect x="1150" y="169" width="7" height="12"/><rect x="1181" y="155" width="7" height="12"/><rect x="1208" y="187" width="7" height="12"/><rect x="1246" y="142" width="7" height="13"/><rect x="1277" y="177" width="7" height="12"/><rect x="1304" y="218" width="7" height="11"/>
 </g>
-<!-- left tent -->
-<g stroke="#171d1e" stroke-width="9" stroke-linejoin="miter">
-  <path d="M125 447L298 270 488 447Z" fill="url(#tent)"/>
-  <path d="M298 270L488 447H352L298 270Z" fill="#424b3c"/>
-  <path d="M298 270L125 447H245L298 270Z" fill="#8b7957"/>
+<g fill="#f9c57a" opacity=".55"><rect x="1148" y="166" width="13" height="3"/><rect x="1244" y="138" width="12" height="4"/><rect x="1275" y="173" width="11" height="4"/></g>
+<!-- Ridge road and warm waymarkers -->
+<path d="M1090 285C1044 303 1014 310 987 333S926 363 881 382" fill="none" stroke="#b77845" stroke-width="8" stroke-dasharray="5 8" opacity=".65"/>
+<g fill="#f6b85e"><rect x="1083" y="277" width="5" height="11"/><rect x="1038" y="297" width="5" height="10"/><rect x="989" y="321" width="5" height="11"/><rect x="943" y="344" width="5" height="9"/></g>
+<!-- Forested valley layers -->
+<path d="M0 365l82-64 55 36 69-63 77 57 74-83 67 65 83-70 72 67 79-75 72 69 85-82 82 65 80-75 76 72 85-81 84 66 73-61 76 53v184H0Z" fill="url(#farHill)"/>
+<path d="M0 401l71-45 50 36 63-52 58 42 61-57 70 45 61-51 67 43 63-57 70 50 68-54 57 46 72-52 66 54 74-45 67 47 64-41 75 42v166H0Z" fill="url(#nearHill)"/>
+<!-- Fir tree silhouettes, back row -->
+<g fill="#0c1c20">
+  <path d="M0 441l44-132 42 132zM26 443l57-173 55 173zM115 441l42-126 43 126zM186 449l51-160 50 160zM267 443l43-137 46 137zM346 448l60-185 58 185zM438 450l45-143 43 143zM510 448l58-173 57 173zM600 442l44-136 44 136zM676 447l52-160 51 160zM774 449l52-171 53 171zM873 445l45-139 45 139zM960 448l56-175 58 175zM1066 448l50-157 48 157zM1154 447l56-172 55 172zM1262 449l49-155 49 155zM1353 446l58-179 57 179zM1452 447l47-142 49 142zM1535 449l50-151 48 151z"/>
 </g>
-<path d="M298 287L299 445H355L298 287Z" fill="#1c2425"/>
-<path d="M311 320L346 445H319Z" fill="#b77743" opacity=".45"/>
-<rect x="276" y="282" width="12" height="170" fill="#171b1c"/>
-<rect x="272" y="282" width="10" height="170" fill="#b08b5b"/>
+<g fill="#20382f">
+  <path d="M0 443l34-99 34 99zM73 448l43-126 42 126zM219 448l41-118 42 118zM305 447l36-103 36 103zM411 448l43-127 42 127zM548 445l38-112 37 112zM634 446l43-130 42 130zM735 447l35-105 35 105zM851 447l42-124 41 124zM980 448l39-113 40 113zM1091 446l39-115 39 115zM1198 448l44-132 43 132zM1325 448l38-115 38 115zM1435 447l46-137 44 137z"/>
+</g>
+<!-- Distant stone bridge -->
+<g stroke="#17232d" stroke-width="8" stroke-linejoin="miter">
+  <path d="M625 344h434v20H625z" fill="#5b5d59"/>
+  <path d="M641 360h28v34h-28zM1015 360h28v34h-28z" fill="#444a4b"/>
+  <path d="M700 366v37h26v-37M775 366v37h26v-37M850 366v37h26v-37M925 366v37h26v-37" fill="none" stroke="#48515a" stroke-width="9"/>
+  <path d="M684 344q49 67 99 0M761 344q49 67 99 0M838 344q49 67 99 0M915 344q49 67 99 0" fill="none" stroke="#6e706c" stroke-width="8"/>
+</g>
+<g fill="#e9a55b"><rect x="669" y="336" width="5" height="12"/><rect x="730" y="336" width="5" height="12"/><rect x="804" y="336" width="5" height="12"/><rect x="879" y="336" width="5" height="12"/><rect x="954" y="336" width="5" height="12"/><rect x="1034" y="336" width="5" height="12"/></g>
+<!-- Waterfall and river winding down the valley -->
+<path d="M544 379h95l-8 99-18 17h-57l-12-29z" fill="#183849"/>
+<path d="M556 387h14v83h-14zM578 379h9v99h-9zM599 391h13v86h-13zM621 382h8v94h-8z" fill="url(#falls)"/>
+<g fill="#b5dce0" opacity=".8"><rect x="556" y="408" width="7" height="28"/><rect x="582" y="391" width="5" height="34"/><rect x="607" y="410" width="7" height="25"/><rect x="623" y="402" width="4" height="33"/></g>
+<path d="M530 480q74-26 126-4t113 6q71-10 142 11t104 6v84H536Z" fill="url(#water)"/>
+<path d="M558 499q63-19 121 0t115 5q52-3 98 8" fill="none" stroke="#8cbac2" stroke-width="7" opacity=".55"/>
+<g fill="#c1e5e5" opacity=".72"><path d="M566 497h35v4h-35zM630 511h28v4h-28zM716 493h46v4h-46zM812 513h31v4h-31zM884 505h40v4h-40z"/></g>
+<path d="M638 536q120-29 178-2t108 4" fill="none" stroke="#4a93a6" stroke-width="14" opacity=".35"/>
+<!-- Shore boulders and banks -->
+<g fill="#263d3b">
+  <path d="M0 474l42-31 40 19 18 35H0zM90 488l37-31 45 22 21 39H91zM450 494l28-31 38 17 18 31zM545 495l34-23 41 20 20 20h-90zM1000 505l35-28 43 18 12 26h-90zM1117 480l29-26 38 17 21 31h-88zM1330 492l42-28 49 21 17 25h-103zM1468 490l42-30 58 22 32 24h-126z"/>
+</g>
+<g fill="#4f6352">
+  <rect x="33" y="478" width="11" height="5"/><rect x="113" y="489" width="9" height="5"/><rect x="488" y="486" width="12" height="5"/><rect x="1057" y="493" width="11" height="5"/><rect x="1398" y="489" width="14" height="5"/>
+</g>
+<!-- Ground plane -->
+<rect x="0" y="438" width="1600" height="322" fill="url(#earth)"/>
+<path d="M0 469q188-24 328 5t274-6q146-31 287 4t291-1q199-36 420 15v274H0Z" fill="#312d29" opacity=".55"/>
+<ellipse cx="800" cy="635" rx="450" ry="165" fill="url(#campHalo)"/>
+<path d="M0 532q178-40 321 8t292-3q169-48 334-3t319-3q167-32 334 11v218H0Z" fill="url(#cobble)" opacity=".68"/>
+<!-- Worn path toward the river -->
+<path d="M698 425q-36 44-66 78t-38 93q28 47 82 65h247q58-42 71-74-10-62-61-105t-52-87z" fill="#514135" opacity=".34"/>
+<path d="M716 435q-17 54-58 91t-34 66" fill="none" stroke="#937052" stroke-width="6" stroke-dasharray="14 11" opacity=".33"/>
+<!-- Large old trees framing the clearing -->
+<g stroke-linejoin="miter">
+  <path d="M0 506V130l28-33 20 46 29 20-26 20-9 94 38-54 33 18-44 37-27 110 42-29 20 29-50 42-15 78z" fill="#241d20" stroke="#14181c" stroke-width="9"/>
+  <path d="M0 424V165l24-12 22 20 24 10-22 24-17 125 36-40 17 17-43 53-9 102z" fill="#49302a"/>
+  <path d="M0 488V202l15 9 12 94-9 98 21-29 13 13-18 46-7 59z" fill="#6d4933" opacity=".7"/>
+  <path d="M1600 524V126l-31-31-19 49-28 17 24 21 7 101-39-55-32 20 45 39 28 116-42-29-22 28 51 44 14 78z" fill="#241e21" stroke="#13191d" stroke-width="9"/>
+  <path d="M1600 436V164l-26-10-19 20-26 13 22 24 16 126-37-40-18 18 45 52 10 88z" fill="#493029"/>
+  <path d="M1600 485V196l-14 10-15 94 10 93-20-31-15 15 20 46 6 61z" fill="#704932" opacity=".68"/>
+</g>
+<!-- Overhead canopy leaves -->
 <g>
-  <rect x="383" y="341" width="18" height="18" fill="#70452d"/><rect x="387" y="363" width="10" height="24" fill="#df9a4a"/>
-  <rect x="380" y="387" width="24" height="9" fill="#6d462d"/><rect x="385" y="348" width="14" height="5" fill="#f6c46d"/>
-  <rect x="371" y="321" width="42" height="8" fill="#50372b"/><rect x="380" y="329" width="9" height="14" fill="#50372b"/>
+  <path d="M0 115q73-93 174-70 61 16 98 77l-28 36-37-15-26 31-36-19-29 27-37-23-36 17-32-33-31 5z" fill="#182c24"/>
+  <path d="M0 103q68-83 148-65 54 12 95 62l-24 24-29-10-17 20-27-16-24 22-30-20-31 13-23-23-38 8z" fill="#38432d"/>
+  <path d="M0 145l29-40 17 9 8-27 21 10 14-21 18 14 12-24 20 16 19-19 18 22 22-7 12 26 21-3 13 27-29 23-21-15-19 19-24-17-21 21-28-15-18 18-25-22-24 11z" fill="#9b4c32"/>
+  <path d="M34 90l15-18 9 18 18-4 3 19-18 9-16-9zM94 72l15-15 11 20 16-2 3 18-19 7-15-10zM163 82l15-16 12 18 18 3-4 19-19 3-12-12zM227 113l13-17 11 22 15 2-6 18-17 2-11-11z" fill="#cc6840"/>
+  <path d="M1190 115q68-86 159-75 96 10 147 89l-32 37-35-14-25 21-38-20-27 27-33-19-37 19-32-27-42 11z" fill="#172b23"/>
+  <path d="M1263 72q79-47 151 10l54 55-25 26-25-12-19 17-28-15-20 18-24-18-30 18-22-17-28 9-23-27z" fill="#343f2d"/>
+  <path d="M1265 89l20-21 13 17 18-5 7 21-18 10-18-9zM1345 72l18-20 14 19 19-4 6 21-20 12-16-13zM1430 92l16-16 16 19 18-2 7 20-20 11-17-11zM1515 113l17-19 17 21 19-1 9 21-20 11-18-12z" fill="#9b4c32"/>
 </g>
-<!-- right tent -->
-<g stroke="#171d1e" stroke-width="9" stroke-linejoin="miter">
-  <path d="M1125 451L1320 264 1510 451Z" fill="url(#tent)"/>
-  <path d="M1320 264L1510 451H1370L1320 264Z" fill="#45503e"/>
-  <path d="M1320 264L1125 451H1248L1320 264Z" fill="#827453"/>
+<!-- Left tent: stitched canopy and inner bedroll -->
+<g stroke="#211c20" stroke-width="8" stroke-linejoin="miter">
+  <path d="M72 489L294 273 523 489Z" fill="url(#canvas)"/>
+  <path d="M294 273L523 489H366L294 273Z" fill="#352d30"/>
+  <path d="M294 273L72 489H214L294 273Z" fill="url(#canvasSide)"/>
+  <path d="M80 480L294 285 501 481" fill="none" stroke="#b18a5d" stroke-width="4" opacity=".65"/>
 </g>
-<path d="M1319 281L1320 447H1370L1319 281Z" fill="#171f20"/>
-<path d="M1327 319L1360 447H1335Z" fill="#b77743" opacity=".42"/>
-<rect x="1308" y="276" width="12" height="172" fill="#171b1c"/>
-<rect x="1304" y="276" width="10" height="172" fill="#b08b5b"/>
+<path d="M294 293v189h63z" fill="#171e24"/>
+<path d="M309 320l49 160" stroke="#b67b4c" stroke-width="8" opacity=".5"/>
+<path d="M294 285l-4 205" stroke="#17191c" stroke-width="11"/><path d="M288 285v205" stroke="#c09a65" stroke-width="5"/>
+<g stroke="#201a1c" stroke-width="5">
+  <path d="M95 487l23-28 18 28v38H95z" fill="#32282a"/>
+  <path d="M124 482l19-22 18 22v42h-37z" fill="#514039"/>
+  <path d="M107 494h23v24h-23z" fill="#87593e"/>
+  <path d="M177 474l23-13 17 18v49h-40z" fill="#554234"/>
+</g>
+<path d="M85 496h420" stroke="#ad8153" stroke-width="4" stroke-dasharray="7 8" opacity=".75"/>
+<path d="M286 274v-48l9-13 10 13v48" fill="#533627" stroke="#17191d" stroke-width="6"/>
+<path d="M302 223h19l-5 12h-14z" fill="#d0914a"/>
+<!-- Left banner and cross -->
+<path d="M386 295h68v130l-34 31-34-31z" fill="#5d2d31" stroke="#21191e" stroke-width="8"/>
+<path d="M396 304h48v112l-24 22-24-22z" fill="#8b3c36"/>
+<path d="M416 332h9v65h-9zM394 355h52v9h-52z" fill="#e0a65c"/>
+<path d="M422 308v7" stroke="#f4c779" stroke-width="5"/>
+<path d="M384 296l-5-26 11 5 3 22M455 296l6-26-12 5-3 22" fill="#60402e"/>
+<!-- Left supply crates, stacked bedroll and shield -->
+<g stroke="#1b1a1c" stroke-width="7" stroke-linejoin="miter">
+  <rect x="84" y="524" width="136" height="102" fill="url(#wood)"/>
+  <path d="M94 538h116v79H94z" fill="#6a422d" stroke="#a06a40" stroke-width="4"/>
+  <path d="M94 538l116 79M210 538L94 617" stroke="#3b2822" stroke-width="7"/>
+  <path d="M147 533h18v84h-18z" fill="#493026"/>
+  <rect x="218" y="552" width="90" height="74" fill="#51352a"/>
+  <path d="M227 563h72v53h-72z" fill="#765039" stroke="#a77a4d" stroke-width="3"/>
+  <path d="M227 582h72" stroke="#3c2822" stroke-width="5"/>
+  <rect x="316" y="535" width="114" height="79" fill="#67432c"/>
+  <path d="M327 548h91v54h-91z" fill="#8b5a37" stroke="#39251e" stroke-width="4"/>
+  <path d="M374 548v54M327 574h91" stroke="#3c2922" stroke-width="5"/>
+</g>
+<g fill="#b17e4d"><rect x="109" y="548" width="18" height="7"/><rect x="269" y="565" width="22" height="6"/><rect x="349" y="551" width="12" height="6"/></g>
+<g stroke="#17191e" stroke-width="6">
+  <path d="M461 493q-26 20-20 65l20 42 50-12 8-45-19-47z" fill="#473c34"/>
+  <path d="M468 504l-9 46 16 31 27-12 4-34-15-30z" fill="#8a754d" stroke="#1b1c22" stroke-width="4"/>
+  <path d="M481 518v47M464 537h37" stroke="#d1a15d" stroke-width="5"/>
+</g>
+<!-- Left sword stuck in the ground -->
+<g transform="translate(252 468) rotate(-18)">
+  <path d="M-5 0h10v108l-10 20z" fill="#9aa4a5" stroke="#20242b" stroke-width="4"/>
+  <path d="M0 8v96" stroke="#e1e0cf" stroke-width="3"/>
+  <path d="M-23 27h46v9h-46z" fill="#b07a45" stroke="#241b1d" stroke-width="4"/>
+  <path d="M-5 35h10v26H-5z" fill="#6e392d"/>
+  <path d="M-8 64h16v9H-8z" fill="#cda46c"/>
+</g>
+<!-- Right-side provision tent, partly veiled by the real rest panel -->
+<g stroke="#191a20" stroke-width="8" stroke-linejoin="miter">
+  <path d="M1125 484l184-220 230 220z" fill="#51463e"/>
+  <path d="M1309 264l230 220h-146z" fill="#292831"/>
+  <path d="M1309 264l-184 220h145z" fill="#876a4c"/>
+  <path d="M1309 279v199" stroke="#b08b5b" stroke-width="9"/>
+</g>
+<path d="M1138 478l171-196 211 197" fill="none" stroke="#be9462" stroke-width="4" stroke-dasharray="8 7" opacity=".7"/>
+<path d="M1293 273v-47l16-18 14 18v47" fill="#4a3228" stroke="#18191e" stroke-width="6"/>
+<path d="M1309 215h28l-6 14h-17z" fill="#c58a4e"/>
+<!-- Right-side workbench and potion shelf -->
+<g stroke="#1a191c" stroke-width="7" stroke-linejoin="miter">
+  <path d="M1082 528h270v18h-270z" fill="#6e492f"/>
+  <path d="M1100 546h16v93h-16zM1325 546h17v93h-17z" fill="#493027"/>
+  <rect x="1110" y="475" width="218" height="50" fill="#775039"/>
+  <path d="M1121 485h196v31h-196z" fill="#a06b43" stroke="#35241f" stroke-width="3"/>
+  <rect x="1175" y="458" width="78" height="18" fill="#4c3328"/>
+  <path d="M1182 462h64" stroke="#d4a367" stroke-width="4"/>
+</g>
+<path d="M1200 489h49v28h-49z" fill="#d6b88a" stroke="#4a342a" stroke-width="4"/>
+<path d="M1208 496h32v12h-32z" fill="#9a714f"/>
+<!-- Potion bottles -->
+<g stroke="#241b21" stroke-width="4">
+  <path d="M1140 444h16v12l8 10v27h-32v-27l8-10z" fill="#9a493b"/><path d="M1141 444h14v-8h-14z" fill="#b58b56"/>
+  <path d="M1174 446h15v10l8 11v25h-31v-25l8-11z" fill="#286779"/><path d="M1175 446h13v-8h-13z" fill="#c7a16a"/>
+  <path d="M1265 451h14v11l8 10v24h-30v-24l8-10z" fill="#a35c2f"/><path d="M1266 451h12v-8h-12z" fill="#bd995f"/>
+</g>
+<g fill="#f1c16b"><rect x="1142" y="471" width="18" height="6"/><rect x="1176" y="469" width="17" height="6"/><rect x="1265" y="475" width="16" height="6"/></g>
+<!-- Large chest and barrel -->
+<g stroke="#1b191d" stroke-width="7">
+  <path d="M1372 520h130v96h-130z" fill="#4f362c"/>
+  <path d="M1378 513h118v18h-118z" fill="#8a5b38"/>
+  <path d="M1385 536h104v68h-104z" fill="#6c432d" stroke="#a97948" stroke-width="3"/>
+  <path d="M1427 536v68M1385 568h104" stroke="#36241f" stroke-width="6"/>
+  <rect x="1420" y="560" width="29" height="23" fill="#bd985d" stroke="#33221e" stroke-width="4"/>
+  <path d="M1450 573h11" stroke="#e7c37c" stroke-width="4"/>
+</g>
+<g stroke="#17191d" stroke-width="6">
+  <path d="M1016 533q-23 10-19 69t28 62q29 3 34-61t-20-70z" fill="#64402c"/>
+  <path d="M1004 548h50M1001 579h55M1008 618h45" stroke="#b07b48" stroke-width="7"/>
+  <ellipse cx="1027" cy="533" rx="23" ry="9" fill="#9b7147"/>
+</g>
+<!-- Hanging lantern posts -->
 <g>
-  <rect x="1446" y="342" width="18" height="18" fill="#70452d"/><rect x="1450" y="363" width="10" height="25" fill="#df9a4a"/>
-  <rect x="1442" y="388" width="25" height="9" fill="#6d462d"/><rect x="1448" y="348" width="14" height="5" fill="#f6c46d"/>
+  <path d="M500 350h12v216h-12z" fill="#3d2b24" stroke="#171a20" stroke-width="4"/>
+  <path d="M490 355h75v10h-75z" fill="#5f432f" stroke="#171a20" stroke-width="4"/>
+  <path d="M532 365l17 20v42l-13 16-17-16v-42z" fill="#3f342c" stroke="#19191d" stroke-width="5"/>
+  <rect x="527" y="391" width="15" height="29" fill="#f5b95e"/>
+  <ellipse cx="535" cy="406" rx="37" ry="48" fill="url(#lampHalo)"/>
+  <rect x="529" y="379" width="11" height="5" fill="#e4b26c"/>
+  <path d="M1127 355h12v220h-12z" fill="#3d2b24" stroke="#171a20" stroke-width="4"/>
+  <path d="M1090 359h81v10h-81z" fill="#5f432f" stroke="#171a20" stroke-width="4"/>
+  <path d="M1120 369l20 19v42l-13 16-18-16v-42z" fill="#3f342c" stroke="#19191d" stroke-width="5"/>
+  <rect x="1121" y="396" width="17" height="28" fill="#f1ad57"/>
+  <ellipse cx="1129" cy="408" rx="38" ry="47" fill="url(#lampHalo)"/>
 </g>
-<!-- tent supplies -->
-<g stroke="#171718" stroke-width="6">
-  <rect x="95" y="461" width="89" height="67" fill="#765039"/><rect x="107" y="475" width="62" height="8" fill="#b07b48"/>
-  <rect x="160" y="500" width="62" height="46" fill="#543b30"/><rect x="171" y="512" width="41" height="7" fill="#a16b40"/>
-  <rect x="1410" y="469" width="85" height="59" fill="#70503a"/><rect x="1420" y="482" width="65" height="7" fill="#ae7a48"/>
+<!-- More crates and travel supplies -->
+<g stroke="#1b191e" stroke-width="6">
+  <rect x="57" y="598" width="140" height="73" fill="#513427"/>
+  <path d="M66 608h122v53H66z" fill="#765039" stroke="#a37348" stroke-width="3"/>
+  <path d="M66 608l122 53M188 608L66 661" stroke="#35241f" stroke-width="5"/>
+  <rect x="1328" y="593" width="103" height="72" fill="#5e3d2c"/>
+  <path d="M1338 603h83v52h-83z" fill="#865839" stroke="#ad7d4b" stroke-width="3"/>
+  <path d="M1380 603v52M1338 629h83" stroke="#3b2721" stroke-width="5"/>
 </g>
-<!-- foreground gear and logs -->
-<g stroke="#171718" stroke-width="7">
-  <rect x="230" y="563" width="182" height="43" fill="#64402f"/><rect x="244" y="571" width="20" height="27" fill="#a06c43"/>
-  <rect x="1185" y="568" width="205" height="45" fill="#60402f"/><rect x="1201" y="577" width="19" height="26" fill="#a06c43"/>
-  <rect x="468" y="489" width="82" height="59" fill="#624331"/><rect x="478" y="500" width="62" height="7" fill="#a47a4c"/>
-  <rect x="1035" y="489" width="83" height="58" fill="#574032"/><rect x="1045" y="501" width="62" height="7" fill="#9b7047"/>
+<g fill="#a47449"><rect x="82" y="617" width="17" height="7"/><rect x="147" y="638" width="20" height="6"/><rect x="1360" y="612" width="17" height="7"/></g>
+<!-- Bedroll, rug and folded blanket -->
+<path d="M265 594l208-19 42 53-211 25z" fill="#582d31" stroke="#1d1a20" stroke-width="7"/>
+<path d="M280 599l184-16 29 38-185 18z" fill="#8d4b3c" stroke="#d0a169" stroke-width="3"/>
+<path d="M293 603l160-13M301 626l166-14" stroke="#d8a86a" stroke-width="4" stroke-dasharray="9 7"/>
+<path d="M465 581l33-2 15 21-32 3z" fill="#c2a17b" stroke="#241a20" stroke-width="5"/>
+<!-- Central stone fire ring and crossed logs: no static flame, the animated sprite sits above it -->
+<ellipse cx="800" cy="648" rx="248" ry="83" fill="#b55d35" opacity=".2"/>
+<path d="M606 647q194-95 387 1" fill="none" stroke="#8d5a3d" stroke-width="13" opacity=".45"/>
+<g stroke="#19171d" stroke-width="9" stroke-linejoin="miter">
+  <path d="M596 635l35-34 43 12 17 39-26 29-52-5z" fill="#484349"/>
+  <path d="M674 660l18-37 48-4 29 28-8 37-48 5z" fill="#5b5150"/>
+  <path d="M764 674l-3-42 36-29 44 25 4 43-38 17z" fill="#695a51"/>
+  <path d="M853 670l-4-39 33-28 48 22 7 40-35 22z" fill="#554b4b"/>
+  <path d="M943 655l9-38 43-19 41 26-3 40-51 20z" fill="#665b56"/>
+  <path d="M1022 628l22-35 45-1 23 35-13 39-49 9z" fill="#46434b"/>
 </g>
-<!-- ring stones, with open centre for animated fire -->
-<g stroke="#171719" stroke-width="8">
-  <rect x="622" y="583" width="73" height="37" fill="#77695d"/><rect x="692" y="604" width="75" height="34" fill="#5d5551"/>
-  <rect x="766" y="609" width="73" height="34" fill="#837466"/><rect x="840" y="596" width="76" height="39" fill="#625752"/>
-  <rect x="916" y="571" width="72" height="39" fill="#887a69"/><rect x="583" y="550" width="62" height="39" fill="#554e4d"/>
-  <rect x="959" y="542" width="60" height="39" fill="#514b4a"/><rect x="653" y="552" width="70" height="32" fill="#89796a"/>
-  <rect x="872" y="548" width="68" height="31" fill="#75675c"/>
+<g fill="#89796b">
+  <path d="M613 640l17-20 27 7 10 16-17-5-11 13-20-2z"/>
+  <path d="M690 646l10-18 27-5 16 16-21-3-10 15z"/>
+  <path d="M778 647l17-23 24-7 17 18-21-2-13 17z"/>
+  <path d="M866 642l17-21 26 5 10 15-23-5-14 14z"/>
+  <path d="M958 636l18-16 26-7 18 18-24-1-12 16z"/>
+  <path d="M1040 625l15-18 25 2 11 14-22-4-12 14z"/>
 </g>
-<g stroke="#272020" stroke-width="7">
-  <rect x="681" y="574" width="230" height="20" fill="#5f3b29" transform="rotate(-13 681 574)"/>
-  <rect x="688" y="592" width="222" height="19" fill="#7b5033" transform="rotate(12 688 592)"/>
+<g fill="#28272d">
+  <rect x="634" y="655" width="17" height="7"/><rect x="709" y="672" width="23" height="6"/><rect x="797" y="682" width="24" height="6"/><rect x="893" y="670" width="23" height="6"/><rect x="978" y="660" width="18" height="7"/>
 </g>
-<g fill="#b28b60" opacity=".5"><rect x="636" y="590" width="16" height="5"/><rect x="711" y="612" width="22" height="4"/><rect x="933" y="579" width="15" height="4"/><rect x="882" y="557" width="19" height="4"/></g>
-<!-- grass, flowers and mushrooms -->
-<g fill="#66804c">
-  <rect x="58" y="625" width="12" height="26"/><rect x="72" y="615" width="10" height="36"/><rect x="95" y="648" width="11" height="20"/>
-  <rect x="1450" y="626" width="12" height="32"/><rect x="1465" y="610" width="10" height="46"/><rect x="1490" y="639" width="11" height="27"/>
-  <rect x="510" y="677" width="11" height="19"/><rect x="526" y="664" width="11" height="32"/><rect x="1070" y="671" width="12" height="27"/>
+<!-- Charred logs tucked into the stone ring -->
+<g stroke="#1a171b" stroke-width="8" stroke-linejoin="miter">
+  <path d="M704 609l28-21 45 8 35 28-15 15-41-14-34 12z" fill="#38241f"/>
+  <path d="M748 619l35-24 35 7 38 24-18 16-43-17-34 11z" fill="#6b402a"/>
+  <path d="M822 627l38-25 40 5 37 24-20 16-40-16-38 12z" fill="#4b2b22"/>
+  <path d="M883 621l26-20 37 4 32 25-18 14-39-12-32 7z" fill="#6c432d"/>
 </g>
-<g fill="#c15a4b"><rect x="118" y="652" width="28" height="13"/><rect x="127" y="642" width="10" height="10"/><rect x="1408" y="664" width="26" height="12"/><rect x="1418" y="654" width="9" height="10"/></g>
-<g fill="#d9c7a0"><rect x="130" y="664" width="6" height="24"/><rect x="1420" y="676" width="6" height="20"/></g>
-<g fill="#d6a35e"><rect x="32" y="686" width="12" height="7"/><rect x="52" y="673" width="7" height="7"/><rect x="1536" y="696" width="10" height="7"/></g>
-<rect x="0" y="738" width="1600" height="22" fill="#18191d"/>
+<g fill="#b17c47" opacity=".75"><rect x="744" y="601" width="19" height="4"/><rect x="840" y="615" width="17" height="4"/><rect x="923" y="612" width="18" height="4"/></g>
+<!-- Subtle sparks already in the ground, not a second flame -->
+<g fill="#db9851" opacity=".75"><rect x="579" y="585" width="4" height="4"/><rect x="1050" y="575" width="4" height="4"/><rect x="690" y="574" width="3" height="3"/><rect x="927" y="583" width="4" height="4"/></g>
+<!-- Cobble, mud, puddles and warm reflections -->
+<g fill="#2a2a2c">
+  <path d="M0 700h71v9H0zM108 720h43v8h-43zM330 706h56v8h-56zM445 722h61v8h-61zM1110 703h44v8h-44zM1280 714h55v8h-55zM1467 697h61v8h-61z"/>
+</g>
+<g fill="#71949a" opacity=".65">
+  <path d="M399 692h64v5h-64zM422 702h37v4h-37zM1160 684h54v5h-54zM1190 694h39v4h-39zM560 714h31v4h-31z"/>
+</g>
+<g fill="#d27a3c" opacity=".55"><rect x="720" y="700" width="19" height="4"/><rect x="749" y="710" width="34" height="5"/><rect x="804" y="700" width="30" height="4"/><rect x="852" y="713" width="28" height="4"/></g>
+<!-- Tufts of grass, autumn leaves, flowers and mushrooms -->
+<g fill="#304b31"><path d="M0 760l20-44 12 44 15-39 13 39M73 760l18-34 10 34 17-45 13 45M150 760l18-38 12 38 14-29 9 29M1250 760l18-46 11 46 18-36 13 36M1380 760l20-51 12 51 17-38 13 38M1510 760l20-42 12 42 16-33 13 33"/></g>
+<g fill="#71874b"><path d="M43 760l10-31 7 31M111 760l15-42 9 42M185 760l13-35 7 35M1340 760l15-41 9 41M1465 760l13-39 9 39"/></g>
+<g fill="#bd5b5a"><path d="M94 716h18v-10h15v10h12v11H94zM1400 727h19v-10h14v10h14v10h-47zM1490 703h15v-9h14v9h12v9h-41z"/></g>
+<g fill="#d7a5c0"><rect x="102" y="705" width="5" height="9"/><rect x="112" y="697" width="5" height="10"/><rect x="1406" y="713" width="5" height="8"/><rect x="1422" y="705" width="5" height="9"/></g>
+<g fill="#dca15e"><rect x="543" y="702" width="5" height="5"/><rect x="1090" y="728" width="4" height="4"/><rect x="1180" y="699" width="4" height="4"/><rect x="316" y="732" width="5" height="5"/></g>
+<!-- Small stones around the clearing -->
+<g fill="#3d4244"><path d="M40 676l16-12 23 4 6 13-29 7zM185 702l14-12 20 6-3 11-22 6zM500 684l18-10 22 7-5 12-25 4zM1090 686l14-12 26 7-6 12-21 3zM1350 680l22-11 25 9-6 13-28 3z"/></g>
+<!-- Shadow falloff to keep the live panel readable -->
+<rect width="1600" height="760" fill="url(#night)" opacity=".07"/>
+<rect x="1000" y="0" width="600" height="760" fill="#080d16" opacity=".16"/>
 </svg>
