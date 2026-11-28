@@ -5041,3 +5041,92 @@ body.reduce-motion .rest-flames .rest-fire-sprite {
     background-size:cover !important;
   }
 }
+
+
+/* Build 038 — user-provided image replaces the coded Rest scenery */
+.rest-campfire-scene {
+  position:relative;
+  overflow:hidden;
+  background:#10131b !important;
+  background-image:none !important;
+}
+.rest-campfire-scene::before { content:none !important; display:none !important; }
+.rest-scenic-shade,.rest-scene-caption { display:none !important; }
+.rest-custom-background-image {
+  position:absolute;
+  z-index:0;
+  inset:0;
+  display:none;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  pointer-events:none;
+  user-select:none;
+}
+.rest-custom-background-image.is-active { display:block; }
+.rest-camp-controls { z-index:5; }
+.rest-background-toolbar {
+  position:absolute;
+  z-index:9;
+  top:18px;
+  left:18px;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  max-width:min(54%,620px);
+  padding:9px 11px;
+  border:1px solid rgba(213,165,104,.45);
+  background:rgba(7,8,12,.88);
+  box-shadow:0 5px 18px rgba(0,0,0,.32);
+}
+.rest-background-upload,.rest-background-reset {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:30px;
+  padding:6px 10px;
+  border:1px solid rgba(191,145,96,.52);
+  background:rgba(40,27,24,.9);
+  color:#e8d3ad;
+  font:600 9px var(--pixel);
+  letter-spacing:.06em;
+  cursor:pointer;
+}
+.rest-background-upload:hover,.rest-background-reset:hover {
+  border-color:#e0ad70;
+  background:rgba(91,52,37,.92);
+}
+.rest-background-upload input {
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+.rest-background-status {
+  flex-basis:100%;
+  color:rgba(220,200,166,.72);
+  font:8px var(--mono);
+}
+@media(max-width:850px) {
+  .rest-background-toolbar { top:12px;left:12px;max-width:48%; }
+  .rest-background-status { font-size:7px; }
+}
+@media(max-width:650px) {
+  .rest-background-toolbar {
+    top:auto;
+    right:10px;
+    bottom:10px;
+    left:10px;
+    max-width:none;
+    justify-content:center;
+    gap:6px;
+    padding:7px;
+  }
+  .rest-background-status { text-align:center; }
+  .rest-background-upload,.rest-background-reset { min-height:28px;padding:5px 8px;font-size:8px; }
+}
