@@ -1,5 +1,14 @@
 # PAIS DUNGEON
 
+## Build 029 — nuevas habilidades y efectos de combate
+
+- **Pol:** Ataque Maligno lanza una esfera arcana, Materia oscura invoca un rayo descendente y Estallido primordial golpea a todos con una gran esfera que estalla. Los tres efectos usan magia oscura pixelada.
+- **Igor:** Antivirus cura a un aliado; Chupadita inflige daño y devuelve a Igor el 50% del daño; Diarrea para todos cura a todos los aliados vivos.
+- **Ivan:** Escudo protector absorbe el siguiente golpe de un aliado; Barrilete derriba y hace perder el próximo turno; Culo Gordo concede un escudo de un golpe a cada aliado y expira al terminar la ronda.
+- **Alex:** Dedeo golpea a todos los enemigos y aplica veneno durante dos turnos.
+- Se conservan los identificadores internos de las habilidades y sus niveles de desbloqueo para respetar las partidas guardadas.
+
+
 ## Build 028 — Eliminación del spritesheet antiguo de Salim
 
 Se elimina el spritesheet heredado `assets/salim-sprites.webp` y sus referencias en todo el juego. La ficha de personaje y la ruta muestran ahora la animación idle con los mismos PNG nuevos de tres frames que utiliza el combate. El PNG de combate se amplía y conserva una escala idéntica en reposo y ataque.
