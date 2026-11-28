@@ -1728,16 +1728,22 @@
       const idleMarkup=!isHit && currentHp>0
         ? '<div class="battle-idle-frames" aria-hidden="true">'+[1,2,3].map((frame)=>'<img class="battle-idle-frame idle-frame-'+frame+'" src="'+getHeroAnimationFrameUrl(id,"idle",frame)+'" alt="" draggable="false" onload="this.parentElement.dataset.loaded=String((Number(this.parentElement.dataset.loaded)||0)+1);if(Number(this.parentElement.dataset.loaded)>=3)this.parentElement.parentElement.classList.add(&quot;has-idle-sprite&quot;)" onerror="this.remove()">').join("")+'</div>'
         : "";
+      const supportTargetsThisAlly=Boolean(animation && animation.side==="ally" && animation.frame<=2 && (animation.targets||[]).some((target)=>target.side==="ally" && target.id===id));
+      let supportFxMarkup="";
+      if(supportTargetsThisAlly && animation.actorId==="arcanist" && animation.actionId==="antivirus") supportFxMarkup='<div class="battle-support-vfx support-antivirus"><i></i><b></b></div>';
+      if(supportTargetsThisAlly && animation.actorId==="arcanist" && animation.actionId==="reboot") supportFxMarkup='<div class="battle-support-vfx support-team-heal"><i></i><b></b></div>';
+      if(supportTargetsThisAlly && animation.actorId==="tracker" && animation.actionId==="protective-shield") supportFxMarkup='<div class="battle-support-vfx support-single-shield"><i></i><b></b></div>';
+      if(supportTargetsThisAlly && animation.actorId==="tracker" && animation.actionId==="team-bastion") supportFxMarkup='<div class="battle-support-vfx support-team-guard"><i></i><b></b></div>';
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-ally battle-hero-'+id+(isActive?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+(currentHp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">0'+(index+1)+'</span>' +
-          '<div class="battle-character-visual'+(id==="duelist"?" is-duelist-sprite":"")+'">'+(id==="duelist"?"":'<div class="battle-pixel-figure figure-'+id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(1120,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>')+idleMarkup+spriteMarkup+'</div>'+impactMarkup+floatingMarkup+
+          '<div class="battle-character-visual'+(id==="duelist"?" is-duelist-sprite":"")+'">'+(id==="duelist"?"":'<div class="battle-pixel-figure figure-'+id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(1120,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><i class="figure-shadow"></i><i class="figure-legs"></i><i class="figure-body"></i><i class="figure-arm"></i><i class="figure-head"></i><i class="figure-hair"></i><i class="figure-weapon"></i><b class="figure-mark">'+character.sign+'</b></div>')+idleMarkup+spriteMarkup+'</div>'+supportFxMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+character.role+'</span>' +
         '</div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+character.name+'</strong><em>«'+character.title+'»</em></div>' +
           '<div class="battle-unit-life"><span>♥ PV</span><b>'+currentHp+'/'+maxHp+'</b></div><div class="battle-hp-track"><i style="width:'+hpRatio+'%"></i></div>' +
           '<div class="battle-unit-mana"><span>✦ PM</span><b>'+currentMp+'/'+maxMp+'</b></div><div class="battle-mp-track"><i style="width:'+mpRatio+'%"></i></div>' +
-          (shield>0?'<small class="battle-shield-value">ESCUDO '+shield+' · '+shieldTurns+'T</small>':"")+
+          (shield>0?'<small class="battle-shield-value">ESCUDO '+shield+' · '+((battle.shieldHits||{})[id]?"1 GOLPE":shieldTurns+"T")+'</small>':"")+
           (buff && buff.turns>0?'<small class="battle-buff-value">MEJORA '+buff.turns+'T · ATQ +'+Math.round(buff.attack*100)+'% · VEL +'+Math.round(buff.speed*100)+'%</small>':"")+
           (debuff && debuff.turns>0?'<small class="battle-curse-value">MALDICIÓN '+debuff.turns+'T · RECIBE +18% DAÑO</small>':"")+
         '</div></article>';
@@ -1757,17 +1763,26 @@
         const age=Math.max(0,Date.now()-(Number(number.createdAt)||Date.now()));
         const animationDelay=Math.min(BATTLE_FLOATING_NUMBER_DURATION,age);
         const offset=((floatIndex%3)-1)*18;
-        return '<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+offset+'px;animation-delay:-'+animationDelay+'ms" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":"")+'</span>';
+        return '<span class="battle-floating-number is-'+number.type+'" style="--float-offset:'+offset+'px;animation-delay:-'+animationDelay+'ms" data-float-id="'+number.id+'">'+(number.type==="heal"?"+":number.type==="shield"?"✦ ":"−")+number.amount+(number.type==="shield"?" ESCUDO":number.type==="poison"?" VENENO":"")+'</span>';
       }).join("");
       const spriteMarkup=isAttacking ? '<img class="battle-action-sprite enemy-action-sprite" src="assets/battles/animations/enemies/'+enemy.id+'/attack/frame-0'+animation.frame+'.png" alt="" onerror="this.remove()">' : "";
+      const spellTargetsThisEnemy=Boolean(animation && animation.side==="ally" && animation.frame<=2 && (animation.targets||[]).some((target)=>target.side==="enemy" && target.id===enemy.id));
+      let spellMarkup="";
+      if(spellTargetsThisEnemy && animation.actorId==="guardian") {
+        if(animation.actionId==="arcane-bolt") spellMarkup=animation.frame===1?'<div class="battle-spell-vfx spell-malefic-launch"><i></i><b></b></div>':'<div class="battle-spell-vfx spell-hit-burst spell-hit-malefic"><i></i><b></b></div>';
+        if(animation.actionId==="burn-mark") spellMarkup=animation.frame===1?'<div class="battle-spell-vfx spell-dark-beam"><i></i><b></b></div>':'<div class="battle-spell-vfx spell-hit-burst spell-hit-dark"><i></i><b></b></div>';
+      }
+      if(spellTargetsThisEnemy && animation.actorId==="arcanist" && animation.actionId==="life-drain") spellMarkup=animation.frame===1?'<div class="battle-spell-vfx spell-life-sip"><i></i><b></b></div>':'<div class="battle-spell-vfx spell-hit-burst spell-hit-drain"><i></i><b></b></div>';
+      if(spellTargetsThisEnemy && animation.actorId==="alchemist" && animation.actionId==="field-finish") spellMarkup=animation.frame===1?'<div class="battle-spell-vfx spell-poison-cloud"><i></i><b></b></div>':'<div class="battle-spell-vfx spell-hit-burst spell-hit-poison"><i></i><b></b></div>';
       const impactMarkup=isHit ? '<span class="battle-impact-burst effect-'+animation.fx+'"></span>' : "";
       return '<article class="battle-unit battle-enemy battle-enemy-'+enemy.id+(enemy.hp<=0?" is-fallen":"")+(isTarget?" is-targetable":"")+(activeEnemy?" is-active-turn":"")+(isAttacking?" is-attacking":"")+(isWindingUp?" is-winding-up":"")+(isImpactFrame?" is-impact-frame":"")+(isHit?" is-hit":"")+'" '+targetAttrs+'>' +
         '<div class="battle-unit-art"><span class="battle-unit-index">E0'+(index+1)+'</span>' +
-          '<div class="battle-enemy-figure enemy-'+enemy.id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(2200,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>'+spriteMarkup+impactMarkup+floatingMarkup+
+          '<div class="battle-enemy-figure enemy-'+enemy.id+'" style="'+(isAttacking?'animation-delay:-'+Math.min(2200,Math.max(0,Date.now()-(Number(animation.startedAt)||Date.now())))+'ms':'')+'" aria-hidden="true"><img class="battle-enemy-art-image" src="assets/battles/enemies/'+enemy.asset+'.png" alt="" onerror="this.remove()"><i class="enemy-shadow"></i><i class="enemy-body"></i><i class="enemy-spikes"></i><i class="enemy-eyes"></i><b>'+enemy.mark+'</b></div>'+spellMarkup+spriteMarkup+impactMarkup+floatingMarkup+
           '<span class="battle-unit-role">'+enemy.role+'</span></div>' +
         '<div class="battle-unit-info"><div class="battle-unit-name"><strong>'+enemy.name+'</strong></div>' +
           '<div class="battle-unit-life"><span>♥ PV</span><b>'+enemy.hp+'/'+enemy.maxHp+'</b></div><div class="battle-hp-track enemy-hp-track"><i style="width:'+ratio+'%"></i></div>' +
           (enemy.burn>0?'<small class="battle-status-tag">QUEMADURA '+enemy.burn+'</small>':"")+
+          (enemy.poison>0?'<small class="battle-poison-tag">VENENO '+enemy.poison+' TURNOS</small>':"")+
           (enemy.stun>0?'<small class="battle-stun-tag">DERRIBADO · PIERDE TURNO</small>':"")+
         '</div></article>';
     }).join("");
@@ -1801,12 +1816,15 @@
             (pendingSkill?'<button class="battle-cancel-target" type="button" data-action="cancel-battle-target">CANCELAR</button>':"")+
           '</div><div class="battle-skill-row">'+skillsMarkup+'</div></div>';
 
+    const stageSpellMarkup=battle.actionAnimation && battle.actionAnimation.side==="ally" && battle.actionAnimation.actorId==="guardian" && battle.actionAnimation.actionId==="nova" && battle.actionAnimation.frame<=2
+      ? '<div class="battle-spell-global spell-primordial-global is-frame-'+battle.actionAnimation.frame+'" aria-hidden="true"><i></i><b></b><span></span></div>'
+      : "";
     return '<div class="campaign-page battle-page">'+
       '<div class="battle-topbar"><div><span class="section-eyebrow">'+region.name.toUpperCase()+' · '+site.name.toUpperCase()+'</span><h2>Campo de batalla</h2></div>' +
         '<div class="battle-round-mark"><small>RONDA</small><strong>'+String(battle.round).padStart(2,"0")+'</strong></div>' +
         '<div class="battle-turn-order"><span>ORDEN DE TURNO</span><div>'+orderMarkup+'</div></div></div>'+
       '<section class="battle-stage '+(battle.actionAnimation && battle.actionAnimation.frame===2?'is-impacting fx-'+battle.actionAnimation.fx:'')+'" aria-label="Campo de batalla por turnos">'+
-        '<div class="battle-room-wall battle-room-'+site.id+'"><img class="battle-scene-image" src="assets/battles/backgrounds/'+site.id+'.jpg" alt="" onerror="this.remove()">'+sceneProps+'<div class="battle-room-fog"></div></div>'+
+        '<div class="battle-room-wall battle-room-'+site.id+'"><img class="battle-scene-image" src="assets/battles/backgrounds/'+site.id+'.jpg" alt="" onerror="this.remove()">'+sceneProps+'<div class="battle-room-fog"></div></div>'+stageSpellMarkup+
         '<div class="battle-stage-topline"><span>COMPAÑÍA <b>‹</b> ENEMIGOS</span><span>UNA SOLA SALA · ENCUENTRO '+(battle.status==="active"?"ACTIVO":battle.status==="victory"?"COMPLETADO":"FALLIDO")+'</span></div>'+
         '<div class="battle-lineup battle-allies-line">'+allyUnits+'</div>'+
         '<div class="battle-lineup battle-enemies-line">'+enemyUnits+'</div>'+
