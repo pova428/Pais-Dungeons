@@ -1,3 +1,17 @@
+import { characters, XP_THRESHOLDS } from "./src/data/heroes.js";
+import { regions } from "./src/data/world.js";
+import {
+  EQUIPMENT_ITEMS,
+  RARITY_ORDER,
+  GACHA_RARITY_RATES,
+  GACHA_COST,
+  SHOP_REFRESH_COST,
+  SHOP_STOCK_SIZE,
+  MAX_EQUIPPED_ITEMS,
+  GACHA_ANIMATION_DURATIONS,
+  items
+} from "./src/data/equipment.js";
+import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounters.js";
 (() => {
   "use strict";
 
@@ -19,112 +33,6 @@
   const dialogContent = document.getElementById("dialog-content");
   const dialogActions = document.getElementById("dialog-actions");
   const continueButton = document.getElementById("continue-button");
-
-  const characters = [
-    {id:"guardian",name:"Pol",title:"El Flaco",role:"MAGO",sign:"P",icon:"✧",detail:"Mago veloz y frágil, especialista en esferas, rayos y explosiones de magia oscura.",strengths:"Mayor velocidad y agilidad. Magia muy potente y gran evasión.",weaknesses:"Poca vida, defensa baja y daño físico reducido.",portrait:"assets/pol-portrait.png",sprites:"assets/pol-sprites.png",base:{hp:58,attack:5,magic:12,defense:4,speed:18,agility:17,mp:60},growth:{hp:5,attack:1,magic:1,defense:1,speed:1,agility:1,mp:4},skills:[
-      {id:"arcane-bolt",manaCost:9,target:"enemy",name:"Ataque Maligno",detail:"Lanza una esfera de magia oscura a un enemigo: 105% de MAG.",unlockLevel:1,icon:"✧",kind:"BÁSICA"},
-      {id:"burn-mark",manaCost:15,target:"enemy",name:"Materia oscura",detail:"Un rayo de magia cae del cielo sobre un enemigo: 145% de MAG.",unlockLevel:4,icon:"♨",kind:"MAGIA"},
-      {id:"nova",manaCost:26,target:"all-enemies",name:"Estallido primordial",detail:"Invoca una esfera arcana gigante que estalla y golpea a todos los enemigos: 110% de MAG.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
-    ]},
-    {id:"duelist",name:"Salim",title:"El Moro",role:"ASESINO",sign:"S",icon:"⚔",detail:"Asesino de gran daño y agilidad, pero muy vulnerable.",strengths:"Daño físico más alto. Muy rápido, ágil y con gran potencial crítico.",weaknesses:"Menor vida y defensa del equipo. Sufre mucho si recibe golpes directos.",portrait:"assets/salim-portrait.png",base:{hp:48,attack:13,magic:1,defense:3,speed:17,agility:18,mp:36},growth:{hp:4,attack:1,magic:0,defense:1,speed:1,agility:1,mp:3},skills:[
-      {id:"stab",manaCost:8,target:"enemy",name:"Navajazo",detail:"Corte rápido a un enemigo: 100% de ATQ.",unlockLevel:1,icon:"🗡",kind:"BÁSICA"},
-      {id:"multi-stab",manaCost:17,target:"enemy",name:"Navajazos múltiples",detail:"Tres cortes consecutivos de 35% de ATQ cada uno.",unlockLevel:4,icon:"⚔",kind:"ATAQUE"},
-      {id:"brothers",manaCost:28,target:"all-enemies",name:"Llamar a sus hermanos",detail:"Ataque conjunto contra todos los enemigos con dos impactos de 50% de ATQ.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
-    ]},
-    {id:"arcanist",name:"Igor",title:"El Alto",role:"SANADOR",sign:"I",icon:"✚",detail:"Sanador que cura aliados, roba vida y puede recuperar a toda la compañía.",strengths:"Curación potente, buena vida y estadísticas equilibradas.",weaknesses:"Menor daño directo que los atacantes y velocidad moderada.",portrait:"assets/igor-portrait.png",sprites:"assets/igor-sprites.png",base:{hp:78,attack:6,magic:11,defense:8,speed:10,agility:10,mp:80},growth:{hp:7,attack:1,magic:1,defense:1,speed:1,agility:1,mp:5},skills:[
-      {id:"antivirus",manaCost:12,target:"ally",name:"Antivirus",detail:"Cura a un aliado: 90% de MAG + 6 PV.",unlockLevel:1,icon:"✚",kind:"BÁSICA"},
-      {id:"life-drain",manaCost:18,target:"enemy",name:"Chupadita",detail:"Roba vida a un enemigo: 80% de MAG. Igor recupera el 50% del daño infligido.",unlockLevel:4,icon:"☯",kind:"APOYO"},
-      {id:"reboot",manaCost:30,target:"all-allies",name:"Diarrea para todos",detail:"Cura a todos los aliados vivos: 75% de MAG + 8 PV a cada uno.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
-    ]},
-    {id:"tracker",name:"Ivan",title:"El Gordo",role:"TANQUE",sign:"V",icon:"⬟",detail:"Tanque del equipo. Protege a sus compañeros con escudos y derribos.",strengths:"Mayor vida y defensa. Escudos fuertes y gran capacidad de protección.",weaknesses:"El más lento y menos ágil. Magia y daño explosivo muy bajos.",portrait:"assets/ivan-portrait.png",sprites:"assets/ivan-sprites.png",base:{hp:116,attack:8,magic:1,defense:15,speed:5,agility:4,mp:48},growth:{hp:11,attack:1,magic:0,defense:1,speed:0,agility:0,mp:3},skills:[
-      {id:"protective-shield",manaCost:11,target:"ally",name:"Escudo protector",detail:"Concede a un aliado un escudo del 22% de su vida máxima. Bloquea el siguiente ataque que reciba y dura como máximo una ronda.",unlockLevel:1,icon:"⬡",kind:"BÁSICA"},
-      {id:"knockdown",manaCost:16,target:"enemy",name:"Barrilete",detail:"Embestida que inflige 90% de ATQ y derriba al enemigo, que pierde su próximo turno.",unlockLevel:4,icon:"⚒",kind:"CONTROL"},
-      {id:"team-bastion",manaCost:28,target:"all-allies",name:"Culo Gordo",detail:"Protege a todos los aliados con un escudo del 15% de su vida máxima. Bloquea el siguiente golpe de cada uno o desaparece al terminar la ronda.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
-    ]},
-    {id:"alchemist",name:"Alex",title:"El Mujeriego",role:"DUELISTA",sign:"A",icon:"⚔",detail:"Duelista equilibrado, combina daño, resistencia y mejoras propias.",strengths:"Buen daño físico y vida. Puede potenciarse antes de atacar.",weaknesses:"No destaca en magia ni supera a Salim en daño o a Ivan en resistencia.",portrait:"assets/alex-portrait.png",sprites:"assets/alex-sprites.png",base:{hp:86,attack:10,magic:1,defense:8,speed:12,agility:12,mp:52},growth:{hp:8,attack:1,magic:0,defense:1,speed:1,agility:1,mp:4},skills:[
-      {id:"balonazo",manaCost:9,target:"enemy",name:"Balonazo",detail:"Lanza un balón contra un enemigo: 105% de ATQ.",unlockLevel:1,icon:"⚽",kind:"BÁSICA"},
-      {id:"modo-mujer",manaCost:16,target:"self",name:"Modo Mujer",detail:"Se potencia durante 2 turnos: +20% de ATQ y +10% de VEL.",unlockLevel:4,icon:"♛",kind:"MEJORA"},
-      {id:"field-finish",manaCost:27,target:"all-enemies",name:"Dedeo",detail:"Ataque tóxico que golpea a todos los enemigos: 85% de ATQ y veneno durante 2 turnos.",unlockLevel:10,icon:"✦",kind:"ULTIMATE"}
-    ]}
-  ];
-
-  const regions = [
-    {
-      id:"institute", index:"I", name:"Instituto Camí de Mar", short:"CAMÍ DE MAR", atmosphere:"Las clases han terminado. La pesadilla acaba de empezar.",
-      description:"Los pasillos del instituto están vacíos, pero las aulas siguen encendidas. Algo se mueve detrás de las puertas de las clases.",
-      boss:"Redes", bossRole:"SALA DEL JEFE",
-      bossDescription:"El último aula del instituto. Los cables se retuercen por las paredes y el equipo de red sigue funcionando aunque el edificio esté desierto.",
-      sites:[
-        {id:"institute-programming",name:"Programacion",kind:"AULA",description:"Las pantallas siguen mostrando líneas de código que nadie recuerda haber escrito. Cada ordenador parece estar esperando una orden.",icon:"Ⅰ"},
-        {id:"institute-database",name:"Base de Datos",kind:"AULA",description:"En el aula hay archivadores abiertos y servidores que zumban detrás de una puerta cerrada. Los registros no dejan de cambiar.",icon:"Ⅱ"},
-        {id:"institute-yard",name:"Patio",kind:"EXTERIOR",description:"El patio está cubierto por una niebla espesa. Las puertas de acceso se han cerrado y se oyen pasos al otro lado de la pista.",icon:"Ⅲ"},
-        {id:"institute-networks",name:"Redes",kind:"JEFE FINAL",description:"La sala final del instituto. Una maraña de cables, armarios de comunicaciones y luces rojas protege el camino de salida.",icon:"Ⅳ",boss:true}
-      ]
-    },
-    {
-      id:"baix-penedes", index:"II", name:"Baix Penedes", short:"BAIX PENEDES", atmosphere:"Carreteras conocidas que ya no llevan a casa.",
-      description:"Una comarca convertida en territorio hostil. Los lugares cotidianos han quedado aislados y la carretera parece no terminar nunca.",
-      boss:"Sushi", bossRole:"SALA DEL JEFE",
-      bossDescription:"La sala final de Baix Penedes. Tras la última puerta espera el encuentro que cierra esta zona y guarda el paso hacia Steam.",
-      sites:[
-        {id:"baix-bowling",name:"Bolera",kind:"LOCAL DE OCIO",description:"Las pistas siguen encendidas y los bolos caen sin que nadie lance la bola. Algo espera al fondo del local.",icon:"Ⅰ"},
-        {id:"baix-n340",name:"N-340",kind:"CARRETERA",description:"Una carretera bloqueada por vehículos abandonados. Las señales apuntan a destinos que ya no existen.",icon:"Ⅱ"},
-        {id:"baix-cinema",name:"Cine",kind:"EDIFICIO",description:"La sesión lleva horas empezada. En la pantalla se proyectan imágenes de la propia compañía caminando por el edificio.",icon:"Ⅲ"},
-        {id:"baix-sushi",name:"Sushi",kind:"JEFE FINAL",description:"La última sala de Baix Penedes. El local parece tranquilo desde fuera, pero la puerta no se abre desde dentro.",icon:"Ⅳ",boss:true}
-      ]
-    },
-    {
-      id:"steam", index:"III", name:"Steam", short:"STEAM", atmosphere:"Las partidas no terminan cuando abandonas el ordenador.",
-      description:"Un territorio formado por mundos de terror que se han mezclado entre sí. Cada puerta lleva a una experiencia distinta y ninguna permite salir fácilmente.",
-      boss:"Clubes", bossRole:"SALA DEL JEFE",
-      bossDescription:"El último lugar de Steam. La compañía tendrá que superar el desafío final para cerrar esta parte de la maldición.",
-      sites:[
-        {id:"steam-content-warning",name:"Content warning",kind:"MUNDO DE TERROR",description:"Una expedición con cámara en mano. Hay que grabar lo que acecha en las sombras, aunque algo también esté grabando al grupo.",icon:"Ⅰ"},
-        {id:"steam-labyrinthine",name:"Labyrinthine",kind:"LABERINTO",description:"Un laberinto de pasillos cambiantes. Las marcas en las paredes no siempre conducen al mismo sitio.",icon:"Ⅱ"},
-        {id:"steam-backrooms",name:"Escape Backrooms",kind:"ZONA LIMINAL",description:"Habitaciones amarillentas, luces que zumban y corredores que se repiten. El camino de vuelta parece haberse borrado.",icon:"Ⅲ"},
-        {id:"steam-clubs",name:"Clubes",kind:"JEFE FINAL",description:"La última sala de Steam. Las luces, el ruido y las sombras anuncian el desafío que cierra la tercera ruta.",icon:"Ⅳ",boss:true}
-      ]
-    }
-  ];
-
-  const EQUIPMENT_ITEMS = [
-    {id:"copper-ring",name:"Anillo de cobre",rarity:"Común",icon:"◉",type:"Anillo",price:35,description:"Un aro sencillo que protege contra golpes pequeños.",bonuses:{defense:1}},
-    {id:"worn-gloves",name:"Guantes gastados",rarity:"Común",icon:"♧",type:"Guantes",price:38,description:"Mejor agarre para armas y herramientas.",bonuses:{attack:1,agility:1}},
-    {id:"dusty-grimoire",name:"Grimorio polvoriento",rarity:"Común",icon:"▤",type:"Reliquia",price:40,description:"Unas pocas páginas aún conservan energía.",bonuses:{magic:1}},
-    {id:"hunter-boots",name:"Botas del rastreador",rarity:"Poco común",icon:"⌁",type:"Botas",price:75,description:"Su suela ligera permite reaccionar antes.",bonuses:{speed:2,agility:1}},
-    {id:"bone-pendant",name:"Colgante de hueso",rarity:"Poco común",icon:"♢",type:"Amuleto",price:82,description:"Un fragmento tallado que estabiliza la magia.",bonuses:{magic:2,defense:1}},
-    {id:"thorn-band",name:"Banda de espinas",rarity:"Poco común",icon:"✥",type:"Anillo",price:88,description:"Duele llevarla, pero endurece el brazo.",bonuses:{attack:2}},
-    {id:"bastion-buckle",name:"Hebilla del bastión",rarity:"Rara",icon:"⬟",type:"Armadura",price:145,description:"Una pieza de metal recuperada de una antigua guardia.",bonuses:{defense:3,attack:1}},
-    {id:"ember-tome",name:"Tomo de brasa",rarity:"Rara",icon:"♨",type:"Reliquia",price:155,description:"Sus páginas guardan calor arcano.",bonuses:{magic:3}},
-    {id:"eagle-charm",name:"Amuleto del águila",rarity:"Rara",icon:"⌖",type:"Amuleto",price:165,description:"Afina los reflejos y favorece los golpes precisos.",bonuses:{agility:2,critChance:.04}},
-    {id:"ash-crown",name:"Corona de ceniza",rarity:"Épica",icon:"♛",type:"Reliquia",price:260,description:"Una corona quemada que aún conserva poder.",bonuses:{magic:3,defense:2,speed:1}},
-    {id:"duelist-sash",name:"Faja del duelista",rarity:"Épica",icon:"╱",type:"Armadura",price:275,description:"Ligera y flexible, acompaña cada movimiento.",bonuses:{attack:3,agility:2}},
-    {id:"green-cross",name:"Cruz de savia",rarity:"Épica",icon:"✚",type:"Amuleto",price:290,description:"Aumenta la energía de las curaciones.",bonuses:{magic:2,healingBonus:.12}},
-    {id:"bloodfang",name:"Colmillo carmesí",rarity:"Legendaria",icon:"牙",type:"Arma",price:440,description:"Un filo antiguo que premia la agresividad.",bonuses:{attack:4,agility:2,critChance:.08}},
-    {id:"titan-core",name:"Núcleo del titán",rarity:"Legendaria",icon:"⬢",type:"Armadura",price:465,description:"Una piedra pesada que refuerza cualquier defensa.",bonuses:{defense:5,shieldBonus:.12}},
-    {id:"star-heart",name:"Corazón estelar",rarity:"Legendaria",icon:"✦",type:"Reliquia",price:490,description:"Concentra una gran cantidad de energía mágica.",bonuses:{magic:4,healingBonus:.08}},
-    {id:"navaja-de-ala",name:"Navaja de Ala",rarity:"Hyperrara",icon:"⚔",type:"Arma única",price:0,character:"duelist",description:"La navaja legendaria de Salim. Su filo parece moverse antes que la mano.",bonuses:{attack:5,speed:3,agility:3,critChance:.12}},
-    {id:"varita-aula-prohibida",name:"Varita del Aula Prohibida",rarity:"Hyperrara",icon:"✧",type:"Báculo único",price:0,character:"guardian",description:"La magia olvidada del instituto responde a Pol.",bonuses:{magic:5,speed:2,agility:2,critChance:.08}},
-    {id:"antivirus-raiz",name:"Antivirus Raíz",rarity:"Hyperrara",icon:"✚",type:"Reliquia única",price:0,character:"arcanist",description:"Un núcleo curativo que limpia cualquier corrupción.",bonuses:{magic:4,defense:3,healingBonus:.25}},
-    {id:"escudo-de-los-cinco",name:"Escudo de los Cinco",rarity:"Hyperrara",icon:"⬡",type:"Escudo único",price:0,character:"tracker",description:"El bastión de Ivan convertido en una defensa imposible de quebrar.",bonuses:{defense:7,speed:2,shieldBonus:.25}},
-    {id:"balon-del-ultimo-gol",name:"Balón del Último Gol",rarity:"Hyperrara",icon:"⚽",type:"Reliquia única",price:0,character:"alchemist",description:"El balón que convierte cada remate de Alex en una jugada decisiva.",bonuses:{attack:4,defense:2,speed:3,critChance:.08}}
-  ];
-  const RARITY_ORDER=["Común","Poco común","Rara","Épica","Legendaria","Hyperrara"];
-  const GACHA_RARITY_RATES=[
-    {rarity:"Común",chance:50},{rarity:"Poco común",chance:25},{rarity:"Rara",chance:15},
-    {rarity:"Épica",chance:7},{rarity:"Legendaria",chance:2.5},{rarity:"Hyperrara",chance:.5}
-  ];
-  const GACHA_COST=100,SHOP_REFRESH_COST=35,SHOP_STOCK_SIZE=4,MAX_EQUIPPED_ITEMS=5;
-  const GACHA_ANIMATION_DURATIONS={spin:1350,drop:850,open:720};
-
-  const items = [
-    {id:"ration",name:"Ración de marcha",desc:"Comida seca para recuperar fuerzas en el bastión.",price:15,icon:"✚",kind:"rations"},
-    {id:"bandage",name:"Venda de lino",desc:"Un paquete de vendas limpias para futuras expediciones.",price:20,icon:"╱",kind:"bandage"},
-    {id:"tonic",name:"Tónico de raíz negra",desc:"Un frasco amargo de uso medicinal. Su fórmula es inestable.",price:35,icon:"⚗",kind:"tonic"},
-    {id:"oil",name:"Aceite de lámpara",desc:"Combustible para no caminar a oscuras.",price:12,icon:"♨",kind:"oil"}
-  ];
-
-  const XP_THRESHOLDS = [0,100,240,420,650,930,1260,1640,2070,2550];
 
   function getCharacterStats(character,level) {
     const safeLevel = Math.min(10,Math.max(1,Number(level) || 1));
@@ -198,76 +106,6 @@
       grantExperience(character.id,state.party.includes(character.id) ? amount : Math.floor(amount/2));
     });
   }
-
-  const BASIC_ATTACK = {
-    id:"basic-attack",manaCost:0,target:"enemy",name:"Ataque básico",
-    detail:"Golpe físico sin consumir maná: 70% de ATQ.",unlockLevel:1,icon:"⚔",kind:"BÁSICA"
-  };
-
-  const ENEMY_TYPES = {
-    "process-wisp":{name:"Eco de proceso",role:"ESPÍRITU DIGITAL",maxHp:46,attack:7,speed:16,mark:"404",ai:"hunter",asset:"process-wisp"},
-    "virus-larva":{name:"Larva de virus",role:"PLAGA",maxHp:40,attack:6,speed:12,mark:"!",ai:"hexer",asset:"virus-larva"},
-    "code-fragment":{name:"Fragmento de código",role:"ANOMALÍA",maxHp:52,attack:8,speed:8,mark:"//",ai:"bruiser",asset:"code-fragment"},
-
-    "archive-mimic":{name:"Mímico de archivo",role:"DEPREDADOR",maxHp:48,attack:7,speed:9,mark:"DB",ai:"support",asset:"archive-mimic"},
-    "query-leech":{name:"Sanguijuela SQL",role:"PARÁSITO",maxHp:44,attack:7,speed:14,mark:"SQL",ai:"hunter",asset:"query-leech"},
-    "null-sentinel":{name:"Centinela nulo",role:"GUARDIÁN",maxHp:61,attack:9,speed:6,mark:"0",ai:"bruiser",asset:"null-sentinel"},
-
-    "ash-hound":{name:"Sabueso de ceniza",role:"CAZADOR",maxHp:50,attack:8,speed:17,mark:"H",ai:"hunter",asset:"ash-hound"},
-    "yard-haunt":{name:"Aparición del patio",role:"ESPECTRO",maxHp:48,attack:7,speed:11,mark:"✦",ai:"hexer",asset:"yard-haunt"},
-    "broken-desk":{name:"Pupitre roto",role:"BRUTO",maxHp:60,attack:9,speed:7,mark:"▰",ai:"bruiser",asset:"broken-desk"},
-
-    "router-wraith":{name:"Espectro del router",role:"JEFE · REDES",maxHp:112,attack:10,speed:13,mark:"R",ai:"boss",asset:"router-wraith",boss:true},
-    "cable-stalker":{name:"Acechador de cable",role:"CAZADOR",maxHp:52,attack:8,speed:17,mark:"~",ai:"hunter",asset:"cable-stalker"},
-    "firewall-drone":{name:"Dron cortafuegos",role:"SOPORTE",maxHp:56,attack:8,speed:9,mark:"FW",ai:"support",asset:"firewall-drone"},
-
-    "pin-ghoul":{name:"Necrófago de bolera",role:"BRUTO",maxHp:58,attack:8,speed:11,mark:"9",ai:"bruiser",asset:"pin-ghoul"},
-    "lane-phantom":{name:"Fantasma de pista",role:"ESPECTRO",maxHp:50,attack:8,speed:14,mark:"X",ai:"hexer",asset:"lane-phantom"},
-    "ball-mauler":{name:"Aplastabolos",role:"BRUTO",maxHp:64,attack:9,speed:7,mark:"●",ai:"bruiser",asset:"ball-mauler"},
-
-    "asphalt-reaver":{name:"Desollador de asfalto",role:"CAZADOR",maxHp:60,attack:9,speed:14,mark:"N",ai:"hunter",asset:"asphalt-reaver"},
-    "signal-crawler":{name:"Rastrero de señal",role:"PARÁSITO",maxHp:52,attack:8,speed:12,mark:"≈",ai:"hexer",asset:"signal-crawler"},
-    "wreck-hound":{name:"Sabueso de chatarra",role:"BRUTO",maxHp:67,attack:10,speed:8,mark:"W",ai:"bruiser",asset:"wreck-hound"},
-
-    "screen-haunt":{name:"Aparición de pantalla",role:"ESPECTRO",maxHp:62,attack:9,speed:12,mark:"▣",ai:"hexer",asset:"screen-haunt"},
-    "frame-mimic":{name:"Mímico de fotograma",role:"SOPORTE",maxHp:58,attack:9,speed:10,mark:"F",ai:"support",asset:"frame-mimic"},
-    "usher-wraith":{name:"Acomodador espectral",role:"CAZADOR",maxHp:52,attack:10,speed:16,mark:"U",ai:"hunter",asset:"usher-wraith"},
-
-    "sushi-chef":{name:"El chef de la última mesa",role:"JEFE · SUSHI",maxHp:132,attack:11,speed:14,mark:"寿",ai:"boss",asset:"sushi-chef",boss:true},
-    "wasabi-fiend":{name:"Demonio de wasabi",role:"CAZADOR",maxHp:61,attack:9,speed:17,mark:"辣",ai:"hunter",asset:"wasabi-fiend"},
-    "soy-shadow":{name:"Sombra de soja",role:"ESPECTRO",maxHp:66,attack:9,speed:10,mark:"影",ai:"hexer",asset:"soy-shadow"},
-
-    "camera-stalker":{name:"Acechador de cámara",role:"CAZADOR",maxHp:68,attack:10,speed:17,mark:"REC",ai:"hunter",asset:"camera-stalker"},
-    "clip-fiend":{name:"Demonio de clip",role:"PARÁSITO",maxHp:59,attack:9,speed:13,mark:"▶",ai:"hexer",asset:"clip-fiend"},
-    "recording-ghost":{name:"Fantasma grabado",role:"SOPORTE",maxHp:65,attack:9,speed:9,mark:"◉",ai:"support",asset:"recording-ghost"},
-
-    "maze-binder":{name:"Tejedor del laberinto",role:"ESPECTRO",maxHp:72,attack:10,speed:12,mark:"⌘",ai:"hexer",asset:"maze-binder"},
-    "thorn-minotaur":{name:"Minotauro de espinas",role:"BRUTO",maxHp:82,attack:11,speed:7,mark:"M",ai:"bruiser",asset:"thorn-minotaur"},
-    "wall-crawler":{name:"Rastrero de pared",role:"CAZADOR",maxHp:66,attack:10,speed:16,mark:"W",ai:"hunter",asset:"wall-crawler"},
-
-    "faceless-runner":{name:"Corredor sin rostro",role:"CAZADOR",maxHp:72,attack:10,speed:18,mark:"?",ai:"hunter",asset:"faceless-runner"},
-    "yellow-mimic":{name:"Mímico amarillo",role:"SOPORTE",maxHp:70,attack:10,speed:11,mark:"Y",ai:"support",asset:"yellow-mimic"},
-    "ceiling-watcher":{name:"Vigía del techo",role:"ESPECTRO",maxHp:76,attack:11,speed:8,mark:"⌃",ai:"hexer",asset:"ceiling-watcher"},
-
-    "club-master":{name:"Maestro de Clubes",role:"JEFE FINAL · STEAM",maxHp:158,attack:12,speed:15,mark:"DJ",ai:"boss",asset:"club-master",boss:true},
-    "bass-brute":{name:"Bruto del bajo",role:"BRUTO",maxHp:78,attack:11,speed:8,mark:"♬",ai:"bruiser",asset:"bass-brute"},
-    "strobe-witch":{name:"Bruja estroboscópica",role:"ESPECTRO",maxHp:74,attack:10,speed:17,mark:"✧",ai:"hexer",asset:"strobe-witch"}
-  };
-
-  const SITE_ENCOUNTERS = {
-    "institute-programming":["process-wisp","virus-larva","code-fragment"],
-    "institute-database":["archive-mimic","query-leech","null-sentinel"],
-    "institute-yard":["ash-hound","yard-haunt","broken-desk"],
-    "institute-networks":["router-wraith","cable-stalker","firewall-drone"],
-    "baix-bowling":["pin-ghoul","lane-phantom","ball-mauler"],
-    "baix-n340":["asphalt-reaver","signal-crawler","wreck-hound"],
-    "baix-cinema":["screen-haunt","frame-mimic","usher-wraith"],
-    "baix-sushi":["sushi-chef","wasabi-fiend","soy-shadow"],
-    "steam-content-warning":["camera-stalker","clip-fiend","recording-ghost"],
-    "steam-labyrinthine":["maze-binder","thorn-minotaur","wall-crawler"],
-    "steam-backrooms":["faceless-runner","yellow-mimic","ceiling-watcher"],
-    "steam-clubs":["club-master","bass-brute","strobe-witch"]
-  };
 
   function createBattleState(siteId) {
     const startingVitals={};
