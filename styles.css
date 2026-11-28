@@ -5025,3 +5025,19 @@ body.reduce-motion .rest-flames .rest-fire-sprite {
 @media(max-width:420px) {
   .rest-fire-stage { bottom:18%;transform:translateX(-50%) scale(.72); }
 }
+
+
+/* Build 037 — campamento sin llama ni efectos de fuego */
+.rest-campfire-scene {
+  background-image:url("assets/rest-campsite.svg?v=037") !important;
+  background-position:center center !important;
+  background-size:cover !important;
+}
+.rest-fire-stage { display:none !important; }
+@media(max-width:650px) {
+  .rest-campfire-scene {
+    background-image:url("assets/rest-campsite-mobile.svg?v=037") !important;
+    background-position:center center !important;
+    background-size:cover !important;
+  }
+}
