@@ -1859,29 +1859,23 @@
     }).join("");
     const action=rests>0
       ? '<button class="rest-main-button" type="button" data-action="rest"><span class="rest-button-icon">✦</span><span><b>DESCANSAR AHORA</b><small>CONSUMIR 1 RACIÓN · RECUPERAR AL EQUIPO</small></span><span class="rest-button-arrow">→</span></button>'
-      : '<button class="rest-main-button is-disabled" type="button" disabled><span class="rest-button-icon">×</span><span><b>NO QUEDAN RACIONES</b><small>EL FUEGO ESPERA A QUE VOLVÁIS CON SUMINISTROS</small></span></button><button class="rest-market-link" type="button" data-tab="shop">IR AL MERCADO Y COMPRAR RACIONES →</button>';
+      : '<button class="rest-main-button is-disabled" type="button" disabled><span class="rest-button-icon">×</span><span><b>NO QUEDAN RACIONES</b><small>EL CAMPAMENTO ESPERA A QUE VOLVÁIS CON SUMINISTROS</small></span></button><button class="rest-market-link" type="button" data-tab="shop">IR AL MERCADO Y COMPRAR RACIONES →</button>';
     return '<div class="campaign-page rest-page">'+
-      '<div class="page-heading rest-page-heading"><div><span class="section-eyebrow">REFUGIO · ZONA SEGURA</span><h2>Campamento del Último Farol</h2><p>La noche queda al otro lado de la luz. Reuníos junto al fuego y recuperad fuerzas antes de continuar.</p></div></div>'+
-      '<section class="rest-campfire-scene" aria-label="Campamento pixel art en un bosque de noche, con dos tiendas y una gran hoguera">'+
+      '<div class="page-heading rest-page-heading"><div><span class="section-eyebrow">REFUGIO · ZONA SEGURA</span><h2>Campamento del Último Farol</h2><p>La noche queda al otro lado de la luz. Reuníos en el campamento y recuperad fuerzas antes de continuar.</p></div></div>'+
+      '<section class="rest-campfire-scene" aria-label="Campamento pixel art en un bosque de noche, con tiendas y zona de descanso">'+
         '<div class="rest-scenic-shade"></div>'+
-        '<div class="rest-fire-stage" aria-hidden="true">'+
-          '<div class="rest-fire-aura"></div>'+
-          '<div class="rest-smoke"><i></i><i></i><i></i><i></i><i></i></div>'+
-          '<div class="rest-fire-sparks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
-          '<div class="rest-flames" aria-hidden="true"><i class="rest-fire-sprite"></i></div>'+
-        '</div>'+
         '<aside class="rest-camp-controls">'+
           '<span class="rest-controls-eyebrow">✦ EL ÚLTIMO FAROL ✦</span>'+
-          '<h3>Un respiro junto al fuego</h3>'+
+          '<h3>Un respiro en el campamento</h3>'+
           '<p>Una ración permite que los cinco héroes recuperen un 25% de su vida y de su maná máximos, también quienes están en reserva.</p>'+
           '<div class="rest-uses-display"><span class="rest-uses-icon">✚</span><div><small>DESCANSOS DISPONIBLES</small><strong class="'+(rests===0?"is-empty":"")+'">'+rests+'</strong><b>'+(rests===1?"1 RACIÓN RESTANTE":rests+" RACIONES RESTANTES")+'</b></div></div>'+
           '<div class="rest-camp-action">'+action+'</div>'+
           '<div class="rest-recovery-badges"><span><b>+25%</b><small>VIDA</small></span><span><b>+25%</b><small>MANÁ</small></span><span><b>5 / 5</b><small>HÉROES</small></span></div>'+
           '<small class="rest-command-footnote">'+(rests>0?"El descanso consume una sola ración y atiende a toda la compañía.":"El descanso no se consume hasta que consigas una ración.")+'</small>'+
         '</aside>'+
-        '<div class="rest-scene-caption"><span>EL FUEGO MANTIENE LA OSCURIDAD A DISTANCIA</span><small>DESCANSAD. MAÑANA CONTINÚA EL CAMINO.</small></div>'+
+        '<div class="rest-scene-caption"><span>EL CAMPAMENTO MANTIENE LA OSCURIDAD A DISTANCIA</span><small>DESCANSAD. MAÑANA CONTINÚA EL CAMINO.</small></div>'+
       '</section>'+
-      '<section class="rest-party-zone"><div class="rest-party-heading"><div><span class="section-eyebrow">ALREDEDOR DE LA HOGUERA</span><h3>Estado de la compañía</h3></div><span class="rest-hurt-count">'+hurt+' / 5 <small>HERIDOS</small></span></div><div class="rest-party-grid">'+members+'</div><p>Los cinco reciben los beneficios del descanso, estén en la expedición o de reserva.</p></section>'+
+      '<section class="rest-party-zone"><div class="rest-party-heading"><div><span class="section-eyebrow">EN EL CAMPAMENTO</span><h3>Estado de la compañía</h3></div><span class="rest-hurt-count">'+hurt+' / 5 <small>HERIDOS</small></span></div><div class="rest-party-grid">'+members+'</div><p>Los cinco reciben los beneficios del descanso, estén en la expedición o de reserva.</p></section>'+
       '<p class="campaign-notice">'+state.notice+'</p>'+
     '</div>';
   }
