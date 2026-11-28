@@ -1,6 +1,6 @@
 # PAIS DUNGEON
 
-**RPG táctico de fantasía oscura · Build 038**
+**RPG táctico de fantasía oscura · Build 039**
 
 Cinco juramentos. Una tierra condenada. Acompaña a Salim, Pol, Igor, Ivan y Alex en una aventura de exploración, combates por turnos, equipo y supervivencia.
 
@@ -11,13 +11,20 @@ Consulta el **[mapa de proyecto y hoja de ruta](ROADMAP.md)** para ver:
 - Qué mejoras gráficas, animaciones y objetos están pendientes.
 - Qué trabajo queda para los mapas, el lore y la historia.
 - Las fases previstas para ampliar el contenido y pulir el juego.
-- Consulta el [mapa de arquitectura](docs/architecture.md) para localizar sistemas y datos del código.
+
+Para localizar sistemas y datos del código, consulta el [mapa de arquitectura](docs/architecture.md).
 
 **Estado actual:** la base jugable incluye campaña, compañía de cinco héroes, combate, habilidades, mercado, inventario, equipamiento, rutas y descanso. El siguiente gran objetivo es elevar la calidad visual y narrativa, ampliar los mapas y el contenido y revisar la experiencia completa.
 
 ---
 
 ## Historial de builds
+
+## Build 039 — campamento ilustrado y descanso integrado
+
+- Se incorpora la ilustración nocturna del campamento como fondo predeterminado de Descanso, con una capa de sombra para mantener la lectura.
+- El contador destaca los descansos que quedan y aclara que cada ración permite uno; el botón principal muestra el coste y la recuperación.
+- El panel y el encuadre se adaptan a escritorio y móvil. Se conserva la opción de cargar un fondo propio y restablecer la ilustración predeterminada.
 
 ## Build 038 — fondo personalizable en Descanso
 

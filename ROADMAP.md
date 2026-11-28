@@ -1,7 +1,7 @@
 # PAIS DUNGEON — mapa de proyecto y planificación
 
 > Documento vivo para saber qué está construido, qué está en desarrollo y qué queda por hacer.  
-> Estado revisado: **Build 038**.
+> Estado revisado: **Build 039**.
 
 ## Visión del proyecto
 
@@ -65,8 +65,8 @@ flowchart TD
 - [x] Sección de rutas con tres recorridos definidos en la interfaz.
 - [x] Encuentros y estructura inicial de exploración.
 - [x] Sistema de descanso: consume una ración y recupera un 25% de vida y maná máximos de los cinco héroes.
-- [x] Contador de descansos disponibles y acceso al mercado cuando faltan raciones.
-- [x] Fondo de descanso personalizable por el jugador, guardado localmente en el navegador.
+- [x] Contador de descansos disponibles, botón principal de descanso y acceso al mercado cuando faltan raciones.
+- [x] Fondo de descanso personalizable por el jugador, guardado localmente en el navegador, con ilustración predeterminada del campamento.
 
 ### 6. Arte y animación ya incorporados
 - [x] Retratos de los cinco protagonistas.
@@ -141,3 +141,4 @@ El historial detallado de cambios y builds se mantiene en el [README principal](
 ---
 
 **Prioridad general:** terminar de consolidar las pantallas actuales, elevar la calidad gráfica, dar identidad e historia a cada mapa, ampliar el contenido y finalmente dedicar una fase completa a pruebas y pulido.
+

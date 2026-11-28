@@ -980,7 +980,7 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
     } else {
       image.removeAttribute("src");
       image.classList.remove("is-active");
-      if (status) status.textContent = "Puedes cargar tu propia imagen";
+      if (status) status.textContent = "Campamento original · puedes cambiar la imagen";
     }
   }
 
@@ -1005,7 +1005,7 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
       restBackgroundObjectUrl = null;
       restBackgroundObjectUrlBlob = null;
       applyRestBackgroundToScene();
-      if (state) { state.notice = "Se ha quitado la imagen personalizada."; saveState(); }
+      if (state) { state.notice = "Se ha restaurado el fondo del campamento."; saveState(); }
     } catch (error) {
       const status = document.getElementById("rest-background-status");
       if (status) status.textContent = "No se pudo borrar la imagen guardada.";
@@ -1833,18 +1833,18 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
       : '<button class="rest-main-button is-disabled" type="button" disabled><span class="rest-button-icon">×</span><span><b>NO QUEDAN RACIONES</b><small>EL CAMPAMENTO ESPERA A QUE VOLVÁIS CON SUMINISTROS</small></span></button><button class="rest-market-link" type="button" data-tab="shop">IR AL MERCADO Y COMPRAR RACIONES →</button>';
     return '<div class="campaign-page rest-page">'+
       '<div class="page-heading rest-page-heading"><div><span class="section-eyebrow">REFUGIO · ZONA SEGURA</span><h2>Campamento del Último Farol</h2><p>La noche queda al otro lado de la luz. Reuníos en el campamento y recuperad fuerzas antes de continuar.</p></div></div>'+
-      '<section class="rest-campfire-scene" aria-label="Fondo personalizable del campamento">'+
+      '<section class="rest-campfire-scene" aria-label="Campamento nocturno de la compañía">'+
         '<img class="rest-custom-background-image" id="rest-custom-background-image" alt="" aria-hidden="true">'+
         '<div class="rest-background-toolbar">'+
-          '<label class="rest-background-upload" for="rest-background-upload">▧ ELEGIR IMAGEN<input id="rest-background-upload" type="file" accept="image/*"></label>'+
-          '<button class="rest-background-reset" type="button" data-action="reset-rest-background">QUITAR IMAGEN</button>'+
+          '<label class="rest-background-upload" for="rest-background-upload">▧ CAMBIAR FONDO<input id="rest-background-upload" type="file" accept="image/*"></label>'+
+          '<button class="rest-background-reset" type="button" data-action="reset-rest-background">RESTABLECER FONDO</button>'+
           '<span class="rest-background-status" id="rest-background-status">Puedes cargar tu propia imagen</span>'+
         '</div>'+
-        '<aside class="rest-camp-controls">'+
+        '<aside class="rest-camp-controls" aria-labelledby="rest-controls-title">'+
           '<span class="rest-controls-eyebrow">✦ EL ÚLTIMO FAROL ✦</span>'+
-          '<h3>Un respiro en el campamento</h3>'+
+          '<h3 id="rest-controls-title">Un respiro en el campamento</h3>'+
           '<p>Una ración permite que los cinco héroes recuperen un 25% de su vida y de su maná máximos, también quienes están en reserva.</p>'+
-          '<div class="rest-uses-display"><span class="rest-uses-icon">✚</span><div><small>DESCANSOS DISPONIBLES</small><strong class="'+(rests===0?"is-empty":"")+'">'+rests+'</strong><b>'+(rests===1?"1 RACIÓN RESTANTE":rests+" RACIONES RESTANTES")+'</b></div></div>'+
+          '<div class="rest-uses-display"><span class="rest-uses-icon">✚</span><div><small>DESCANSOS QUE TE QUEDAN</small><strong class="'+(rests===0?"is-empty":"")+'">'+rests+'</strong><b>'+(rests===1?"1 RACIÓN · 1 DESCANSO":rests+" RACIONES · 1 DESCANSO CADA UNA")+'</b></div></div>'+
           '<div class="rest-camp-action">'+action+'</div>'+
           '<div class="rest-recovery-badges"><span><b>+25%</b><small>VIDA</small></span><span><b>+25%</b><small>MANÁ</small></span><span><b>5 / 5</b><small>HÉROES</small></span></div>'+
           '<small class="rest-command-footnote">'+(rests>0?"El descanso consume una sola ración y atiende a toda la compañía.":"El descanso no se consume hasta que consigas una ración.")+'</small>'+
