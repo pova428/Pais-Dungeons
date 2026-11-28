@@ -908,139 +908,6 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
   const BATTLE_ENEMY_IMPACT_DELAY = 520;
   const BATTLE_ENEMY_RECOVERY_DELAY = 440;
   const BATTLE_FLOATING_NUMBER_DURATION = 1500;
-  const REST_BACKGROUND_DB_NAME = "pais-dungeon-user-images";
-  const REST_BACKGROUND_STORE = "custom-images";
-  const REST_BACKGROUND_KEY = "rest-screen-background";
-  const REST_BACKGROUND_MAX_BYTES = 15 * 1024 * 1024;
-  let restBackgroundBlob = null;
-  let restBackgroundLoaded = false;
-  let restBackgroundLoadPromise = null;
-  let restBackgroundObjectUrl = null;
-  let restBackgroundObjectUrlBlob = null;
-
-  function openRestBackgroundDatabase() {
-    return new Promise((resolve,reject) => {
-      if (!window.indexedDB) return reject(new Error("Este navegador no permite guardar imágenes localmente."));
-      const request = window.indexedDB.open(REST_BACKGROUND_DB_NAME,1);
-      request.onupgradeneeded = () => {
-        if (!request.result.objectStoreNames.contains(REST_BACKGROUND_STORE)) {
-          request.result.createObjectStore(REST_BACKGROUND_STORE);
-        }
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error || new Error("No se pudo abrir el almacenamiento de imágenes."));
-    });
-  }
-
-  async function readRestBackground() {
-    const db = await openRestBackgroundDatabase();
-    return new Promise((resolve,reject) => {
-      const transaction = db.transaction(REST_BACKGROUND_STORE,"readonly");
-      const request = transaction.objectStore(REST_BACKGROUND_STORE).get(REST_BACKGROUND_KEY);
-      request.onsuccess = () => { const value=request.result || null; db.close(); resolve(value); };
-      request.onerror = () => { const error=request.error; db.close(); reject(error); };
-    });
-  }
-
-  async function writeRestBackground(blob) {
-    const db = await openRestBackgroundDatabase();
-    return new Promise((resolve,reject) => {
-      const transaction = db.transaction(REST_BACKGROUND_STORE,"readwrite");
-      transaction.objectStore(REST_BACKGROUND_STORE).put(blob,REST_BACKGROUND_KEY);
-      transaction.oncomplete = () => { db.close(); resolve(); };
-      transaction.onerror = () => { const error=transaction.error; db.close(); reject(error); };
-      transaction.onabort = () => { const error=transaction.error; db.close(); reject(error || new Error("No se pudo guardar la imagen.")); };
-    });
-  }
-
-  async function deleteRestBackground() {
-    const db = await openRestBackgroundDatabase();
-    return new Promise((resolve,reject) => {
-      const transaction = db.transaction(REST_BACKGROUND_STORE,"readwrite");
-      transaction.objectStore(REST_BACKGROUND_STORE).delete(REST_BACKGROUND_KEY);
-      transaction.oncomplete = () => { db.close(); resolve(); };
-      transaction.onerror = () => { const error=transaction.error; db.close(); reject(error); };
-      transaction.onabort = () => { const error=transaction.error; db.close(); reject(error || new Error("No se pudo quitar la imagen.")); };
-    });
-  }
-
-  function applyRestBackgroundToScene() {
-    const image = document.getElementById("rest-custom-background-image");
-    const status = document.getElementById("rest-background-status");
-    if (!image) return;
-    if (restBackgroundBlob) {
-      if (restBackgroundObjectUrlBlob !== restBackgroundBlob) {
-        if (restBackgroundObjectUrl) URL.revokeObjectURL(restBackgroundObjectUrl);
-        restBackgroundObjectUrl = URL.createObjectURL(restBackgroundBlob);
-        restBackgroundObjectUrlBlob = restBackgroundBlob;
-      }
-      image.src = restBackgroundObjectUrl;
-      image.classList.add("is-active");
-      if (status) status.textContent = "Imagen personalizada guardada en este navegador";
-    } else {
-      image.removeAttribute("src");
-      image.classList.remove("is-active");
-      if (status) status.textContent = "Campamento original · puedes cambiar la imagen";
-    }
-  }
-
-  async function loadRestBackgroundForCurrentScreen() {
-    if (!restBackgroundLoaded) {
-      if (!restBackgroundLoadPromise) {
-        restBackgroundLoadPromise = readRestBackground().catch(() => null);
-      }
-      restBackgroundBlob = await restBackgroundLoadPromise;
-      restBackgroundLoaded = true;
-    }
-    applyRestBackgroundToScene();
-  }
-
-  async function resetRestBackground() {
-    try {
-      await deleteRestBackground();
-      restBackgroundBlob = null;
-      restBackgroundLoaded = true;
-      restBackgroundLoadPromise = Promise.resolve(null);
-      if (restBackgroundObjectUrl) URL.revokeObjectURL(restBackgroundObjectUrl);
-      restBackgroundObjectUrl = null;
-      restBackgroundObjectUrlBlob = null;
-      applyRestBackgroundToScene();
-      if (state) { state.notice = "Se ha restaurado el fondo del campamento."; saveState(); }
-    } catch (error) {
-      const status = document.getElementById("rest-background-status");
-      if (status) status.textContent = "No se pudo borrar la imagen guardada.";
-    }
-  }
-
-  async function handleRestBackgroundUpload(input) {
-    const file = input && input.files ? input.files[0] : null;
-    if (!file) return;
-    if (!file.type || !file.type.startsWith("image/")) {
-      const status = document.getElementById("rest-background-status");
-      if (status) status.textContent = "Selecciona un archivo de imagen.";
-      input.value = "";
-      return;
-    }
-    if (file.size > REST_BACKGROUND_MAX_BYTES) {
-      const status = document.getElementById("rest-background-status");
-      if (status) status.textContent = "La imagen supera el límite de 15 MB.";
-      input.value = "";
-      return;
-    }
-    try {
-      await writeRestBackground(file);
-      restBackgroundBlob = file;
-      restBackgroundLoaded = true;
-      restBackgroundLoadPromise = Promise.resolve(file);
-      applyRestBackgroundToScene();
-    } catch (error) {
-      const status = document.getElementById("rest-background-status");
-      if (status) status.textContent = "No se pudo guardar. Prueba con otra imagen.";
-    }
-    input.value = "";
-  }
-
-
   function getBattleActionStepDuration(animation) {
     if (!animation) return BATTLE_ACTION_FRAME_DELAY;
     if (animation.side === "enemy") {
@@ -1462,7 +1329,6 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
     if (state.tab === "battle") campaignMain.innerHTML = renderBattle();
     if (state.tab === "rest") campaignMain.innerHTML = renderRest();
     if (state.tab === "shop") campaignMain.innerHTML = renderShop();
-    if (state.tab === "rest") loadRestBackgroundForCurrentScreen();
   }
 
   function renderBastion() {
@@ -1826,37 +1692,29 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
       const hpRatio=Math.round(hp/maxHp*100);
       const mpRatio=Math.round(mp/maxMp*100);
       const active=state.party.includes(character.id);
-      return '<article class="rest-member-card '+(hpRatio<100?"is-wounded":"is-ready")+'"><div class="rest-member-top"><span class="rest-member-sigil">'+character.sign+'</span><div class="rest-member-name"><b>'+character.name+'</b><small>«'+character.title+'»</small></div><span class="rest-member-state '+(active?"is-active":"")+'">'+(active?"EN RUTA":"RESERVA")+'</span></div><div class="rest-member-stat"><span>♥ VIDA</span><b>'+hp+' / '+maxHp+'</b></div><div class="rest-member-track hp"><i style="width:'+hpRatio+'%"></i></div><div class="rest-member-stat"><span>✦ MANÁ</span><b>'+mp+' / '+maxMp+'</b></div><div class="rest-member-track mp"><i style="width:'+mpRatio+'%"></i></div></article>';
+      return '<article class="rest-member-card '+(hpRatio<100?"is-wounded":"is-ready")+'"><div class="rest-member-top"><span class="rest-member-sigil">'+character.sign+'</span><div class="rest-member-name"><b>'+character.name+'</b></div><span class="rest-member-state '+(active?"is-active":"")+'">'+(active?"EN RUTA":"RESERVA")+'</span></div><div class="rest-member-stat"><span>VIDA</span><b>'+hp+' / '+maxHp+'</b></div><div class="rest-member-track hp"><i style="width:'+hpRatio+'%"></i></div><div class="rest-member-stat"><span>MANÁ</span><b>'+mp+' / '+maxMp+'</b></div><div class="rest-member-track mp"><i style="width:'+mpRatio+'%"></i></div></article>';
     }).join("");
     const action=rests>0
-      ? '<button class="rest-main-button" type="button" data-action="rest"><span class="rest-button-icon">✦</span><span><b>DESCANSAR AHORA</b><small>CONSUMIR 1 RACIÓN · RECUPERAR AL EQUIPO</small></span><span class="rest-button-arrow">→</span></button>'
-      : '<button class="rest-main-button is-disabled" type="button" disabled><span class="rest-button-icon">×</span><span><b>NO QUEDAN RACIONES</b><small>EL CAMPAMENTO ESPERA A QUE VOLVÁIS CON SUMINISTROS</small></span></button><button class="rest-market-link" type="button" data-tab="shop">IR AL MERCADO Y COMPRAR RACIONES →</button>';
+      ? '<button class="rest-main-button" type="button" data-action="rest"><span class="rest-button-icon">✦</span><span><b>DESCANSAR</b><small>−1 RACIÓN</small></span><span class="rest-button-arrow">→</span></button>'
+      : '<button class="rest-main-button is-disabled" type="button" disabled><span class="rest-button-icon">×</span><span><b>SIN RACIONES</b></span></button><button class="rest-market-link" type="button" data-tab="shop">COMPRAR RACIONES →</button>';
+    const notice=state.notice && state.notice!=="Elige una ruta y supera cada parada para avanzar."
+      ? '<p class="campaign-notice rest-notice" role="status">'+state.notice+'</p>'
+      : "";
     return '<div class="campaign-page rest-page">'+
-      '<div class="page-heading rest-page-heading"><div><span class="section-eyebrow">REFUGIO · ZONA SEGURA</span><h2>Campamento del Último Farol</h2><p>La noche queda al otro lado de la luz. Reuníos en el campamento y recuperad fuerzas antes de continuar.</p></div></div>'+
+      '<div class="page-heading rest-page-heading"><div><span class="section-eyebrow">REFUGIO SEGURO</span><h2>Descanso</h2><p>Recupera fuerzas antes de continuar.</p></div></div>'+
       '<section class="rest-campfire-scene" aria-label="Campamento nocturno de la compañía">'+
-        '<img class="rest-custom-background-image" id="rest-custom-background-image" alt="" aria-hidden="true">'+
-        '<div class="rest-background-toolbar">'+
-          '<label class="rest-background-upload" for="rest-background-upload">▧ CAMBIAR FONDO<input id="rest-background-upload" type="file" accept="image/*"></label>'+
-          '<button class="rest-background-reset" type="button" data-action="reset-rest-background">RESTABLECER FONDO</button>'+
-          '<span class="rest-background-status" id="rest-background-status">Puedes cargar tu propia imagen</span>'+
-        '</div>'+
         '<aside class="rest-camp-controls" aria-labelledby="rest-controls-title">'+
-          '<span class="rest-controls-eyebrow">✦ EL ÚLTIMO FAROL ✦</span>'+
-          '<h3 id="rest-controls-title">Un respiro en el campamento</h3>'+
-          '<p>Una ración permite que los cinco héroes recuperen un 25% de su vida y de su maná máximos, también quienes están en reserva.</p>'+
-          '<div class="rest-uses-display"><span class="rest-uses-icon">✚</span><div><small>DESCANSOS QUE TE QUEDAN</small><strong class="'+(rests===0?"is-empty":"")+'">'+rests+'</strong><b>'+(rests===1?"1 RACIÓN · 1 DESCANSO":rests+" RACIONES · 1 DESCANSO CADA UNA")+'</b></div></div>'+
+          '<span class="rest-controls-eyebrow">✦ CAMPAMENTO · ÚLTIMO FAROL ✦</span>'+
+          '<h3 id="rest-controls-title">Recupera fuerzas</h3>'+
+          '<p>Toda la compañía recupera vida y maná.</p>'+
+          '<div class="rest-uses-display"><span class="rest-uses-icon">✚</span><div><small>DESCANSOS DISPONIBLES</small><strong class="'+(rests===0?"is-empty":"")+'">'+rests+'</strong><b>1 RACIÓN = 1 DESCANSO</b></div></div>'+
           '<div class="rest-camp-action">'+action+'</div>'+
-          '<div class="rest-recovery-badges"><span><b>+25%</b><small>VIDA</small></span><span><b>+25%</b><small>MANÁ</small></span><span><b>5 / 5</b><small>HÉROES</small></span></div>'+
-          '<small class="rest-command-footnote">'+(rests>0?"El descanso consume una sola ración y atiende a toda la compañía.":"El descanso no se consume hasta que consigas una ración.")+'</small>'+
+          '<div class="rest-recovery-badges"><span><b>+25%</b><small>VIDA</small></span><span><b>+25%</b><small>MANÁ</small></span><span><b>5</b><small>HÉROES</small></span></div>'+
         '</aside>'+
-
       '</section>'+
-      '<section class="rest-party-zone"><div class="rest-party-heading"><div><span class="section-eyebrow">EN EL CAMPAMENTO</span><h3>Estado de la compañía</h3></div><span class="rest-hurt-count">'+hurt+' / 5 <small>HERIDOS</small></span></div><div class="rest-party-grid">'+members+'</div><p>Los cinco reciben los beneficios del descanso, estén en la expedición o de reserva.</p></section>'+
-      '<p class="campaign-notice">'+state.notice+'</p>'+
+      '<section class="rest-party-zone"><div class="rest-party-heading"><div><span class="section-eyebrow">LA COMPAÑÍA</span><h3>Estado de los héroes</h3></div>'+(hurt?'<span class="rest-hurt-count">'+hurt+' <small>HERIDOS</small></span>':'')+'</div><div class="rest-party-grid">'+members+'</div></section>'+notice+
     '</div>';
   }
-
-
   function renderGachaMachine(modifier) {
     const lights=Array.from({length:16},(_,index)=>'<i class="gacha-pixel-lamp lamp-'+(index+1)+'"></i>').join("");
     return '<div class="gacha-pixel-machine '+(modifier||"")+'"><div class="gacha-machine-lights">'+lights+'</div><div class="gacha-machine-top"><span>PAIS CAPSULE</span><b>✦</b></div><div class="gacha-machine-glass"><div class="gacha-machine-rotor"><i></i><i></i><i></i><i></i></div><div class="gacha-orb orb-one"></div><div class="gacha-orb orb-two"></div><div class="gacha-orb orb-three"></div><div class="gacha-capsule"><i class="capsule-top"></i><i class="capsule-bottom"></i><b>✦</b></div></div><div class="gacha-machine-controls"><span>◈</span><b>GACHA · 01</b><span>◈</span></div><div class="gacha-machine-chute"><i></i></div><div class="gacha-machine-base"><span>CAPSULE SYSTEM</span></div></div>';
@@ -2104,7 +1962,6 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
     if (action === "complete-site" || action === "visit-site") return completeSite(target.dataset.site);
     if (action === "defeat-boss") return defeatBoss();
     if (action === "rest") return restCompany();
-    if (action === "reset-rest-background") return resetRestBackground();
     if (action === "buy") return buyItem(target.dataset.item);
     if (action === "buy-equipment") return buyEquipment(target.dataset.item);
     if (action === "refresh-shop") return rotateShopStock();
@@ -2144,11 +2001,6 @@ import { BASIC_ATTACK, ENEMY_TYPES, SITE_ENCOUNTERS } from "./src/data/encounter
       return;
     }
   }
-
-  document.addEventListener("change", (event) => {
-    const backgroundInput = event.target.closest && event.target.closest("#rest-background-upload");
-    if (backgroundInput) handleRestBackgroundUpload(backgroundInput);
-  });
 
   document.addEventListener("click", (event) => {
     const actionButton = event.target.closest("[data-action]");

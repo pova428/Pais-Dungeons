@@ -1,7 +1,7 @@
 # PAIS DUNGEON — mapa de proyecto y planificación
 
 > Documento vivo para saber qué está construido, qué está en desarrollo y qué queda por hacer.  
-> Estado revisado: **Build 039**.
+> Estado revisado: **Build 040**.
 
 ## Visión del proyecto
 
@@ -66,7 +66,7 @@ flowchart TD
 - [x] Encuentros y estructura inicial de exploración.
 - [x] Sistema de descanso: consume una ración y recupera un 25% de vida y maná máximos de los cinco héroes.
 - [x] Contador de descansos disponibles, botón principal de descanso y acceso al mercado cuando faltan raciones.
-- [x] Fondo de descanso personalizable por el jugador, guardado localmente en el navegador, con ilustración predeterminada del campamento.
+- [x] Fondo ilustrado fijo para el campamento de Descanso.
 
 ### 6. Arte y animación ya incorporados
 - [x] Retratos de los cinco protagonistas.
@@ -80,7 +80,7 @@ Las tareas están ordenadas por dependencias y prioridad orientativa. Las casill
 
 ### Fase 1 — Cerrar y mejorar la zona de descanso
 - [ ] Definir el diseño definitivo de la zona de descanso y su ambientación.
-- [ ] Mejorar la integración del fondo personalizado con los paneles y controles.
+- [ ] Revisar la integración del fondo ilustrado con el panel en todos los tamaños de pantalla.
 - [ ] Añadir objetos y pequeños detalles ambientales que den vida al campamento.
 - [ ] Incorporar animaciones ambientales opcionales y configurables, sin perjudicar el rendimiento.
 - [ ] Revisar estados visuales: sin raciones, descanso disponible, recuperación y confirmaciones.

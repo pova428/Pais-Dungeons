@@ -20,7 +20,7 @@
 2. La partida vive en el objeto `state` y se guarda en `localStorage`.
 3. `renderCampaign()` pinta la pantalla activa a partir de ese estado.
 4. Los elementos interactivos usan atributos `data-action`, `data-tab` y `data-*`; los manejadores al final de `game.js` actualizan estado y vuelven a renderizar.
-5. Las imágenes personalizadas de Descanso se guardan en IndexedDB; no forman parte del guardado de campaña.
+5. El fondo de Descanso es `assets/rest-campfire-illustration.jpg`; no forma parte del guardado de campaña.
 
 ## Límites actuales
 

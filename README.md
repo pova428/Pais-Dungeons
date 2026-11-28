@@ -1,6 +1,6 @@
 # PAIS DUNGEON
 
-**RPG táctico de fantasía oscura · Build 039**
+**RPG táctico de fantasía oscura · Build 040**
 
 Cinco juramentos. Una tierra condenada. Acompaña a Salim, Pol, Igor, Ivan y Alex en una aventura de exploración, combates por turnos, equipo y supervivencia.
 
@@ -19,6 +19,11 @@ Para localizar sistemas y datos del código, consulta el [mapa de arquitectura](
 ---
 
 ## Historial de builds
+
+## Build 040 — descanso más claro y legible
+
+- Se fija la ilustración del campamento y se retiran el selector y el guardado de fondos personalizados.
+- Se simplifican los textos y se agrandan el contador, el botón y el estado de los héroes en escritorio y móvil.
 
 ## Build 039 — campamento ilustrado y descanso integrado
 
