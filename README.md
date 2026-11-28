@@ -1,5 +1,12 @@
 # PAIS DUNGEON
 
+## Build 036 — ilustración panorámica nueva para Descanso
+
+- Se sustituye únicamente el fondo de la pantalla Descanso por la nueva ilustración panorámica del campamento; el encuadre conserva la escena completa y extiende los laterales con continuidad oscura para el formato ancho.
+- Se mantiene la hoguera animada, colocada sobre el fuego de la ilustración, con una escala y altura ajustadas al anillo de piedras.
+- Se integra el panel de descanso con fondo oscuro translúcido para mantener la lectura de raciones, recuperación y botón.
+- La pestaña Descanso conserva sus datos, acciones y tarjetas de los cinco héroes; las demás pantallas no cambian.
+
 ## Build 035 — animaciones de Pol normalizadas con Salim
 
 - Se conectan las cinco secuencias PNG de Pol (`guardian`): `idle`, `basic-attack`, `arcane-bolt`, `burn-mark` y `nova`, con tres frames de 512 × 512 px por secuencia.
