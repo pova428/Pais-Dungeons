@@ -1,5 +1,11 @@
 # PAIS DUNGEON
 
+## Build 037 — descanso sin llama ni efectos animados
+
+- Se retira la llama incrustada en el fondo panorámico y se recuperan las ilustraciones del campamento que conservan el anillo de piedras y los troncos, pero no dibujan fuego.
+- Se elimina del HTML la capa que añadía el sprite de la llama, el humo, las chispas y el resplandor animado.
+- Se mantienen el panel de descanso, el consumo de raciones y la recuperación de los cinco héroes; solo cambia la presentación visual y los textos asociados al fuego.
+
 ## Build 036 — ilustración panorámica nueva para Descanso
 
 - Se sustituye únicamente el fondo de la pantalla Descanso por la nueva ilustración panorámica del campamento; el encuadre conserva la escena completa y extiende los laterales con continuidad oscura para el formato ancho.
