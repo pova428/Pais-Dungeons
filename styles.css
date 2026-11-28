@@ -4845,3 +4845,114 @@ body.reduce-motion .battle-spell-vfx,body.reduce-motion .battle-spell-global,bod
 @media(max-width:420px) {
   .rest-fire-stage { transform:translateX(-50%) scale(.69); }
 }
+
+
+/* Build 033 — animated pixel-art fire integrated into the campsite fire ring */
+.rest-fire-stage {
+  left:50%;
+  bottom:15px;
+  width:300px;
+  height:320px;
+  transform:translateX(-50%);
+  transform-origin:bottom center;
+  image-rendering:pixelated;
+}
+.rest-fire-aura {
+  z-index:1;
+  left:50%;
+  bottom:0;
+  width:340px;
+  height:108px;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(218,94,43,.24) 0,rgba(149,55,33,.12) 44%,transparent 78%);
+  filter:none;
+  animation:rest-aura-pulse 1.7s steps(4,end) infinite alternate;
+}
+.rest-smoke {
+  z-index:2;
+  left:50%;
+  top:-12px;
+  width:140px;
+  height:180px;
+  transform:translateX(-50%);
+}
+.rest-smoke i {
+  width:16px;
+  height:16px;
+  background:#77717e;
+  box-shadow:3px 2px 0 #524c5c;
+  filter:none;
+  opacity:0;
+  animation:rest-smoke-rise 4.1s steps(8,end) infinite;
+}
+.rest-flames {
+  position:absolute;
+  z-index:4;
+  left:50%;
+  bottom:0;
+  width:192px;
+  height:288px;
+  transform:translateX(-50%);
+  transform-origin:center bottom;
+  filter:drop-shadow(0 0 8px rgba(232,100,38,.38));
+  image-rendering:pixelated;
+}
+.rest-flames .rest-fire-sprite {
+  position:absolute;
+  left:0;
+  bottom:0;
+  display:block;
+  width:192px;
+  height:288px;
+  background-image:url("assets/rest-fire-pixel-sprites.png");
+  background-repeat:no-repeat;
+  background-position:0 0;
+  background-size:768px 288px;
+  image-rendering:pixelated;
+  clip-path:none;
+  animation:rest-fire-sprite-play .96s steps(4,end) infinite;
+}
+@keyframes rest-fire-sprite-play {
+  from { background-position:0 0; }
+  to { background-position:-768px 0; }
+}
+.rest-fire-sparks {
+  z-index:6;
+  left:50%;
+  bottom:68px;
+  width:230px;
+  height:190px;
+  transform:translateX(-50%);
+}
+.rest-fire-sparks i {
+  width:3px;
+  height:4px;
+  background:#d78642;
+  box-shadow:2px 1px 0 #713628;
+  animation:rest-spark-rise 1.9s steps(6,end) infinite;
+}
+.rest-fire-sparks i:nth-child(2n) { background:#f0ad59; }
+.rest-fire-sparks i:nth-child(3n) { width:2px;height:3px;background:#a94d31; }
+@keyframes rest-aura-pulse {
+  from { opacity:.48;transform:translateX(-50%) scale(.94); }
+  to { opacity:.82;transform:translateX(-50%) scale(1.06); }
+}
+@media(max-width:1120px) {
+  .rest-fire-stage { left:50%;bottom:10px;transform:translateX(-50%) scale(.92); }
+}
+@media(max-width:850px) {
+  .rest-fire-stage { left:50%;bottom:8px;transform:translateX(-50%) scale(.86); }
+}
+@media(max-width:650px) {
+  .rest-fire-stage { left:50%;bottom:50px;transform:translateX(-50%) scale(.82); }
+}
+@media(max-width:420px) {
+  .rest-fire-stage { bottom:45px;transform:translateX(-50%) scale(.76); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .rest-flames .rest-fire-sprite { animation:none !important;background-position:0 0; }
+}
+body.reduce-motion .rest-flames .rest-fire-sprite {
+  animation:none !important;
+  background-position:0 0;
+}

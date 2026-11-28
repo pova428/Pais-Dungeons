@@ -1,5 +1,12 @@
 # PAIS DUNGEON
 
+## Build 033 — hoguera animada integrada en el campamento
+
+- Se sustituye la llama construida con polígonos CSS por una secuencia pixel-art de cuatro fotogramas con transparencia.
+- El fuego queda alineado sobre la leña y el anillo de piedras del propio escenario, sin duplicar la base de la hoguera.
+- Se conservan el humo y las chispas, con un resplandor más contenido para que el fuego no parezca una pegatina ni queme toda la escena.
+- Se ajusta la posición y el tamaño en escritorio, tablet y móvil; los controles y la lógica del descanso no cambian.
+
 ## Build 032 — hoguera pixel-art de fantasía oscura
 
 - La hoguera geométrica se sustituye por una ilustración pixel-art propia de troncos cruzados, carbón encendido y un anillo de piedras con sombreado por bloques.
