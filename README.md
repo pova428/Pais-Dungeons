@@ -1,5 +1,10 @@
 # PAIS DUNGEON
 
+## Build 030 — ajuste de curación de Chupadita
+
+La curación de Igor se calcula sobre el daño que realmente ha recibido el enemigo, no sobre el daño potencial. Así Chupadita no cura de más cuando el rival tiene pocos puntos de vida.
+
+
 ## Build 029 — nuevas habilidades y efectos de combate
 
 - **Pol:** Ataque Maligno lanza una esfera arcana, Materia oscura invoca un rayo descendente y Estallido primordial golpea a todos con una gran esfera que estalla. Los tres efectos usan magia oscura pixelada.

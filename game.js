@@ -703,8 +703,8 @@
       case "life-drain":
         if(enemy) {
           const drained=targetDamage(.8,true)+2;
-          applyEnemyDamage(enemy,drained);
-          healHero(character.id,Math.ceil(drained*.5*(1+(stats.healingBonus||0))));
+          const actualDrained=applyEnemyDamage(enemy,drained);
+          healHero(character.id,Math.ceil(actualDrained*.5*(1+(stats.healingBonus||0))));
         }
         break;
       case "reboot":
