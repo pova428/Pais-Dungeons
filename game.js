@@ -277,11 +277,11 @@
     const enemyIds=SITE_ENCOUNTERS[siteId]||SITE_ENCOUNTERS["institute-programming"];
     const enemies=enemyIds.map((enemyId)=>{
       const template=ENEMY_TYPES[enemyId];
-      return Object.assign({id:enemyId},template,{hp:template.maxHp,burn:0,stun:0,shield:0,enraged:false});
+      return Object.assign({id:enemyId},template,{hp:template.maxHp,burn:0,burnDamage:0,poison:0,poisonDamage:0,stun:0,shield:0,enraged:false});
     });
     return {
       siteId,encounterVersion:2,round:1,order:[],turnIndex:0,currentTurnStarted:null,startingVitals,
-      enemies,shields:{},shieldTurns:{},buffs:{},debuffs:{},pendingSkillId:null,targetMode:null,
+      enemies,shields:{},shieldTurns:{},shieldHits:{},shieldExpiresRound:{},buffs:{},debuffs:{},pendingSkillId:null,targetMode:null,
       actionAnimation:null,floatingNumbers:[],nextFloatingNumberId:1,status:"active",
       log:["La compañía entra en la sala. ¡Comienza el combate!"]
     };
@@ -389,17 +389,23 @@
       damage=Math.ceil(damage*(1+(curse.damageTaken||.18)));
       pushBattleLog(character.name+" sufre daño amplificado por la maldición.");
     }
-    const shield=state.battle.shields[heroId]||0;
+    const battle=state.battle;
+    const shield=battle.shields[heroId]||0;
     if(shield>0) {
       const absorbed=Math.min(shield,damage);
-      state.battle.shields[heroId]-=absorbed;
       damage-=absorbed;
       if(absorbed>0) addBattleFloatingNumber("ally",heroId,absorbed,"shield");
       pushBattleLog(character.name+" bloquea "+absorbed+" con su escudo.");
-      if(state.battle.shields[heroId]<=0) {
-        delete state.battle.shields[heroId];
-        delete state.battle.shieldTurns[heroId];
-        pushBattleLog("El escudo de "+character.name+" se rompe.");
+      if((battle.shieldHits[heroId]||0)>0) {
+        delete battle.shields[heroId]; delete battle.shieldTurns[heroId];
+        delete battle.shieldHits[heroId]; delete battle.shieldExpiresRound[heroId];
+        pushBattleLog("El escudo de "+character.name+" se consume tras el primer ataque.");
+      } else {
+        battle.shields[heroId]-=absorbed;
+        if(battle.shields[heroId]<=0) {
+          delete battle.shields[heroId]; delete battle.shieldTurns[heroId];
+          pushBattleLog("El escudo de "+character.name+" se rompe.");
+        }
       }
     }
     const current=Math.max(0,Number(state.hp[heroId])||0);
@@ -446,6 +452,31 @@
     enemy.burn -= 1;
     pushBattleLog(enemy.name + " recibe " + burnDamage + " de quemadura.");
     if (enemy.hp <= 0) pushBattleLog(enemy.name + " cae por la quemadura.");
+  }
+
+  function applyPoisonAtEnemyTurn(enemy) {
+    const turns=Math.max(0,Number(enemy.poison)||0);
+    if(turns<=0 || enemy.hp<=0) return;
+    const before=enemy.hp;
+    const damage=Math.max(1,Math.round(Number(enemy.poisonDamage)||3));
+    enemy.hp=Math.max(0,before-damage);
+    enemy.poison=turns-1;
+    const actual=before-enemy.hp;
+    if(actual>0) addBattleFloatingNumber("enemy",enemy.id,actual,"poison");
+    pushBattleLog(enemy.name+" recibe "+actual+" de daño por veneno.");
+    if(enemy.hp<=0) pushBattleLog(enemy.name+" cae por el veneno.");
+    if(enemy.poison<=0) enemy.poisonDamage=0;
+  }
+
+  function expireRoundShields(battle) {
+    if(!battle || !battle.shieldExpiresRound) return;
+    Object.entries(battle.shieldExpiresRound).forEach(([heroId,expiresRound])=>{
+      if(Number(expiresRound)>battle.round) return;
+      delete battle.shieldExpiresRound[heroId]; delete battle.shieldHits[heroId];
+      delete battle.shields[heroId]; delete battle.shieldTurns[heroId];
+      const character=characters.find((entry)=>entry.id===heroId);
+      if(character) pushBattleLog("El escudo de "+character.name+" se desvanece al terminar la ronda.");
+    });
   }
 
   function chooseEnemyTarget(enemy,candidates) {
@@ -527,6 +558,7 @@
       if(getAliveParty().length===0) { setBattleDefeat(); break; }
       if(battle.turnIndex>=battle.order.length) {
         battle.round+=1;
+        expireRoundShields(battle);
         battle.order=getBattleOrder();
         battle.turnIndex=0;
         battle.currentTurnStarted=null;
@@ -646,16 +678,13 @@
         if(enemy) applyEnemyDamage(enemy,targetDamage(.7,false));
         break;
       case "arcane-bolt":
-        if(enemy) applyEnemyDamage(enemy,targetDamage(.9,true)+1);
+        if(enemy) applyEnemyDamage(enemy,targetDamage(1.05,true)+2);
         break;
       case "burn-mark":
-        if(enemy) {
-          applyEnemyDamage(enemy,targetDamage(.55,true)+1);
-          if(enemy.hp>0) { enemy.burn=2; enemy.burnDamage=Math.max(2,Math.round(stats.magic*.2)); }
-        }
+        if(enemy) applyEnemyDamage(enemy,targetDamage(1.45,true)+2);
         break;
       case "nova":
-        battle.enemies.filter((entry)=>entry.hp>0).forEach((entry)=>applyEnemyDamage(entry,targetDamage(.85,true)));
+        battle.enemies.filter((entry)=>entry.hp>0).forEach((entry)=>applyEnemyDamage(entry,targetDamage(1.1,true)+2));
         break;
       case "stab":
         if(enemy) applyEnemyDamage(enemy,targetDamage(1,false)+1);
@@ -675,23 +704,20 @@
         if(enemy) {
           const drained=targetDamage(.8,true)+2;
           applyEnemyDamage(enemy,drained);
-          healHero(character.id,Math.ceil(drained*.35*(1+(stats.healingBonus||0))));
+          healHero(character.id,Math.ceil(drained*.5*(1+(stats.healingBonus||0))));
         }
         break;
       case "reboot":
-        getAliveParty().sort((a,b)=>{
-          const ca=characters.find((entry)=>entry.id===a),cb=characters.find((entry)=>entry.id===b);
-          return state.hp[a]/getEffectiveCharacterStats(ca,state.levels[a]||1).hp-state.hp[b]/getEffectiveCharacterStats(cb,state.levels[b]||1).hp;
-        }).slice(0,3).forEach((id)=>healHero(id,(stats.magic*.75+8)*(1+(stats.healingBonus||0))));
+        getAliveParty().forEach((id)=>healHero(id,(stats.magic*.75+8)*(1+(stats.healingBonus||0))));
         break;
       case "protective-shield":
         if(ally) {
           const allyMax=getEffectiveCharacterStats(ally,state.levels[ally.id]||1).hp;
           battle.shields[ally.id]=Math.round(allyMax*.22*(1+(stats.shieldBonus||0)));
-          battle.shieldTurns[ally.id]=2;
+          battle.shieldTurns[ally.id]=0; battle.shieldHits[ally.id]=1; battle.shieldExpiresRound[ally.id]=battle.round+1;
           freshShieldIds.add(ally.id);
           addBattleFloatingNumber("ally",ally.id,battle.shields[ally.id],"shield");
-          pushBattleLog(ally.name+" recibe un escudo de "+battle.shields[ally.id]+" puntos durante sus próximos 2 turnos.");
+          pushBattleLog(ally.name+" recibe un escudo que bloquea su próximo ataque recibido, hasta el final de la ronda.");
         }
         break;
       case "knockdown":
@@ -705,12 +731,11 @@
           const allyChar=characters.find((entry)=>entry.id===id);
           const max=getEffectiveCharacterStats(allyChar,state.levels[id]||1).hp;
           const amount=Math.round(max*.15*(1+(stats.shieldBonus||0)));
-          battle.shields[id]=(battle.shields[id]||0)+amount;
-          battle.shieldTurns[id]=Math.max(2,battle.shieldTurns[id]||0);
+          battle.shields[id]=amount; battle.shieldTurns[id]=0; battle.shieldHits[id]=1; battle.shieldExpiresRound[id]=battle.round+1;
           freshShieldIds.add(id);
           addBattleFloatingNumber("ally",id,amount,"shield");
         });
-        pushBattleLog("Ivan levanta un bastión que protege a toda la compañía durante 2 turnos de cada aliado.");
+        pushBattleLog("Ivan protege a toda la compañía: el próximo golpe de cada aliado queda bloqueado o el escudo desaparece al terminar la ronda.");
         break;
       case "balonazo":
         if(enemy) applyEnemyDamage(enemy,targetDamage(.8,false)+1);
@@ -720,7 +745,10 @@
         pushBattleLog("Alex activa Modo Mujer: su ataque y velocidad aumentan.");
         break;
       case "field-finish":
-        battle.enemies.filter((entry)=>entry.hp>0).forEach((entry)=>applyEnemyDamage(entry,targetDamage(1.05,false)));
+        battle.enemies.filter((entry)=>entry.hp>0).forEach((entry)=>{
+          applyEnemyDamage(entry,targetDamage(.85,false)+1);
+          if(entry.hp>0) { entry.poison=2; entry.poisonDamage=Math.max(3,Math.round(stats.attack*.35)); pushBattleLog(entry.name+" queda envenenado durante 2 turnos."); }
+        });
         break;
       default:
         pushBattleLog("La habilidad "+skill.name+" todavía no tiene un efecto definido.");
@@ -778,6 +806,7 @@
           const enemy=battle.enemies.find((entry)=>entry.id===animation.actorId);
           if(enemy && enemy.hp>0) {
             applyBurnAtEnemyTurn(enemy);
+            if(enemy.hp>0) applyPoisonAtEnemyTurn(enemy);
             if(enemy.hp>0) performEnemyTurn(enemy);
           }
         }
@@ -1129,11 +1158,11 @@
       return "slash";
     }
     const effects={
-      "basic-attack":"slash","arcane-bolt":"magic","burn-mark":"fire","nova":"nova",
+      "basic-attack":"slash","arcane-bolt":"malefic-orb","burn-mark":"dark-beam","nova":"primordial-burst",
       "stab":"slash","multi-stab":"multi-slash","brothers":"summon",
-      "antivirus":"healing","life-drain":"drain","reboot":"healing-aura",
-      "protective-shield":"shield","knockdown":"heavy","team-bastion":"shield-aura",
-      "balonazo":"impact","modo-mujer":"buff","field-finish":"impact-area"
+      "antivirus":"healing","life-drain":"life-sip","reboot":"team-heal",
+      "protective-shield":"single-hit-shield","knockdown":"knockdown","team-bastion":"team-guard",
+      "balonazo":"impact","modo-mujer":"buff","field-finish":"poison"
     };
     return effects[actionId] || "magic";
   }
@@ -1282,6 +1311,15 @@
         battle:saved.battle && typeof saved.battle === "object" ? saved.battle : null,
         visitedSites:(saved.visitedSites || []).filter((siteId) => validSiteIds.includes(siteId))
       });
+      if(merged.battle) {
+        merged.battle.shields=Object.assign({},merged.battle.shields||{});
+        merged.battle.shieldTurns=Object.assign({},merged.battle.shieldTurns||{});
+        merged.battle.shieldHits=Object.assign({},merged.battle.shieldHits||{});
+        merged.battle.shieldExpiresRound=Object.assign({},merged.battle.shieldExpiresRound||{});
+        merged.battle.buffs=Object.assign({},merged.battle.buffs||{});
+        merged.battle.debuffs=Object.assign({},merged.battle.debuffs||{});
+        merged.battle.enemies=(Array.isArray(merged.battle.enemies)?merged.battle.enemies:[]).map((enemy)=>Object.assign({poison:0,poisonDamage:0},enemy));
+      }
       const ownedUids=new Set(merged.equipmentInventory.map((entry)=>String(entry.uid)));
       const equippedUids=new Set();
       characters.forEach((character)=>{
